@@ -1,0 +1,1039 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="de" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>2.4. Weiterführende Themen &#8212; Diskretisierung und numerische Optimierung</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ode/04_Anfangswertprobleme/04_04_Anfangswertprobleme';</script>
+    <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
+    <link rel="search" title="Suche" href="../../search.html" />
+    <link rel="next" title="3. Numerische Lösung von Randwertproblemen" href="../05_Randwertprobleme/00_05_Randwertprobleme.html" />
+    <link rel="prev" title="2.3. Mehrschrittverfahren für Anfangswertprobleme" href="03_04_Anfangswertprobleme.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="de"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../01_Einleitung.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Diskretisierung und numerische Optimierung</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../01_Einleitung.html">
+                    Einleitung
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/00_02_NichtlineareOptimierung.html">1. Numerische Optimierung</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/01_02_NichtlineareOptimierung.html">1.1. Mathematische Grundlagen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html">1.2. Abstiegsverfahren</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_04_Anfangswertprobleme.html">2.1. Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_04_Anfangswertprobleme.html">2.2. Einschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_04_Anfangswertprobleme.html">2.3. Mehrschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">2.4. Weiterführende Themen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../05_Randwertprobleme/00_05_Randwertprobleme.html">3. Numerische Lösung von Randwertproblemen</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../05_Randwertprobleme/01_05_Randwertprobleme.html">3.1. Existenz und Eindeutigkeit von Lösungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../05_Randwertprobleme/02_05_Randwertprobleme.html">3.2. Differenzenverfahren für Randwertprobleme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">4. Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/FAU-AMMN/MathPhysicsC" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Quell-Repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Laden Sie diese Seite herunter">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/ode/04_Anfangswertprobleme/04_04_Anfangswertprobleme.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Quelldatei herunterladen"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="In PDF drucken"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Vollbildmodus"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Suche" aria-label="Suche" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Weiterführende Themen</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Inhalt </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lineare-transportgleichung">2.4.1. Lineare Transportgleichung</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffusionsgleichung">2.4.2. Diffusionsgleichung</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adjungierte-methode">2.4.2.1. Adjungierte Methode</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zusammenhang-zwischen-optimierung-und-differentialgleichungen">2.4.3. Zusammenhang zwischen Optimierung und Differentialgleichungen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning">2.4.4. Deep Learning</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="weiterfuhrende-themen">
+<span id="id1"></span><h1><span class="section-number">2.4. </span>Weiterführende Themen<a class="headerlink" href="#weiterfuhrende-themen" title="Permalink to this heading">#</a></h1>
+<p>Im Folgenden diskutieren wir noch einige weiterführende Themen und
+Anwendungen zur Numerik von Einschrittverfahren. Dabei beginnen wir
+zunächst mit einfachen partiellen Differentialgleichungen und gehen dann
+zur Verbindung zwischen Optimierung und Differentialgleichungen über.</p>
+<section id="lineare-transportgleichung">
+<span id="id2"></span><h2><span class="section-number">2.4.1. </span>Lineare Transportgleichung<a class="headerlink" href="#lineare-transportgleichung" title="Permalink to this heading">#</a></h2>
+<p>Wir betrachten im Folgenden eine <em>lineare Transportgleichung</em>, die unter
+Anderem verwendet wird um die Ausbreitung eines Stoffes oder eines
+Zustands zu modellieren. Wir betrachten dieses Modell der Einfachheit
+halber nur in einer räumlichen Dimension mit <span class="math notranslate nohighlight">\(n=1\)</span> auf dem
+Diskretisierungsgitter <span class="math notranslate nohighlight">\(\Omega_h = h \cdot \Z\)</span> und einer örtlichen
+Schrittweite <span class="math notranslate nohighlight">\(h &gt; 0\)</span>. Die Zustandsvariable <span class="math notranslate nohighlight">\(u_k(t) \in \R\)</span> beschreibt
+einen Zustand im Punkt <span class="math notranslate nohighlight">\(k\cdot h \in \Omega_h\)</span> zum Zeitpunkt
+<span class="math notranslate nohighlight">\(t \in [0, T]\)</span>. Wir wählen nun ebenfalls eine äquidistante
+Diskretisierung des Zeitintervalls <span class="math notranslate nohighlight">\([0, T]\)</span> mit fester Zeitschrittweite
+<span class="math notranslate nohighlight">\(\tau &gt; 0\)</span>.</p>
+<p>Nehmen wir nun an, dass der Zustand mit einer konstanten, positiven
+Geschwindigkeit <span class="math notranslate nohighlight">\(v \coloneqq \frac{h}{\tau} &gt; 0\)</span>, d.h., genau die Breite
+einer örtliche Gitterzelle <span class="math notranslate nohighlight">\(h\)</span> pro Zeitschritt <span class="math notranslate nohighlight">\(\tau\)</span> transportiert
+wird, so gilt offensichtlich</p>
+<div class="math notranslate nohighlight">
+\[u_k(t+ \tau) \ = \ u_{k-1}(t).\]</div>
+<p>Dies können wir auch durch Erweiterung schreiben als</p>
+<div class="math notranslate nohighlight" id="equation-eq-transport-erweiterung">
+<span class="eqno">(2.19)<a class="headerlink" href="#equation-eq-transport-erweiterung" title="Permalink to this equation">#</a></span>\[u_k(t+ \tau) \ = \ \underbrace{u_k(t) - u_k(t)}_{= \: 0} + \underbrace{\frac{\tau}{h} v}_{= \: 1 } \cdot \: u_{k-1}(t) \ = \ u_k(t) - \tau \frac{v}h \cdot (u_k(t) - u_{k-1}(t)).\]</div>
+<p>Diese Darstellung können wir als <em>Vorwärts-Euler Verfahren</em> der
+folgenden gewöhnlichen Differentialgleichung mit einer konstanten,
+positiven Geschwindigkeit <span class="math notranslate nohighlight">\(v \in \R^+\)</span> interpretieren:</p>
+<div class="math notranslate nohighlight" id="equation-eq-transport-dgl">
+<span class="eqno">(2.20)<a class="headerlink" href="#equation-eq-transport-dgl" title="Permalink to this equation">#</a></span>\[u_k'(t) \ = \ - \frac{v}h \cdot (u_k(t) - u_{k-1}(t)).\]</div>
+<p>Die rechte Seite hat eine Lipschitz-Konstante der Ordnung
+<span class="math notranslate nohighlight">\(\mathcal{O}(\frac{1}h)\)</span>, welche beliebig groß werden kann für eine
+immer feinere örtliche Auflösung, d.h. für <span class="math notranslate nohighlight">\(h \rightarrow 0\)</span>.</p>
+<p>Nach <a class="reference internal" href="#equation-eq-transport-erweiterung">(2.19)</a> gilt</p>
+<div class="math notranslate nohighlight">
+\[u_k(t+\tau) \ = \ (1 - \tau \frac{v}h) \cdot u_k(t) + \tau \frac{v}h \cdot u_{k-1}(t),\]</div>
+<p>und wir sehen, dass wir die Stabilität des Einschrittverfahrens zeigen
+können solange <span class="math notranslate nohighlight">\(\tau \cdot \frac{v}h \leq 1\)</span> gilt. Dann gilt nämlich per
+Dreiecksungleichung</p>
+<div class="math notranslate nohighlight">
+\[\vert u_k(t+\tau) \vert \ \leq \ (1 - \tau \frac{v}h) \cdot \vert u_k(t) \vert+ \tau \frac{v}h \cdot \vert u_{k-1}(t) \vert 
+\ \leq \ \max\{ \vert u_k(t) \vert,\vert u_{k-1}(t) \vert  \}.\]</div>
+<p>Daraus folgt sofort eine Abschätzung für alle örtlichen Gitterpunkte mit</p>
+<div class="math notranslate nohighlight">
+\[\Vert u (t+ \tau) \Vert_\infty \ \leq \ \Vert u (t ) \Vert_\infty.\]</div>
+<p>Alternativ können wir ebenfalls das <em>Rückwärts-Euler Verfahren</em> für die
+gewöhnliche Differentialgleichung <a class="reference internal" href="#equation-eq-transport-dgl">(2.20)</a> betrachten</p>
+<div class="math notranslate nohighlight">
+\[u_k(t+ \tau) \ = \ u_k(t) - \tau \frac{v}h \cdot (u_k(t+\tau) - u_{k-1}(t+\tau)).\]</div>
+<p>Wir wollen nun ebenfalls die Stabilität dieses Einschrittverfahrens
+näher untersuchen. Der Einfachheit halber betrachten wir nur Lösungen
+mit <span class="math notranslate nohighlight">\(u_k(0) = 0\)</span> für <span class="math notranslate nohighlight">\(k \leq 0\)</span>. Es ist klar, dass diese Bedingung dann
+auch für alle <span class="math notranslate nohighlight">\(t &gt; 0\)</span> gilt. Dies ermöglicht es uns ein gestaffeltes
+Gleichungssystem für das implizite Einschrittverfahren herzuleiten und
+zu lösen. Es gilt im ersten Ortspunkt zu beliebiger Zeit <span class="math notranslate nohighlight">\(t \in [0, T]\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+&amp;u_1(t+\tau) \ = \ u_1(t) - \frac{\tau v}{h} \cdot u_1(t+\tau) - \frac{\tau v}{h} \cdot \underbrace{u_0(t+\tau)}_{= \:0}\\
+\Leftrightarrow \quad &amp;\left( 1 + \frac{\tau v}{h} \right) \cdot u_1(t+\tau) \ = \ u_1(t)\\
+\Leftrightarrow \quad &amp;u_1(t+\tau) \ = \ \frac{h}{h+v\tau} \cdot u_1(t).
+\end{split}\end{split}\]</div>
+<p>Für beliebige Punkte <span class="math notranslate nohighlight">\(k \cdot h \in \Omega_h\)</span> mit <span class="math notranslate nohighlight">\(k &gt; 1\)</span> gilt dann</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+&amp;u_k(t+\tau) \ = \ \ u_k(t) - \frac{\tau v}{h} \cdot u_k(t+\tau) + \frac{\tau v}{h} \cdot u_{k-1}(t+\tau)\\
+\Leftrightarrow \quad &amp;\left( 1 + \frac{\tau v}{h} \right) \cdot u_k(t+\tau) \ = \ u_k(t) + \frac{\tau v}{h} \cdot u_{k-1}(t + \tau)\\
+\Leftrightarrow \quad &amp;u_k(t+\tau) \ = \ \frac{h}{h+v\tau} u_k(t) +  \frac{v\tau}{h+v\tau} u_{k-1}(t+\tau).
+\end{split}\end{split}\]</div>
+<p>Wir sehen also direkt, dass wir mittels Dreiecksgleichung folgende
+Abschätzung treffen können</p>
+<div class="math notranslate nohighlight">
+\[\vert u_k(t+\tau) \vert \ \leq \ \max\{ \vert u_k(t) \vert,  \vert u_{k-1}(t+\tau) \vert\}.\]</div>
+<p>Somit folgt induktiv</p>
+<div class="math notranslate nohighlight">
+\[\vert u_k(t+\tau) \vert \ \leq \ \max_{i \leq k} \vert u_i(t) \vert.\]</div>
+<p>Die impliziert wieder insbesondere die Stabilitätsabschätzung für alle
+örtlichen Gitterpunkte mit</p>
+<div class="math notranslate nohighlight">
+\[\Vert u (t+ \tau) \Vert_\infty \ \leq \ \Vert u (t ) \Vert_\infty.\]</div>
+<p>Man beachte, dass in diesem Fall das Einschrittverfahren stabil ist ohne
+jegliche Beschränkung an die Zeitschrittweite <span class="math notranslate nohighlight">\(\tau &gt; 0\)</span>.</p>
+<p>Für <span class="math notranslate nohighlight">\(h \rightarrow 0\)</span> sehen wir, dass</p>
+<div class="math notranslate nohighlight">
+\[v\cdot \frac{u(k\cdot h,t) - u((k-1)\cdot h,t)}{h} \ \longrightarrow \ v\cdot \partial_x u(x, t)\]</div>
+<p>gilt und wir eigentlich eine <em>partielle Differentialgleichung</em>
+approximiert haben, nämlich die sogenannte <strong>lineare
+Transportgleichung</strong> der Form</p>
+<div class="math notranslate nohighlight">
+\[\partial_t u (x,t ) \ = \ - v \cdot \partial_x u(x,t),\]</div>
+<p>mit konstanter, positiver Geschwindigkeit <span class="math notranslate nohighlight">\(v \in \R^+\)</span>.</p>
+<p>Im obigen Fall haben wir also die partielle Ableitung in die
+Ortskoordinate <span class="math notranslate nohighlight">\(x\)</span> durch einen Rückwärtsdifferenzenquotienten
+approximiert. Analog könnten wir auch ein Verfahren mit
+Vorwärtsdifferenzenquotienten bezüglich der Ortskoordinate <span class="math notranslate nohighlight">\(x\)</span>
+aufschreiben, was zu folgender gewöhnlichen Differentialgleichungen
+führt:</p>
+<div class="math notranslate nohighlight">
+\[u_j'(t) \ = \ \frac{v}h \cdot (u_j(t) - u_{j+1}(t)).\]</div>
+<p>Unabhängig von der Zeitdiskretisierung ist hier allerdings das
+Differentialgleichungssystem schon instabil, wie man formal zeigen kann.
+Der Grund hierfür liegt anschaulich betrachtet in der ursprünglichen
+Motivation der Transportgleichung. Mit positiver Geschwindigkeit
+<span class="math notranslate nohighlight">\(v \in \R^+\)</span> beschreibt die Transportgleichung die Ausbreitung eines
+Zustands in Richtung steigender Werte der Ortskoordinate <span class="math notranslate nohighlight">\(x\)</span>. Hierzu
+benötigt man ausschließlich Informationen von der linken Seite eines
+örtlichen Punkts der Diskretisierung <span class="math notranslate nohighlight">\(\Omega_h\)</span>. Dies wird durch den
+Rückwärtsdifferenzenquotienten korrekt abgebildet, während der
+Vorwärtsdifferenzenquotient genau die entgegengesetzte Richtung
+verwendet.</p>
+</section>
+<section id="diffusionsgleichung">
+<span id="id3"></span><h2><span class="section-number">2.4.2. </span>Diffusionsgleichung<a class="headerlink" href="#diffusionsgleichung" title="Permalink to this heading">#</a></h2>
+<p>Wir betrachten im Folgenden einen einfachen Diffusionsmodell im
+eindimensionalen Raum für <span class="math notranslate nohighlight">\(n=1\)</span>. Solche Modelle beschreiben
+beispielsweise in der Physik die Verteilung eines Stoffes in einem
+Medium oder die Ausbreitung von Wärme in einem Material. Wir modellieren
+ein Teilchen, dass einen Sprungprozess auf dem Gitter
+<span class="math notranslate nohighlight">\(\Omega_h \coloneqq h \cdot \Z \cap [0,1]\)</span> mit Schrittweite
+<span class="math notranslate nohighlight">\(h \coloneqq \frac{1}{N} &gt; 0, N \in \N\)</span> und periodischen Randbedingungen
+durchführt, wobei es zu jedem Zeitpunkt <span class="math notranslate nohighlight">\(t \in [0,T]\)</span> mit gleicher
+Wahrscheinlichkeit <span class="math notranslate nohighlight">\(\alpha \in (0, \frac{1}{2})\)</span> nach links oder rechts
+springen kann. In diesem Zusammenhang nennt man <span class="math notranslate nohighlight">\(\alpha\)</span> einen
+Diffusionskoeffizienten für den Sprungprozess. Die Wahrscheinlichkeit
+für einen Sprung in einem kleinen Zeitintervall
+<span class="math notranslate nohighlight">\([t,t+\tau]\subset [0,T]\)</span> mit Zeitschrittweite <span class="math notranslate nohighlight">\(0 &lt; \tau &lt; 1\)</span> ist
+dementsprechend <span class="math notranslate nohighlight">\(2 \alpha \tau \in (0, 1)\)</span>. Dann gilt für die
+Wahrscheinlichkeit <span class="math notranslate nohighlight">\(p_k(t) \in [0,1]\)</span>, dass das Teilchen zur Zeit <span class="math notranslate nohighlight">\(t\)</span> im
+Gitterpunkt <span class="math notranslate nohighlight">\(k\cdot h \in \Omega_h\)</span> ist:</p>
+<div class="math notranslate nohighlight" id="equation-eq-diffusion-wahrscheinlichkeit">
+<span class="eqno">(2.21)<a class="headerlink" href="#equation-eq-diffusion-wahrscheinlichkeit" title="Permalink to this equation">#</a></span>\[p_k(t+\tau) \ = \  \alpha \tau \cdot p_{k-1}(t) +  \alpha \tau \cdot p_{k+1}(t) +  (1- 2 \alpha \tau) \cdot p_k(t), \qquad k=0,\ldots,N,\]</div>
+<p>wobei wegen der periodischen Randbedingungen <span class="math notranslate nohighlight">\(p_{-1}(t) = p_N(t)\)</span> und
+<span class="math notranslate nohighlight">\(p_{N+1}(t) = p_0(t)\)</span> gilt.</p>
+<p>Für immer kleiner werdende Zeitschrittweiten <span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span>
+erhalten wir entsprechend im Grenzwert das Differentialgleichungssystem</p>
+<div class="math notranslate nohighlight" id="equation-eq-diffusion-dgl">
+<span class="eqno">(2.22)<a class="headerlink" href="#equation-eq-diffusion-dgl" title="Permalink to this equation">#</a></span>\[p_k'(t) \ = \ \alpha \cdot (p_{k-1}(t) + p_{k+1}(t) - 2 p_k(t)), \qquad k=0,\ldots,N.\]</div>
+<p>In diesem Zusammenhang sehen wir ein, dass
+<a class="reference internal" href="#equation-eq-diffusion-wahrscheinlichkeit">(2.21)</a> als Vorwärts-Euler Verfahren zur
+numerischen Approximation der gewöhnlichen Differentialgleichung
+<a class="reference internal" href="#equation-eq-diffusion-dgl">(2.22)</a> interpretiert werden kann. Wir erkennen sofort,
+dass dieses Einschrittverfahren stabil ist für <span class="math notranslate nohighlight">\(2 \alpha \tau &lt; 1\)</span>. Dies
+ist potentiell eine starke Einschränkung an die Zeitschrittweite <span class="math notranslate nohighlight">\(\tau\)</span>
+in Fällen in denen der Diffusionskoeffizient <span class="math notranslate nohighlight">\(\alpha\)</span> groß ist.</p>
+<p>Insbesondere können wir mit der Hilfsvariable
+<span class="math notranslate nohighlight">\(D \coloneqq \alpha \cdot h^2\)</span> das Einschrittverfahren wieder als
+Ortsdiskretisierung einer partiellen Differentialgleichung mittels eins
+Differenzenquotient zweiter Ordnung der folgenden Form interpretieren</p>
+<div class="math notranslate nohighlight">
+\[\partial_t p(x,t) \ = \ D \cdot \partial_{xx} p(x,t).\]</div>
+<p>Hierbei approximiert man die zweite Ableitung nach der Ortskoordinate
+durch</p>
+<div class="math notranslate nohighlight">
+\[\partial_{xx} p(k\cdot h,t) \ \approx \ \frac{p_{k-1}(t) - 2p_k(t) + p_{k+1}(t)}{h^2}.\]</div>
+<p>Somit erhalten wir Stabilität des Einschrittverfahrens für
+<span class="math notranslate nohighlight">\(\tau \sim h^2\)</span>, was für sehr kleines <span class="math notranslate nohighlight">\(h &gt; 0\)</span> (also für eine sehr feine
+Ortsauflösung) einen hohen numerischen Aufwand fordert.</p>
+<p>Verwenden wir hingegen das <em>Rückwarts-Euler Verfahren</em> zur
+Zeitdiskretisierung von <a class="reference internal" href="#equation-eq-diffusion-dgl">(2.22)</a>, so erhalten wir für
+<span class="math notranslate nohighlight">\(k=0,\ldots,N\)</span></p>
+<div class="math notranslate nohighlight" id="equation-eq-diffusion-implizit">
+<span class="eqno">(2.23)<a class="headerlink" href="#equation-eq-diffusion-implizit" title="Permalink to this equation">#</a></span>\[p_k(t+\tau ) \ = \ p_k(t) + \alpha \tau \cdot p_{k-1}(t+\tau) + \alpha \tau \cdot p_{k+1}(t+\tau)  -2\alpha \tau \cdot p_k(t + \tau)  .\]</div>
+<p>Es stellt sich heraus, dass dieses implizite Einschrittverfahren
+wiederum stabil ist ohne Schranke an die Zeitschrittweite <span class="math notranslate nohighlight">\(\tau &gt; 0\)</span>.
+Dies sehen wir folgendermaßen: Sei im Folgenden
+<span class="math notranslate nohighlight">\(P(t) \coloneqq (p_0(t),\ldots,p_N(t))^T \in \R^{N+1}\)</span>, dann können wir
+das Einschrittverfahren <a class="reference internal" href="#equation-eq-diffusion-implizit">(2.23)</a> kompakt schreiben
+als</p>
+<div class="math notranslate nohighlight" id="equation-eq-diffusion-implizit-kompakt">
+<span class="eqno">(2.24)<a class="headerlink" href="#equation-eq-diffusion-implizit-kompakt" title="Permalink to this equation">#</a></span>\[(I + \alpha \tau \cdot B) \cdot P(t+ \tau) \ = \ P(t),\]</div>
+<p>mit</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}B = \left( \begin{array}{cccccc}
+2 &amp; -1 &amp; 0 &amp; \ldots &amp; 0 &amp; -1\\
+-1 &amp;2 &amp; -1 &amp; \ldots &amp; 0 &amp; 0 \\
+0 &amp; -1 &amp; 2 &amp; \ldots &amp; 0 &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\   
+0 &amp; 0 &amp; 0 &amp; \ldots &amp;  2 &amp; -1 \\ 
+-1 &amp; 0 &amp; 0 &amp; \ldots &amp;  -1 &amp; 2  
+\end{array} \right).\end{split}\]</div>
+<p>Wie man leicht zeigt, gilt für jeden Vektor <span class="math notranslate nohighlight">\(x \in \R^{N+1}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+x^T B x \ &amp;= \ x^T \cdot 
+\begin{pmatrix} 
+2x_0 - x_1 -x_N\\
+-x_0 + 2x_1 -x_2\\
+\vdots\\
+-x_{k-1} + 2x_k - x_{k+1}\\
+\vdots\\
+-x_0 -x_{N-1} + 2x_N
+\end{pmatrix}\\
+&amp;= \ x_0 \cdot (2x_0 - x_1 -x_N) \\
+&amp; \hspace{0.19cm} + x_1 \cdot (-x_0 + 2x_1 -x_2)\\
+&amp; \hspace{0.19cm} + \ldots \\
+&amp; \hspace{0.19cm} + x_N \cdot (-x_0 -x_{N-1} + 2 x_N)\\
+&amp;= \ \sum_{i=0}^N (x_{i+1} - x_i)^2 \ \geq \ 0.
+\end{split}\end{split}\]</div>
+<p>Damit haben wir gezeigt, dass die Matrix <span class="math notranslate nohighlight">\(B\in \R^{(N+1) \times (N+1)}\)</span>
+positiv semidefinit ist. Dies hätten wir auch mit Hilfe der
+Gerschgorin-Kreise (vgl. <span id="id4">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>) sehen können, da wir an der
+Hauptdiagonalen von <span class="math notranslate nohighlight">\(B\)</span> und der Summe der Nebendiagonalen ablesen
+können, dass alle Eigenwerte der Matrix <span class="math notranslate nohighlight">\(B\)</span> in der Menge
+<span class="math notranslate nohighlight">\(B_2(2) \coloneqq \lbrace x \in \R : |x - 2| \leq 2 \rbrace\)</span> liegen
+müssen. Da <span class="math notranslate nohighlight">\(B\)</span> also positiv semidefinit ist, ist
+<span class="math notranslate nohighlight">\((I+\tau B) \in \R^{(N+1) \times (N+1)}\)</span> für jedes <span class="math notranslate nohighlight">\(\tau &gt; 0\)</span> positiv
+definit und invertierbar. Insbesondere erhalten wir folgende
+Stabilitätsabschätzung indem wir <a class="reference internal" href="#equation-eq-diffusion-implizit-kompakt">(2.24)</a> von
+links mit dem Vektor <span class="math notranslate nohighlight">\(P(t + \tau)^T\)</span> multiplizieren:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+\Vert P(t+\tau) \Vert_2^2 +  \alpha \tau \cdot P(t+\tau)^T B P(t+\tau) \ &amp;= \ P(t+\tau)^T P(t)\\
+&amp;\leq \ \frac{1}2  \Vert P(t+\tau) \Vert_2^2 + \frac{1}2  \Vert P(t) \Vert_2^2.
+\end{split}\end{split}\]</div>
+<p>Die Ungleichung folgt aus der Einsicht, dass gilt</p>
+<div class="math notranslate nohighlight">
+\[0 \ \leq \ \frac{1}{2} (P(t+\tau) - P(t))^2 \ = \ \frac{1}{2}||P(t+\tau)||^2 - P(t+\tau)^T P(t) + \frac{1}{2}||P(t)||^2.\]</div>
+<p>Wegen der positiven Semidefinitheit von <span class="math notranslate nohighlight">\(B\)</span> folgt dann</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+\Vert P(t+\tau) \Vert_2^2 \ &amp;\leq \ \frac{1}2  \Vert P(t+\tau) \Vert_2^2 + \frac{1}2  \Vert P(t) \Vert_2^2\\
+\Leftrightarrow \quad \frac{1}2  \Vert P(t+\tau) \Vert_2^2 \ &amp;\leq \ \frac{1}2  \Vert P(t) \Vert_2^2.
+\end{split}\end{split}\]</div>
+<p>Somit können wir nun induktiv folgende Ungleichungskette folgern:</p>
+<div class="math notranslate nohighlight">
+\[\Vert P(t+\tau) \Vert_2 \ \leq \ \Vert P(t ) \Vert_2 \ \leq \ \ldots \ \leq \ \Vert P(0) \Vert_2.\]</div>
+<p>Tatsächlich gilt in diesem Fall sogar folgende Abschätzung</p>
+<div class="math notranslate nohighlight">
+\[\min_{k=0,\ldots,N} p_k(0) \ \leq \ \min_{k=0,\ldots,N} p_k(t) \ \leq \ \max_{k=0,\ldots,N} p_k(t) \ \leq \ \max_{k=0,\ldots,N} p_k(0).\]</div>
+<p>Abschätzungen dieser Form nennt man im Kontext von partiellen
+Differentialgleichungen <strong>Minimums-</strong> und <strong>Maximumsprinzip</strong> und wir
+werden ähnliche Argumente im nächsten Kapitel zu Randwertaufgaben näher
+diskutieren.</p>
+<section id="adjungierte-methode">
+<span id="id5"></span><h3><span class="section-number">2.4.2.1. </span>Adjungierte Methode<a class="headerlink" href="#adjungierte-methode" title="Permalink to this heading">#</a></h3>
+<p>Nehmen wir nun an, dass wir uns einen Startpunkt
+<span class="math notranslate nohighlight">\(x_{k_0} = k_0 \cdot h \in \Omega_h\)</span> des modellierten Teilchens
+vorgeben, d.h., die Wahrscheinlichkeit für ein Auftreten des Teilchens
+ist zu Anfang <span class="math notranslate nohighlight">\(p_{k_0}(0) = 1\)</span> und <span class="math notranslate nohighlight">\(p_i(t) = 0\)</span> für alle <span class="math notranslate nohighlight">\(i \neq k\)</span>.
+Dann lässt sich mit Hilfe einer numerischen Lösung der
+Differentialgleichung <a class="reference internal" href="#equation-eq-diffusion-dgl">(2.22)</a> im Intervall <span class="math notranslate nohighlight">\(t \in (0,T)\)</span>
+effizient berechnen was die Auftrittswahrscheinlichkeit <span class="math notranslate nohighlight">\(p_k(T)\)</span> des
+Teilches in allen Punkten <span class="math notranslate nohighlight">\(k=0,\ldots,N\)</span> für den Zeitpunkt <span class="math notranslate nohighlight">\(T\)</span> ist.</p>
+<p>Schwieriger ist jedoch die Beantwortung der umgekehrten Frage. Man
+könnte sich die Frage stellen, ob man für einen spezifischen Punkt
+<span class="math notranslate nohighlight">\(x_{k_0} = k_0 \cdot h \in \Omega_h\)</span> die Wahrscheinlichkeit berechnen
+kann, dass das Teilchen zum Zeitpunkt <span class="math notranslate nohighlight">\(T\)</span> dort auftritt, d.h., wir
+interessieren uns für <span class="math notranslate nohighlight">\(p_{k_0}(T)\)</span> für alle möglichen Startpunkte
+<span class="math notranslate nohighlight">\(k = 0,\ldots,N\)</span> des Teilchens. Hierzu müssten wir eigentlich das
+Differentialgleichungssystem mit allen <span class="math notranslate nohighlight">\(N+1\)</span> Startpunkten des Teilchens
+lösen und die Lösung dann in dem spezifischen Punkt <span class="math notranslate nohighlight">\(p_{k_0}(T)\)</span>
+auswerten.</p>
+<p>Eine alternative Berechnungsmöglichkeit für die letzte Fragestellung ist
+die sogenannte <strong>adjungierte Methode</strong>, welche aus der Theorie der
+optimalen Steuerung stammt. Dazu berechnen wir die Lösung des
+adjungierten Problems, welches gegeben ist durch</p>
+<div class="math notranslate nohighlight">
+\[q_k'(t) \ = \ \alpha \cdot (2 q_k(t) - q_{k+1}(t) - q_{k-1}(t)), \qquad k = 0,\ldots,N,\]</div>
+<p>mit vorgegebenem Endwert <span class="math notranslate nohighlight">\(q_{k_0}(T) = 1\)</span> und <span class="math notranslate nohighlight">\(q_i(T) = 0\)</span> für
+<span class="math notranslate nohighlight">\(i\neq k_0\)</span>.</p>
+<p>Die Lösung dieses Problems ist genauso zu berechnen wie für das
+ursprüngliche System <a class="reference internal" href="#equation-eq-diffusion-dgl">(2.22)</a>. Dies sehen wir mit der
+einfachen Variablentransformation <span class="math notranslate nohighlight">\(s \coloneqq T-t\)</span> ein, denn dann haben
+wir ein Anfangswertproblem mit den gleichen Vorzeichen wie das System
+für die Funktionen <span class="math notranslate nohighlight">\(p_k(t)\)</span> zu lösen. Hat man die eine numerische Lösung
+berechnet, so gilt</p>
+<div class="math notranslate nohighlight" id="equation-eq-adjungierte-identitat">
+<span class="eqno">(2.25)<a class="headerlink" href="#equation-eq-adjungierte-identitat" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
+p_{k_0}(T) \ &amp;= \ \sum_{i=0}^N p_i(T) \cdot q_i(T) \\
+&amp;= \ \sum_{i=0}^N p_i(0) \cdot q_i(0) + \sum_{i=0}^N \int_0^T (p_i(t) \cdot q_i(t))'\,\mathrm{d}t \\
+&amp;= \ \sum_{i=0}^N p_i(0) \cdot q_i(0) + \int_0^T \underbrace{\sum_{i=0}^N (p_i'(t) \cdot q_i(t) + p_i(t) \cdot q_i'(t))}_{=\:0}\mathrm{d}t \\
+&amp;= \ \sum_{i=0}^N p_i(0) \cdot q_i(0).
+\end{split}\end{split}\]</div>
+<p>Bei den obigen Umformungen haben wir ausgenutzt, dass die auftretenden
+Terme sich in der Summe wegheben, d.h. es gilt:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+&amp;\sum_{i=0}^N (p_i'(t) \cdot q_i(t) + p_i(t) \cdot q_i'(t)) \\
+= \ &amp;\sum_{i=0}^N \alpha \cdot (p_{i-1}(t) + p_{i+1}(t) - 2p_i(t)) \cdot q_i(t) + \alpha \cdot p_i(t) \cdot (2q_i(t) - q_{i-1}(t) - q_{i+1}(t)) \\
+= \ &amp;0.
+\end{split}\end{split}\]</div>
+<p>Nun sind wir in der Lage die obige Frage effizient zu beantworten, denn
+wenn wir nun eine Lösung mit Anfangswert <span class="math notranslate nohighlight">\(p_\ell(0)=1\)</span> und <span class="math notranslate nohighlight">\(p_i(0) = 0\)</span>
+für <span class="math notranslate nohighlight">\(i \neq \ell\)</span> einsetzen, so liefert uns
+<a class="reference internal" href="#equation-eq-adjungierte-identitat">(2.25)</a> die Identität <span class="math notranslate nohighlight">\(p_{k_0}(T) = q_\ell(0)\)</span>.
+Im Gegensatz zur direkten Berechnung müssen wir nun wieder nur ein
+Differentialgleichungssystem für die unbekannten Lösungen
+<span class="math notranslate nohighlight">\(q_i(t), i=0,\ldots, N\)</span> lösen.</p>
+<p>Das zu Grunde liegende allgemeine Prinzip der adjungierten Methode ist
+das Folgende. Wir nehmen an, wir haben eine gewöhnliche lineare
+Differentialgleichung der Form</p>
+<div class="math notranslate nohighlight">
+\[u'(t) \ = \ A(t) \cdot u(t)\]</div>
+<p>gegeben und wir interessieren uns nicht direkt für Werte der Lösung zum
+Endzeitpunkt <span class="math notranslate nohighlight">\(u(T) \in \R^n\)</span>, sondern nur für eine lineare Funktion
+<span class="math notranslate nohighlight">\(L^T \cdot u(T) \in \R\)</span>. Dann lösen wir stattdessen das adjungierte
+Problem</p>
+<div class="math notranslate nohighlight" id="equation-eq-adjungiertes-problem">
+<span class="eqno">(2.26)<a class="headerlink" href="#equation-eq-adjungiertes-problem" title="Permalink to this equation">#</a></span>\[v'(t) \ = \ - A(t) \cdot v(t)\]</div>
+<p>mit dem Endwert <span class="math notranslate nohighlight">\(v(T) = L \in \R^n\)</span>. Denn dann gilt</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}L^T \cdot u(T) \ &amp;= \ v(T)^T \cdot u(T) \ = \ v(0)^T \cdot u(0) + \int_0^T (v(t)^T \cdot u(t))'\, \mathrm{d}t \\
+&amp;= \ v(0)^T \cdot u(0) + \int_0^T \underbrace{(v'(t)^T \cdot u(t) + v(t)^T \cdot u'(t))}_{=\:0} \, \mathrm{d}t\\
+&amp;= \  v(0)^T \cdot u(0).
+\end{split}\]</div>
+<p>Hierbei nutzt man aus, dass gilt</p>
+<div class="math notranslate nohighlight">
+\[v'(t)^T \cdot u(t) + v(t)^T \cdot u'(t) = - (A(t)^T v(t))^T \cdot u(t) + v(t)^T \cdot A(t) u(t) \ = \ 0.\]</div>
+<p>Haben wir die adjungierte Gleichung für <span class="math notranslate nohighlight">\(v\)</span> berechnet, können wir die
+uns interessierende Größe <span class="math notranslate nohighlight">\(L^T \cdot u(T)\)</span> für jeden Anfangswert sofort
+durch ein Skalarprodukt <span class="math notranslate nohighlight">\(v(0)^T \cdot u(0)\)</span> berechnen. Den Wert
+<span class="math notranslate nohighlight">\(v(0) \in \R^n\)</span> erhalten wir in dem wir eine Variablentransformation
+<span class="math notranslate nohighlight">\(s \coloneqq T- t\)</span> in <a class="reference internal" href="#equation-eq-adjungiertes-problem">(2.26)</a> durchführen und das
+entstehende Differentialgleichungssystem numerisch lösen.</p>
+<p>Bei einer numerischen Lösung müssen wir natürlich die gewöhnliche
+Differentialgleichung mit einer geeigneten Methode (Ein- oder
+Mehrschrittverfahren) diskretisieren. Es empfiehlt sich in diesem
+Kontext die adjungierte Gleichung mit einem passenden Verfahren zu lösen
+um die Eigenschaft der Adjungierten auch im Diskreten zu erhalten. Haben
+wir für die numerische Approximation <span class="math notranslate nohighlight">\(u\)</span> z.B. ein Vorwärts-Euler
+Verfahren der Form</p>
+<div class="math notranslate nohighlight">
+\[u(t_{k+1}) \ = \ u(t_k) + \tau \cdot A u(t_k)\]</div>
+<p>verwendet, so liefert das Vorwärts-Euler Verfahren in umgekehrter Zeit</p>
+<div class="math notranslate nohighlight">
+\[v(t_k) \ = \ v(t_{k+1}) + \tau A^T v(t_k)\]</div>
+<p>genau die richtige Diskretisierung. Es gilt dann nämlich</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}    u(t_N) \cdot v(t_N) \ &amp;= \ u(0) \cdot v(0) + \sum_{k=0}^{N-1} (u(t_{k+1}) \cdot v(t_{k+1}) - u(t_{k }) \cdot v(t_{k })) \\
+     &amp;= \ u(0) \cdot v(0) + \sum_{k=0}^{N-1} ((u(t_{k+1})  - u(t_{k }) \cdot v(t_{k+1}) + (v(t_{k+1}) - v(t_{k })) \cdot u(t_k) ) \\
+     &amp;= \ u(0) \cdot v(0) + \sum_{k=0}^{N-1} (A u(t_{k })\cdot v(t_{k+1}) - (A^T v(t_{k })) \cdot u(t_k) ) \ = \ u(0)\cdot v(0) .
+\end{split}\]</div>
+<p>Man sieht ein, dass bei anderen Verfahren für die adjungierte Gleichung,
+z.B. einem impliziten Euler-Verfahren, eine solche Identität nicht
+gegeben ist. Die Diskretisierung und Adjungierung kommutieren in diesem
+Fall nicht. Beim Vorwärts-Euler Verfahren hingegen erhalten wir genau
+die Adjungierte der Diskretisierung der Differentialgleichung.</p>
+</section>
+</section>
+<section id="zusammenhang-zwischen-optimierung-und-differentialgleichungen">
+<span id="id6"></span><h2><span class="section-number">2.4.3. </span>Zusammenhang zwischen Optimierung und Differentialgleichungen<a class="headerlink" href="#zusammenhang-zwischen-optimierung-und-differentialgleichungen" title="Permalink to this heading">#</a></h2>
+<p>Ein häufiges Problem in praktischen Anwendungen ist die Bestimmung von
+Parametern in gewöhnlichen Differentialgleichungen. Wir betrachten also
+ein Anfangswertproblem</p>
+<div class="math notranslate nohighlight">
+\[u'(t) \ = \ F(t,u(t),w), \qquad u(0) \, = \, u_0(w),\]</div>
+<p>bei dem die rechte Seite der gewöhnlichen Differentialgleichung und der
+Anfangswert von einem Parametervektor <span class="math notranslate nohighlight">\(w \in \R^m\)</span> abhängen. Wir nehmen
+im Folgenden an, dass <span class="math notranslate nohighlight">\(F\)</span> Lipschitz-stetig ist. Dann existiert für
+gegebene Parameter <span class="math notranslate nohighlight">\(w \in \R^m\)</span> eine eindeutige Lösung
+<span class="math notranslate nohighlight">\(u_w \in C^1([0,T])\)</span>. Um die Parameter zu einer bestimmten Lösung zu
+bestimmen, misst man die Werte einer Funktion <span class="math notranslate nohighlight">\(G(u_w) \in R^k\)</span>, wobei
+typischerweise <span class="math notranslate nohighlight">\(k &gt;m\)</span> gilt. Alternativ versucht man die Parameter
+<span class="math notranslate nohighlight">\(w \in \R^m\)</span> derart zu optimieren, damit ein gewünschter Zustand
+<span class="math notranslate nohighlight">\(G(u_w) \in \R^k\)</span> erreicht wird. Häufig sind dies Werte der Lösung zu
+verschiedenen Zeitpunkten, also beispielweise
+<span class="math notranslate nohighlight">\(G(u) \coloneqq (u(s_1), \ldots, u(s_k))\)</span>.</p>
+<p>Für gegebenen Daten <span class="math notranslate nohighlight">\(g \in \R^k\)</span> lässt sich dann ein
+Optimierungsproblem, etwa das <strong>Kleinste-Quadrate-Problem</strong></p>
+<div class="math notranslate nohighlight">
+\[\min_{w \in \R^m} \left\lbrace E(w) \, \coloneqq \, \frac{1}2 \Vert H(w) - g \Vert^2  \, = \, \frac{1}2 \Vert G(u_w) - g \Vert^2 \right\rbrace\]</div>
+<p>lösen um die Parameter zu bestimmen. Die Frage, die wir uns nun stellen
+ist, wie wir in diesem Fall die Lösung des Optimierungsproblems durch
+eines der Optimierungsverfahren dieser Vorlesung, wie z.B. das
+Gradientenabstiegsverfahrens, bestimmen können. Es ist klar, dass
+hierbei die effiziente Berechnung von Gradienten <span class="math notranslate nohighlight">\(\nabla_w\)</span> essentiell
+ist.</p>
+<div class="proof example admonition" id="ex:parameterbestimmung_linDGL">
+<p class="admonition-title"><span class="caption-number">Example 2.14 </span> (Parameterbestimmung für lineare DGL)</p>
+<section class="example-content" id="proof-content">
+<p>Als einfaches Beispiel betrachten wir einen Fall, bei der wir zwar
+wissen, dass die rechte Seite zu einer linearen gewöhnlichen
+Differentialgleichung erster Ordnung gehört, aber nicht den
+Koeffizienten des linearen Terms und auch den Anfangswert nicht kennen.
+Somit können wir zwei unbekannte Parameter <span class="math notranslate nohighlight">\(w = (w_1, w_2) \in \R^2\)</span>
+beschreiben durch</p>
+<div class="math notranslate nohighlight">
+\[u_0(w) \: = \: w_1, \qquad F(t,u,w) \: = \: w_2 \cdot u(t).\]</div>
+<p>Für Anfangswertprobleme dieser Art können wir eine explizite Lösung
+<span class="math notranslate nohighlight">\(u_w \in C^1([0,T])\)</span> angeben mit</p>
+<div class="math notranslate nohighlight">
+\[u_w(t) \ = \ w_1 \cdot e^{w_2t}.\]</div>
+<p>Geben wir uns nun Werte der Lösung an verschiedenen Zeitpunkten
+<span class="math notranslate nohighlight">\(G(u) = (u(s_1), \ldots, u(s_k))\)</span> vor, so erhalten wir dann</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+\partial_{w_1} G(u_w) \ &amp;= \ (e^{w_2 s_1},\ldots,e^{w_2 s_k}), \\
+\partial_{w_2} G(u_w) \ &amp;= \ (w_1 s_1 \cdot e^{w_2 s_1},\ldots,w_1 s_k \cdot e^{w_2 s_K}).
+\end{split}\end{split}\]</div>
+</section>
+</div><p>In <a class="reference internal" href="#ex:parameterbestimmung_linDGL">Example 2.14</a> konnten wir die Ableitung
+der Funktion <span class="math notranslate nohighlight">\(G\)</span> nach den unbekannten Parametern <span class="math notranslate nohighlight">\(w\)</span> angeben, da wir
+eine explizite Lösung der gewöhnlichen Differentialgleichung kannten.
+Wie gehen wir aber vor, wenn wir die Differentialgleichung nicht
+explizit lösen können? Dazu betrachten wir zunächst die partielle
+Ableitung von <span class="math notranslate nohighlight">\(u_w\)</span> nach <span class="math notranslate nohighlight">\(w_i\)</span>, welche wir definieren als</p>
+<div class="math notranslate nohighlight">
+\[u^i_w \ \coloneqq \ \lim_{\delta \rightarrow 0} \frac{u_{w+\delta e_i}(t)- u_w(t)}{\delta},\]</div>
+<p>wobei <span class="math notranslate nohighlight">\(e_i\)</span> der <span class="math notranslate nohighlight">\(i\)</span>-te Einheitsvektor ist. Diese Funktion können wir
+zwar nicht berechnen, aber wir können ein Anfangswertproblem herleiten,
+das von ihr gelöst wird. Unter der Annahme, dass die Abbildung
+<span class="math notranslate nohighlight">\(w\mapsto u_0(w)\)</span> differenzierbar ist, sehen wir dass gilt</p>
+<div class="math notranslate nohighlight">
+\[u_w^i(0) \ = \ \partial_{w_i} u_0(w).\]</div>
+<p>Falls außerdem die rechte Seite <span class="math notranslate nohighlight">\(F\)</span> der Differentialgleichung
+differenzierbar bezüglich <span class="math notranslate nohighlight">\(u\)</span> und <span class="math notranslate nohighlight">\(w\)</span> ist, so folgt mit der Kettenregel</p>
+<div class="math notranslate nohighlight">
+\[(u_w^i)'(t) \ = \ \partial_u F(t,u_w(t),w) \cdot u_w^i(t) + \partial_w F(t,u_w(t),w).\]</div>
+<p>Wir beachten, dass wir diese lineare Differentialgleichungen für jedes
+<span class="math notranslate nohighlight">\(u_w^i\)</span> sind, da wir <span class="math notranslate nohighlight">\(u_w\)</span> ja schon vorher durch Lösen der
+ursprünglichen Anfangswertproblems berechnen können. Ist <span class="math notranslate nohighlight">\(G\)</span> ebenfalls
+differenzierbar, dann folgt</p>
+<div class="math notranslate nohighlight">
+\[\partial_{w_i} H(w) \ = \ G'(u_w) \cdot u_w^i,\]</div>
+<p>daraus bekommen wir also die Jacobi Matrix von <span class="math notranslate nohighlight">\(H\)</span> bzw. dann den
+Gradienten von <span class="math notranslate nohighlight">\(f\)</span> per Kettenregel.</p>
+<p>Wir rechnen diesen Zusammenhang nun für das Problem in
+<a class="reference internal" href="#ex:parameterbestimmung_linDGL">Example 2.14</a> nach. Hier gilt</p>
+<div class="math notranslate nohighlight">
+\[u_w^1(0) \: = \: 1, \qquad u_w^2(0) \: = \: 0,\]</div>
+<p>und</p>
+<div class="math notranslate nohighlight">
+\[(u_w^1)'(t) \ = \ w_2 u_w^1(t), \qquad (u_w^2)'(t) \ = \ w_2 u_w^2(t) + u_w,\]</div>
+<p>und <span class="math notranslate nohighlight">\(\partial_{w_i} G(u) = (u_w^i(s_1),\ldots,u_w^i(s_K))\)</span>. Diese können
+wir explizit lösen und erhalten <span class="math notranslate nohighlight">\(u_w^1(t) = e^{w_2 t}\)</span> und
+<span class="math notranslate nohighlight">\(u_w^2(t) = w_1 t e^{w_2 t}\)</span>. Natürlich stimmen die Ableitungen dann
+wieder mit der direkten Differentiation der expliziten Lösung <span class="math notranslate nohighlight">\(u_w\)</span> wie
+in <a class="reference internal" href="#ex:parameterbestimmung_linDGL">Example 2.14</a> berechnet überein.</p>
+<p>Ist die Anzahl <span class="math notranslate nohighlight">\(M\)</span> der Parameter groß, so ist die Berechnung der
+Ableitungen in dieser Form sehr aufwändig, da wir <span class="math notranslate nohighlight">\(M\)</span> lineare
+Differentialgleichungen lösen müssen. Dies kann aber vermieden werden,
+wenn wir uns daran erinnern, dass wir eigentlich</p>
+<div class="math notranslate nohighlight">
+\[\partial_{w_i} f(w) \ = \ (G(u_w) - g) \cdot G'(u_w) u_w^i\]</div>
+<p>berechnen wollen, also eine lineare Funktion von <span class="math notranslate nohighlight">\(u_w^i\)</span>. Es ist
+dementsprechend naheliegend wieder eine adjungierte Methode zu
+verwenden. Wir betrachten dies wieder näher für
+<span class="math notranslate nohighlight">\(G(u) = (u_w(s_1),\ldots,u_w(s_K)).\)</span> Wir definieren <span class="math notranslate nohighlight">\(v\)</span> als die Lösung
+von</p>
+<div class="math notranslate nohighlight">
+\[v'(t) \ = \ - \partial_u F(t,u_w(t),w) \cdot v(t), \qquad t \in (0,T) \setminus \{s_1,\ldots,s_K\},\]</div>
+<p>mit <span class="math notranslate nohighlight">\(v(T) =0\)</span>. An den Messstellen setzen wir</p>
+<div class="math notranslate nohighlight">
+\[v(s_k) \ = \ u_w(s_k) - g_k +  \lim_{t \downarrow s_k} v(t) .\]</div>
+<p>Dann gilt mit <span class="math notranslate nohighlight">\(s_0=0\)</span>, <span class="math notranslate nohighlight">\(s_{K+1}=T\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\partial_{w_i} f(w) \ &amp;= \ \sum_k (u_w(s_k) - g_k) \cdot u_w^i(s_k) \\
+&amp;= \ \sum_k (\lim_{t \uparrow s_k} v(t) - \lim_{t \downarrow s_k} v(t)) \cdot u_w^i(s_k) \\
+&amp;= \ v(0) \cdot u_w^i(0) + \sum_{k=0}^K \int_{s_k}^{s_{k+1}} (v(t) \cdot u_w^i(t))'\,\mathrm{d}t  \\
+&amp;= \ v(0) \cdot u_w^i(0) + \int_0^T (v(t) \cdot u_w^i(t))'\,\mathrm{d}t  \\
+&amp;= \ v(0) \cdot \partial_{w_i} u_0(w) + \int_0^T v(t) \cdot \partial_{w_i} F(t,u_w(t),w)\,\mathrm{d}t.
+\end{split}\]</div>
+<p>Damit genügt zur Berechnung des Gradienten die Lösung einer adjungierten
+Differentialgleichung, sowie von <span class="math notranslate nohighlight">\(M\)</span> Skalarprodukten mit Anfangswerten
+und <span class="math notranslate nohighlight">\(M\)</span> Integralen mit der Lösung <span class="math notranslate nohighlight">\(v\)</span>.</p>
+</section>
+<section id="deep-learning">
+<span id="id7"></span><h2><span class="section-number">2.4.4. </span>Deep Learning<a class="headerlink" href="#deep-learning" title="Permalink to this heading">#</a></h2>
+<p>In modernen Anwendungen des Maschinellen Lernens kommen ähnliche
+Techniken wie bei Differentialgleichungen und deren Optimierung zum
+Einsatz. Die Idee dabei ist einen parametrisierten Zusammenhang zwischen
+Eingangsdaten <span class="math notranslate nohighlight">\(x \in \R^n\)</span> und Ausgangsdaten <span class="math notranslate nohighlight">\(y \in \R^m\)</span> zu
+konstruieren. Dieser Zusammenhang wird beim sogenannten <em>Deep Learning</em>
+durch ein (künstliches) neuronales Netz mit vielen Schichten (im
+Englischen: <em>Layer</em>) modelliert, das mathematisch als
+Hintereinanderausführung von affinen Abbildungen (Austausch von Impulsen
+zwischen Neuronen) und punktweisen Nichtlinearitäten (Aktivierung eines
+Neurons durch die eingegangenen Impulse) modelliert.</p>
+<p>Ein <strong>neuronales Netzwerk</strong> <span class="math notranslate nohighlight">\(f_\Theta \colon \R^n \rightarrow \R^m\)</span> mit
+<span class="math notranslate nohighlight">\(N \in \N^+\)</span> Schichten <span class="math notranslate nohighlight">\(f^k_{\Theta_k}, k=1,\ldots,N\)</span> modelliert die
+Relation <span class="math notranslate nohighlight">\(x \mapsto y\)</span> dann durch</p>
+<div class="math notranslate nohighlight">
+\[f_\Theta \ \coloneqq \ f_{\Theta_N}^N \circ \ldots \circ f_{\Theta_1}^1,\]</div>
+<p>wobei die berechneten Werte der <span class="math notranslate nohighlight">\(k\)</span>-ten Schicht des neuronalen Netzes
+gegeben sind durch</p>
+<div class="math notranslate nohighlight">
+\[u_{k+1} \ = \ f_{\Theta_k}^k(u_k) \ \coloneqq \ \Psi(W_k u_k + b_k) , \qquad k=0,\ldots,L-1,\]</div>
+<p>mit frei wählbaren Parametern
+<span class="math notranslate nohighlight">\(\Theta_k \coloneqq \lbrace W_k \in \R^{n_k \times n_k}, b_k \in \R^{n_k}\rbrace\)</span>.
+Die <strong>Aktivierungsfunktion</strong> eines Neurons bezeichnen wir mit
+<span class="math notranslate nohighlight">\(\Psi: \R \rightarrow \R\)</span>. Typische Beispiele sind die
+<em>Sigmoid-Funktion</em></p>
+<div class="math notranslate nohighlight">
+\[\Psi(x) \: \coloneqq \: \frac{1}{1+e^{-x}}\]</div>
+<p>oder die <em>Rectified Linear Unit (ReLU)</em></p>
+<div class="math notranslate nohighlight">
+\[\Psi(x) \: \coloneqq \: \max\{x,0\} .\]</div>
+<p>Dazu verwenden wir für Vektoren die Notation
+<span class="math notranslate nohighlight">\(\Psi(x) = (\Psi(x_i))_{i=1,\ldots,n}\)</span> als punktweise Auswertung. Für
+die erste Schicht des neuronalen Netzes setzen wir <span class="math notranslate nohighlight">\(u_0=x\)</span> auf die
+Eingangsdaten und in der letzten Schicht haben wir für die Antwort des
+neuronalen Netzes lediglich eine affine Transformation der Form</p>
+<div class="math notranslate nohighlight">
+\[y \: = \: C \cdot u_N + d,\]</div>
+<p>mit <span class="math notranslate nohighlight">\(C \in \R^{m \times n_N}\)</span>, <span class="math notranslate nohighlight">\(d\in \R^m\)</span>.</p>
+<p>Wir sehen also eine gewisse Analogie zu expliziten Euler-Verfahren für
+gewöhnliche Differentialgleichungen. Dies wird noch deutlicher bei
+sogenannten residualen Netzwerken von der Form</p>
+<div class="math notranslate nohighlight">
+\[u_{k+1} \ = \ u_k + \tau \cdot \Psi(W_k \cdot u_k + b_k) , \qquad k=0,\ldots,L-1,\]</div>
+<p>die wir direkt als Diskretisierung von</p>
+<div class="math notranslate nohighlight">
+\[u'(t) \ = \ \Psi(W(t) \cdot u(t) + b(t))\]</div>
+<p>interpretieren können.</p>
+<p>Das Training einens neuronalen Netzwerks ist nun die optimale Bestimmung
+der freien Parameter <span class="math notranslate nohighlight">\(\Theta = ((W_k, b_k)_{k=1,\ldots,N}, C, d)\)</span> aus
+einer großen Menge an Trainingsdaten <span class="math notranslate nohighlight">\((x_i,y_i)_{i=1,\ldots,M}\)</span>. Dazu
+wird ein Minimierungsproblem der Form</p>
+<div class="math notranslate nohighlight">
+\[\min_{\Theta} \left\lbrace E(\Theta) \ \coloneqq \ \frac{1}M \sum_{i=1}^M \mathcal{L}(f_\Theta(x_i),y_i) \right\rbrace,\]</div>
+<p>wobei <span class="math notranslate nohighlight">\(\mathcal{L}\)</span> eine Metrik ist, die den Abstand zwischen der
+Antwort des neuronalen Netzes und den Trainingsdaten misst (im
+Englischen: <em>Loss function</em>), z.B. einfach</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(f_\Theta(x_i),y_i) \ \coloneqq \ \frac{1}2 \Vert f_\Theta(x_i) - y_i \Vert^2.\]</div>
+<p>Dies ist für große <span class="math notranslate nohighlight">\(M / N, m / n\)</span> ein riesiges Optimierungsproblem,
+dessen approximative Lösung lange Zeit ein großes Hindernis bei der
+Umsetzung solcher Lernansätze war. Der heute gängige Ansatz ist die
+Berechnung mit einem stochastischen Gradientenverfahren, d.h. durch eine
+Iteration</p>
+<div class="math notranslate nohighlight">
+\[w_{j+1} \ = \ w_j - \alpha_j \nabla_w \mathcal{L}(C \cdot u_N(x_{\pi(j)};(W_k,b_k))+d,y_{\pi(j)}),\]</div>
+<p>wobei <span class="math notranslate nohighlight">\(\pi(j) \in \{1,\ldots,M\}\)</span> zufällig gewählt wird (meist
+gleichverteilt). Durch die Auswahl eines einzelnen Datenpaars in jeder
+Iteration erspart man sich die <span class="math notranslate nohighlight">\(M\)</span>-fache Berechnung von
+<span class="math notranslate nohighlight">\(u_N(x_{i };(A_k,b_k))\)</span>, hier muss in jedem Schritt die
+Vorwärts-Schleife nur für einen Anfangswert <span class="math notranslate nohighlight">\(x_i\)</span> berechnet werden.
+Analog zur adjungierten Methode kann man den Gradienten durch Lösung von</p>
+<div class="math notranslate nohighlight">
+\[v_{k-1} \ = \ -(W_k \cdot \Psi'(W_k u_k + b_k))^T \cdot v_k\]</div>
+<p>mit
+<span class="math notranslate nohighlight">\(v_N = \nabla_u \mathcal{L}(C \cdot u_N(x_{i(j)};(W_k,b_k))+d,y_{i(j)})\)</span>
+berechnen. Dies ist in diesem Zusammenhang als <strong>Backpropagation</strong>
+bekannt.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./ode\04_Anfangswertprobleme"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_04_Anfangswertprobleme.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">zurück</p>
+        <p class="prev-next-title"><span class="section-number">2.3. </span>Mehrschrittverfahren für Anfangswertprobleme</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../05_Randwertprobleme/00_05_Randwertprobleme.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">weiter</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>Numerische Lösung von Randwertproblemen</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Inhalt
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lineare-transportgleichung">2.4.1. Lineare Transportgleichung</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#diffusionsgleichung">2.4.2. Diffusionsgleichung</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adjungierte-methode">2.4.2.1. Adjungierte Methode</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#zusammenhang-zwischen-optimierung-und-differentialgleichungen">2.4.3. Zusammenhang zwischen Optimierung und Differentialgleichungen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deep-learning">2.4.4. Deep Learning</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+Durch J. Laubmann, T. Roith, D. Tenbrinck
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <script type="application/json" class="js-hypothesis-config">{"assetRoot": "http://hypothesis.fau-mads.eu:3001/hypothesis/1.0.0-dummy-version/", "sidebarAppUrl":"http://hypothesis.fau-mads.eu:5000/app.html"}</script>
+<script async="async" kind="hypothesis" src="http://hypothesis.fau-mads.eu:5000/embed.js"></script>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,507 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="de" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>1. Numerische Optimierung &#8212; Diskretisierung und numerische Optimierung</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'optimierung/02_NichtlineareOptimierung/00_02_NichtlineareOptimierung';</script>
+    <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
+    <link rel="search" title="Suche" href="../../search.html" />
+    <link rel="next" title="1.1. Mathematische Grundlagen" href="01_02_NichtlineareOptimierung.html" />
+    <link rel="prev" title="Einleitung" href="../../01_Einleitung.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="de"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../01_Einleitung.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Diskretisierung und numerische Optimierung</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../01_Einleitung.html">
+                    Einleitung
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">1. Numerische Optimierung</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_02_NichtlineareOptimierung.html">1.1. Mathematische Grundlagen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_02_NichtlineareOptimierung.html">1.2. Abstiegsverfahren</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../ode/04_Anfangswertprobleme/00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ode/04_Anfangswertprobleme/01_04_Anfangswertprobleme.html">2.1. Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ode/04_Anfangswertprobleme/02_04_Anfangswertprobleme.html">2.2. Einschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ode/04_Anfangswertprobleme/03_04_Anfangswertprobleme.html">2.3. Mehrschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ode/04_Anfangswertprobleme/04_04_Anfangswertprobleme.html">2.4. Weiterführende Themen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../ode/05_Randwertprobleme/00_05_Randwertprobleme.html">3. Numerische Lösung von Randwertproblemen</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../ode/05_Randwertprobleme/01_05_Randwertprobleme.html">3.1. Existenz und Eindeutigkeit von Lösungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ode/05_Randwertprobleme/02_05_Randwertprobleme.html">3.2. Differenzenverfahren für Randwertprobleme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">4. Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/FAU-AMMN/MathPhysicsC" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Quell-Repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Laden Sie diese Seite herunter">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/optimierung/02_NichtlineareOptimierung/00_02_NichtlineareOptimierung.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Quelldatei herunterladen"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="In PDF drucken"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Vollbildmodus"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Suche" aria-label="Suche" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Numerische Optimierung</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="numerische-optimierung">
+<span id="ch-optimierung"></span><h1><span class="section-number">1. </span>Numerische Optimierung<a class="headerlink" href="#numerische-optimierung" title="Permalink to this heading">#</a></h1>
+<p>Optimierung ist ein omnipräsentes Phänomen, dass nicht nur in der
+abstrakten Welt der Mathematik existiert. Viel mehr stellt es ein
+naturgegebenes Prinzip dar, welches überall um uns herum zur Anwendung
+kommt. In der Physik beispielsweise spielt Optimierung eine wesentliche
+Rolle bei der Modellierung von Energiezuständen auf unterschiedlichen
+Skalen: Moleküle formieren sich in einer Art, die die Gesamtenergie des
+Teilchensystems unter Berücksichtigung aller wechselseitigen Kräfte
+minimiert. Gleichzeitig strebt das Universum mit all seinen Planeten,
+Sternen und Galaxien nach einem Zustand von maximaler Verteilung,
+beschrieben durch die thermodynamische Größe der Entropie. Auch hier
+folgt die Zunahme der Entropie dem Prinzip der Energieminimierung des
+Gesamtsystems. Menschen betreiben seit jeher Optimierung in den
+verschiedensten Anwendungen, oft mit unterschiedlichen Motivationen.
+Flugzeuge werden von Ingenieuren so entworfen und gebaut, dass sie
+möglichst stromlinienförmig aussehen, um damit den Reibungswiderstand in
+der Luft zu minimieren und gleichzeitig den nötigen Auftrieb für einen
+sicheren Flug zu erzeugen. Fondmanager streben danach Portfolios zu
+erstellen, deren Gewinn möglichst maximal ist und dennoch
+Spekulationsrisiken vermeiden. Die gesamte Automatisierung der
+Industrie, angefangen bei den ersten Manufakturen hin zu modernen
+vollautomatischen Roboterfabriken, dient lediglich dem Prinzip der
+Gewinnmaximierung durch Minimierung der Produktionskosten.</p>
+<p>Es ist also nicht wirklich überraschend, dass sich ein gesamtes
+Teilgebiet der Angewandten Mathematik mit der Theorie der Optimierung
+befasst und somit dazu beiträgt viele Optimierungsprobleme besser zu
+verstehen und zu lösen. Im folgenden Abschnitt wollen wir uns
+hauptsächlich mit der unbeschränkten (oder: unrestringierten)
+Optimierung beschäftigen und uns nützliche Werkzeuge zum Lösen von
+numerischen Problemstellungen herleiten. Nach einer <em>allgemeinen
+mathematischen Einführung</em> in <a class="reference internal" href="01_02_NichtlineareOptimierung.html#s-opt-grundlagen"><span class="std std-ref">Mathematische Grundlagen</span></a> beginnen wir in
+Kapitel <a class="reference internal" href="02_02_NichtlineareOptimierung.html#s-abstiegsverfahren"><span class="std std-ref">Abstiegsverfahren</span></a> mit einer Klasse von Algorithmen, die
+einer einfachen Idee folgen: die <em>numerischen Abstiegsverfahren</em>. In
+<a class="reference internal" href="03_02_NichtlineareOptimierung.html#s-cg-verfahren"><span class="std std-ref">Verfahren der konjugierten Gradienten</span></a> behandeln wir insbesondere das Verfahren der
+<em>konjugierten Gradienten</em>, welches zur iterativen Lösung von großen,
+linearen Gleichungssystemen mit besonderen Eigenschaften genutzt werden
+kann. Zum Schluss untersuchen wir in <a class="reference internal" href="../03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html#s-nichtdiffbare-optimierung"><span class="std std-ref">Nicht-differenzierbare Optimierung</span></a>
+zwei moderne Optimierungsalgorithmen zur Lösung von <em>konvexen,
+nicht-differenzierbaren Problemen</em>.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./optimierung\02_NichtlineareOptimierung"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../../01_Einleitung.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">zurück</p>
+        <p class="prev-next-title">Einleitung</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="01_02_NichtlineareOptimierung.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">weiter</p>
+        <p class="prev-next-title"><span class="section-number">1.1. </span>Mathematische Grundlagen</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+Durch J. Laubmann, T. Roith, D. Tenbrinck
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <script type="application/json" class="js-hypothesis-config">{"assetRoot": "http://hypothesis.fau-mads.eu:3001/hypothesis/1.0.0-dummy-version/", "sidebarAppUrl":"http://hypothesis.fau-mads.eu:5000/app.html"}</script>
+<script async="async" kind="hypothesis" src="http://hypothesis.fau-mads.eu:5000/embed.js"></script>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

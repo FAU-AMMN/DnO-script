@@ -1,0 +1,966 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="de" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>2.1. Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen &#8212; Diskretisierung und numerische Optimierung</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ode/04_Anfangswertprobleme/01_04_Anfangswertprobleme';</script>
+    <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
+    <link rel="search" title="Suche" href="../../search.html" />
+    <link rel="next" title="2.2. Einschrittverfahren für Anfangswertprobleme" href="02_04_Anfangswertprobleme.html" />
+    <link rel="prev" title="2. Numerische Lösungsverfahren für Anfangswertprobleme" href="00_04_Anfangswertprobleme.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="de"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../01_Einleitung.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Diskretisierung und numerische Optimierung</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../01_Einleitung.html">
+                    Einleitung
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/00_02_NichtlineareOptimierung.html">1. Numerische Optimierung</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/01_02_NichtlineareOptimierung.html">1.1. Mathematische Grundlagen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html">1.2. Abstiegsverfahren</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">2.1. Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_04_Anfangswertprobleme.html">2.2. Einschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_04_Anfangswertprobleme.html">2.3. Mehrschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_04_Anfangswertprobleme.html">2.4. Weiterführende Themen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../05_Randwertprobleme/00_05_Randwertprobleme.html">3. Numerische Lösung von Randwertproblemen</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../05_Randwertprobleme/01_05_Randwertprobleme.html">3.1. Existenz und Eindeutigkeit von Lösungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../05_Randwertprobleme/02_05_Randwertprobleme.html">3.2. Differenzenverfahren für Randwertprobleme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">4. Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/FAU-AMMN/MathPhysicsC" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Quell-Repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Laden Sie diese Seite herunter">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/ode/04_Anfangswertprobleme/01_04_Anfangswertprobleme.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Quelldatei herunterladen"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="In PDF drucken"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Vollbildmodus"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Suche" aria-label="Suche" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Inhalt </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#existenz-und-eindeutigkeit-von-losungen">2.1.1. Existenz und Eindeutigkeit von Lösungen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analytische-losungsverfahren">2.1.2. Analytische Lösungsverfahren</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineare-differentialgleichungen">2.1.2.1. Lineare Differentialgleichungen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matrixexponential">2.1.2.2. Matrixexponential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variation-der-konstanten">2.1.2.3. Variation der Konstanten</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trennung-der-variablen">2.1.2.4. Trennung der Variablen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradientenfluss">2.1.2.5. Gradientenfluss</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="theorie-fur-anfangswertprobleme-gewohnlicher-differentialgleichungen">
+<span id="id1"></span><h1><span class="section-number">2.1. </span>Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen<a class="headerlink" href="#theorie-fur-anfangswertprobleme-gewohnlicher-differentialgleichungen" title="Permalink to this heading">#</a></h1>
+<p>Im Folgenden beschäftigen wir uns zunächst mit Anfangswertproblemen für
+gewöhnliche Differentialgleichungen, im Englischen <em>Ordinary
+differential equations (ODE)</em> genannt.</p>
+<div class="proof definition admonition" id="definition-0">
+<p class="admonition-title"><span class="caption-number">Definition 2.1 </span> (Anfangswertproblem)</p>
+<section class="definition-content" id="proof-content">
+<p>Ein mathematischen Problem, bei dem wir eine Lösung
+<span class="math notranslate nohighlight">\(u \colon \R^+ \rightarrow \R^n\)</span> eines gewöhnlichen
+Differentialgleichungssystems <span class="math notranslate nohighlight">\(1\)</span>. Ordnung mit gegebener
+Startwertbedingung der folgenden allgemeinen Form suchen</p>
+<div class="math notranslate nohighlight" id="equation-eq-awp">
+<span class="eqno">(2.1)<a class="headerlink" href="#equation-eq-awp" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
+\frac{du}{dt} \ = \ u'(t) \ &amp;= \ F(t,u(t)), \\ 
+u(0) \: &amp;= \: u_0 \in \R^n,
+\end{split}\end{split}\]</div>
+<p>wobei <span class="math notranslate nohighlight">\(F: \mathbb{R}^+ \times \mathbb{R}^n \rightarrow \mathbb{R}^n\)</span>
+eine stetige Funktion ist, nennen wir ein <strong>Anfangswertproblem</strong>.</p>
+</section>
+</div><p>Anfangswertprobleme der Form <a class="reference internal" href="#equation-eq-awp">(2.1)</a> treten häufig in der
+Modellierung von Zuständen auf, die sich über die Zeit ändern. Nimmt man
+an, dass der zu modellierende Zustand zum Zeitpunkt <span class="math notranslate nohighlight">\(t &gt; 0\)</span> durch die
+Funktion <span class="math notranslate nohighlight">\(u \colon \R^+ \rightarrow \R^n\)</span> beschrieben wird, möchte man
+verstehen wie sich dieser in hinreichend kleiner Zeit durch die Wirkung
+der Funktion <span class="math notranslate nohighlight">\(F\)</span> ändern wird. Das heißt wir schreiben</p>
+<div class="math notranslate nohighlight">
+\[u(t+\tau) \ \approx \ u(t) + \tau \cdot F(t,u(t)).\]</div>
+<p>Im Grenzwert für immer kleinere Zeitschrittweiten <span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span>
+erhalten wir dann die Differentialgleichung <span class="math notranslate nohighlight">\(u'(t) = F(t, u(t))\)</span>.</p>
+<p>Solche Differentialgleichungen lassen sich beispielsweise in der Physik
+herleiten, wie folgenden Beispiel zeigt.</p>
+<div class="proof example admonition" id="ex:newton_bewegungsgleichung">
+<p class="admonition-title"><span class="caption-number">Example 2.1 </span> (Newtonsche Bewegungsgleichung)</p>
+<section class="example-content" id="proof-content">
+<p>Wir betrachten in diesem Beispiel die Bewegung eines Teilchens mit Hilfe
+des zweiten Newtonschen Gesetzes. Beschreibt <span class="math notranslate nohighlight">\(x(t) \in \R^3\)</span> den Ort des
+Teilchens zur Zeit <span class="math notranslate nohighlight">\(t &gt; 0\)</span> im dreidimensionalen Raum, <span class="math notranslate nohighlight">\(v(t) \in \R^3\)</span>
+seine Geschwindigkeit, <span class="math notranslate nohighlight">\(a(t)\)</span> seine Beschleunigung und <span class="math notranslate nohighlight">\(F\)</span> ein Kraftfeld
+in dem sich das Teilchen bewegt, so sind folgende Zusammenhänge aus dem
+physikalischen Mechanik bekannt:</p>
+<ul class="simple">
+<li><p>Geschwindigkeit ist Änderung des Orts pro Zeit, d.h.,
+<span class="math notranslate nohighlight">\(v(t) = \dot{x}(t) = \frac{dx}{dt}(t)\)</span></p></li>
+<li><p>Beschleunigung ist Änderung der Geschwindigkeit pro Zeit, d.h. es
+gilt <span class="math notranslate nohighlight">\(a(t) = \dot{v}(t) = \frac{dv}{dt}(t)\)</span></p></li>
+<li><p>Kraft ist Masse mal Beschleunigung, d.h.,
+<span class="math notranslate nohighlight">\(m\cdot a(t) = F(x(t),v(t),t)\)</span></p></li>
+</ul>
+<p>Diese Gesetze können wir auch als Differentialgleichungen für den Ort
+<span class="math notranslate nohighlight">\(x\)</span> und die Geschwindigkeit <span class="math notranslate nohighlight">\(v\)</span> des Teilchens (oder dessen Impuls
+<span class="math notranslate nohighlight">\(p(t)=m\cdot v(t)\)</span>) interpretieren, wenn wir die Beschleunigung <span class="math notranslate nohighlight">\(a\)</span>
+eliminieren. Es gilt dann</p>
+<div class="math notranslate nohighlight">
+\[\frac{d}{dt} (x(t),m\cdot v(t)) = (v(t), F(x(t),v(t),t)).\]</div>
+<p>Kennen wir den Anfangsort <span class="math notranslate nohighlight">\(x(0) \in \R^3\)</span> des Teilchens und dessen
+Anfangsgeschwindigkeit <span class="math notranslate nohighlight">\(v(0) \in \R^3\)</span>, so haben wir ein
+Anfangswertproblem für ein System von Differentialgleichungen mit
+insgesamt sechs Gleichungen für sechs Unbekannte.</p>
+<p>In großen Systemen mit <span class="math notranslate nohighlight">\(n \in \N\)</span> Teilchen hat man dann Gleichungen für
+jede Position <span class="math notranslate nohighlight">\(x_1,\ldots,x_n \in \R^3\)</span> und die respektiven
+Geschwindigkeiten <span class="math notranslate nohighlight">\(v_1,\ldots,v_n \in \R^3\)</span> und sucht Lösungen für das
+folgende System von Differentialgleichungen:</p>
+<div class="math notranslate nohighlight">
+\[\frac{d}{dt} (x_i(t),v_i(t)) = (v_i(t), F(x_1(t),v_1(t), \ldots , x_n(t),v_n(t),t)), \quad i=1,\ldots,n.\]</div>
+<p>Zur Beschreibung realer Vorgänge mit vielen Teilchen (Moleküle, Zellen,
+Tiere in Herden, Fußgänger, Autos …) erhält man also schnell beliebig
+komplexe Systeme von Differentialgleichungen.</p>
+</section>
+</div><section id="existenz-und-eindeutigkeit-von-losungen">
+<span id="ss-awp-existenz-eindeutigkeit"></span><h2><span class="section-number">2.1.1. </span>Existenz und Eindeutigkeit von Lösungen<a class="headerlink" href="#existenz-und-eindeutigkeit-von-losungen" title="Permalink to this heading">#</a></h2>
+<p>Um die in dieser Vorlesung diskutierten Verfahren zur numerischen Lösung
+von gewöhnlichen Differentialgleichungen besser zu verstehen müssen wir
+im Folgenden zunächst einige theoretische Grundlagen von gewöhnlichen
+Differentialgleichungen zusammenfassen. Wir beginnen mit einer
+allgemeinen Theorie der Existenz und Eindeutigkeit von Lösungen solcher
+Differentialgleichungen. Die wesentliche Grundlage hierfür wird eine
+Umformulierung der gewöhnlichen Differentialgleichung in eine
+Fixpunktform sein, so dass wir dann einfach einen passenden Fixpunktsatz
+anwenden können.</p>
+<p>Nehmen wir zunächst an, dass <span class="math notranslate nohighlight">\(u \in C^1([0,T])\)</span> eine Lösung des
+Anfangswertproblems <a class="reference internal" href="#equation-eq-awp">(2.1)</a> sei. Dann gilt nach dem Hauptsatz der
+Differential- und Integralrechnung auch folgende Gleichung</p>
+<div class="math notranslate nohighlight">
+\[u(t) \ = \ u_0 + \int_0^t F(s,u(s))\,\mathrm{d}s , \qquad 0 \leq t \leq T.\]</div>
+<p>Diese Darstellung können wir als Fixpunktgleichung <span class="math notranslate nohighlight">\(u= {\cal F}(u)\)</span> in
+einem Banachraum interpretieren. Um Existenz und Eindeutigkeit eines
+Fixpunktes <span class="math notranslate nohighlight">\(u\)</span> und somit einer Lösung des Anfangswertproblems zu zeigen,
+lassen sich nun zwei unterschiedliche Arten von Fixpunktsätzen anwenden.</p>
+<p>Die erste Art (<em>Satz von Schauder</em> oder andere Varianten) basiert auf
+Kompaktheit, d.h. wenn man den Operator <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> auf Funktionen <span class="math notranslate nohighlight">\(u\)</span>
+anwendet, liegt das Bild in einer topologischen Menge mit einem Fixpunkt
+des Operators. In unserem Fall erhält man die Kompaktheit aus dem <em>Satz
+von Arzela–Ascoli</em>, denn man kann zeigen, dass für eine beschränkte
+Folge von Funktionen <span class="math notranslate nohighlight">\((u_n)_{n\in\N}\)</span> die Folge
+<span class="math notranslate nohighlight">\(({\cal F}(u_n))_{n\in\N}\)</span> immer eine konvergente Teilfolge besitzt.
+Dies liefert den sogenannten <strong>Satz von Peano</strong>, der die Existenz einer
+Lösung für eine stetige Funktion <span class="math notranslate nohighlight">\(F\)</span> garantiert. Da man hier jedoch
+recht abstrakt und mittels Teilfolgen argumentiert, lässt sich mit
+dieser Methode leider nicht die Eindeutigkeit eines Fixpunkts
+nachweisen.</p>
+<p>Die zweite Art um Existenz und Eindeutigkeit eines Fixpunkts zu zeigen
+basiert eigentlich immer auf dem <em>Banachschen Fixpunktsatz</em> (siehe
+<span id="id2">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>). Diese Herangehensweise wollen wir im Folgenden
+etwas näher diskutieren. Dazu beachten wir, dass falls die Funktion <span class="math notranslate nohighlight">\(F\)</span>
+im zweiten Argument Lipschitz-stetig ist (mit Lipschitz-Konstante
+<span class="math notranslate nohighlight">\(L &gt; 0\)</span>), folgendes gilt</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Vert {\cal F}(u_1) - {\cal F}(u_2) \Vert_\infty \ &amp;= \ \max_{0 \leq t \leq T} \left\vert \int_0^t F(s,u_1(s)) - F(s,u_2(s)) \, \mathrm{d}s \right\vert \\
+&amp;\leq \  \max_{0 \leq t \leq T} \int_0^t \vert  F(s,u_1(s)) - F(s,u_2(s))\vert \, \mathrm{d}s\\
+&amp;\leq  \ L \cdot \max_{0 \leq t \leq T} \int_0^t \vert u_1(s) - u_2(s) \vert  \, \mathrm{d}s\\
+&amp;\leq  \ L T \cdot \max_{0 \leq s \leq T} \vert u_1(s) - u_2(s) \vert \ = \ L T \cdot \Vert u_1 - u_2 \Vert_\infty. 
+\end{split}\]</div>
+<p>Wir erkennen an dieser Abschätzung, dass die Abbildung
+<span class="math notranslate nohighlight">\({\cal F}:C^1([0,T]) \rightarrow C^1([0,T])\)</span> kontraktiv ist, wenn
+<span class="math notranslate nohighlight">\(T &gt; 0\)</span> klein genug gewählt wird, so dass <span class="math notranslate nohighlight">\(L T &lt; 1\)</span> gilt. Mit Hilfe der
+Kontraktivität von <span class="math notranslate nohighlight">\(\mathcal{F}\)</span> liefert der Banach’sche Fixpunktsatz
+die Existenz und Eindeutigkeit eines Fixpunkts <span class="math notranslate nohighlight">\(u\)</span> (und damit einer
+Lösung der Differentialgleichung) in <span class="math notranslate nohighlight">\(C^1([0,T])\)</span> für <span class="math notranslate nohighlight">\(T\)</span> hinreichend
+klein. Dies ist die erste Version des <strong>Satzes von Picard-Lindelöf,</strong>
+die uns die Existenz und Eindeutigkeit für kleine Zeiten <span class="math notranslate nohighlight">\(T &gt; 0\)</span>
+liefert.</p>
+<p>In unserem Fall können wir jedoch ein noch besseres Resultat erreichen,
+in dem wir einfach die Norm in unserer Abschätzung passend wählen. Die
+Idee dazu liefert zunächst eine einfache Differentialgleichung im
+folgenden Beispiel.</p>
+<div class="proof example admonition" id="ex:dgl_einfach">
+<p class="admonition-title"><span class="caption-number">Example 2.2 </span> (Einfache Differentialgleichung mit konstantem Faktor)</p>
+<section class="example-content" id="proof-content">
+<p>Wir beschäftigen uns in diesem Beispiel mit einer einfachen gewöhnlichen
+Differentialgleichung mit einer Konstanten <span class="math notranslate nohighlight">\(L &gt; 0\)</span> der Form</p>
+<div class="math notranslate nohighlight">
+\[u'(t) \ = \ L \cdot u(t).\]</div>
+<p>Nehmen wir <span class="math notranslate nohighlight">\(u \colon \R_+ \rightarrow \R\)</span> als positive Lösung an, dann
+folgt mit der Kettenregel der Differentialgleichung</p>
+<div class="math notranslate nohighlight">
+\[\frac{d}{dt} (\log u(t)) \ = \ \frac{u'(t)}{u(t)} \ = \ L.\]</div>
+<p>Dies können wir mit Hilfe des Hauptsatzes der Differential- und
+Integralrechnung schreiben als</p>
+<div class="math notranslate nohighlight">
+\[\log u(t) - \log u(0) \ = \ \log\left( \frac{u(t)}{u_0} \right) \ = \ L \cdot t.\]</div>
+<p>Wenden wir auf beide Seiten die Exponentialfunktion an, erhalten wir die
+folgende analytische Lösung der Differentialgleichung:</p>
+<div class="math notranslate nohighlight">
+\[u(t) \ = \ u_0 \cdot e^{L t}.\]</div>
+</section>
+</div><p>Wählen wir nun den Vorfaktor <span class="math notranslate nohighlight">\(L\)</span> in <a class="reference internal" href="#ex:dgl_einfach">Example 2.2</a> als die
+Lipschitzkonstante im zweiten Argument der Funktion <span class="math notranslate nohighlight">\(F\)</span>, dann erkennen
+wir, dass wir ein exponentielles Wachstum mit <span class="math notranslate nohighlight">\(e^{L\cdot t}\)</span> erwarten
+müssen.</p>
+<p>Diese Beobachtung ist auch im Allgemeinen gültig, wie das folgende Lemma
+zeigt.</p>
+<div class="proof lemma admonition" id="lem:gronwall">
+<p class="admonition-title"><span class="caption-number">Lemma 2.1 </span> (Lemma von Gronwall)</p>
+<section class="lemma-content" id="proof-content">
+<p>Sei <span class="math notranslate nohighlight">\(v(t)\)</span> eine nichtnegative, stetige Funktion, die die folgende
+Ungleichung</p>
+<div class="math notranslate nohighlight" id="equation-eq-gronwall-ungleichung-annahme">
+<span class="eqno">(2.2)<a class="headerlink" href="#equation-eq-gronwall-ungleichung-annahme" title="Permalink to this equation">#</a></span>\[v(t) \ \leq \ a + \int_0^t b \cdot v(s)\,\mathrm{d}s, \quad \forall \ 0 \leq t \leq T,\]</div>
+<p>mit <span class="math notranslate nohighlight">\(a &gt; 0\)</span> und <span class="math notranslate nohighlight">\(b \in \mathbb{R}\)</span> erfüllt.</p>
+<p>Dann lässt sich die Funktion <span class="math notranslate nohighlight">\(v\)</span> nach oben abschätzen durch</p>
+<div class="math notranslate nohighlight">
+\[v(t) \ \leq \ a \cdot e^{b t}, \quad \forall \ 0 \leq t \leq T.\]</div>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. Wir definieren zunächst die Hilfsfunktion
+<span class="math notranslate nohighlight">\(w(t) \coloneqq e^{-bt} \cdot v(t) - a\)</span>. Damit können wir <span class="math notranslate nohighlight">\(v\)</span> auch
+schreiben als <span class="math notranslate nohighlight">\(v(t) = e^{bt} \cdot(w(t) + a)\)</span>. Da die Ungleichung
+<a class="reference internal" href="#equation-eq-gronwall-ungleichung-annahme">(2.2)</a> nach Voraussetzung gilt können wir
+folgende Abschätzung machen:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+w(t) \ &amp;= \ e^{-bt} \cdot v(t) - a \\
+&amp;\leq \ e^{-bt} \cdot a + e^{-bt} \cdot \int_0^t b \cdot v(s)\,\mathrm{d}s - a \\
+&amp;= \ a \cdot (e^{-bt}-1)+ \int_0^t e^{-bt} \cdot b \cdot v(s)\,\mathrm{d}s\\
+&amp;= \ a \cdot (e^{-bt}-1)+ \int_0^t e^{b(s-t)} \cdot b \cdot (w(s)+a)\,\mathrm{d}s \\
+&amp;= \ a \cdot (e^{-bt}-1)+ ab\cdot e^{-bt} \cdot \int_0^t e^{bs}\,\mathrm{d}s + b\cdot \int_0^t e^{b(s-t)} \cdot w(s) \, \mathrm{d}s\\
+&amp;\leq \ a \cdot (e^{-bt}-1)+ ab \cdot e^{-bt} \cdot \left[ \frac{1}{b} e^{bs} \right]^t_0 +  b \cdot \int_0^t \underbrace{e^{b(s-s)}}_{= \: 1} \cdot \: w(s) \, \mathrm{d}s\\
+&amp;= \ \underbrace{a \cdot (e^{-bt}-1)+ a \cdot (1 - e^{-bt})}_{= \: 0} + \: b \int_0^t w(s) \, \mathrm{d}s\\
+&amp;= \ \int_0^t b \cdot w(s)\,\mathrm{d}s.
+\end{split}\end{split}\]</div>
+<p>Für die letzte Ungleichung haben wir verwendet, dass
+<span class="math notranslate nohighlight">\(e^{-bs} \geq e^{-bt}\)</span> gilt für alle <span class="math notranslate nohighlight">\(0 \leq s \leq t\)</span>. Aus dieser
+Ungleichung können wir für <span class="math notranslate nohighlight">\(t=0\)</span> folgern, dass <span class="math notranslate nohighlight">\(w(0) \leq 0\)</span> und somit
+<span class="math notranslate nohighlight">\(v(0) \leq a \cdot e^0\)</span> gilt. Somit gilt die Abschätzung des Lemmas
+bereits in diesem Fall.</p>
+<p>Da <span class="math notranslate nohighlight">\(v\)</span> als stetige Funktion vorausgesetzt wurde ist <span class="math notranslate nohighlight">\(w\)</span> ebenfalls stetig
+und somit existiert ein maximaler Zeitpunkt <span class="math notranslate nohighlight">\(T \geq T_0 &gt; 0\)</span> für den
+<span class="math notranslate nohighlight">\(w(t) \leq 0\)</span> für alle <span class="math notranslate nohighlight">\(t \leq T_0\)</span> gilt. Ist <span class="math notranslate nohighlight">\(T_0=T\)</span>, so haben wir die
+Abschätzung des Lemmas bereits gezeigt, da aus <span class="math notranslate nohighlight">\(w(t) \leq 0\)</span> für alle
+<span class="math notranslate nohighlight">\(0 \leq t \leq T\)</span> durch Umstellen schon folgt
+<span class="math notranslate nohighlight">\(v(t) \leq a \cdot e^{bt}\)</span>.</p>
+<p>Nehmen wir nun an, dass <span class="math notranslate nohighlight">\(0 &lt; T_0 &lt; T\)</span> gilt, so gibt es ein hinreichend
+kleines Zeitintervall <span class="math notranslate nohighlight">\((T_0,T_0+\delta)\)</span>, in dem <span class="math notranslate nohighlight">\(w\)</span> positiv ist. Wegen
+der Positivität von <span class="math notranslate nohighlight">\(w\)</span> folgt dann für ein beliebiges
+<span class="math notranslate nohighlight">\(t \in (T_0, T_0 + \delta)\)</span> die Ungleichung</p>
+<div class="math notranslate nohighlight">
+\[w(t) \ \leq \ \int_{T_0}^t b \cdot w(s) \,\mathrm{d}s \ \leq \ \delta \cdot \max_{T_0 \leq s \leq T_0 + \delta} b\cdot w(s)\]</div>
+<p>und somit auch</p>
+<div class="math notranslate nohighlight">
+\[\max_{T_0 \leq t \leq T_0 + \delta} w(t) \ \leq \ \delta \cdot \max_{T_0 \leq s \leq T_0 + \delta} b \cdot w(s) \ = \ \delta b \cdot \max_{T_0 \leq s \leq T_0 + \delta} w(s).\]</div>
+<p>Für <span class="math notranslate nohighlight">\(\delta b &lt; 1\)</span> ist dies aber ein Widerspruch zur Positivität von
+<span class="math notranslate nohighlight">\(w\)</span>. Also muss <span class="math notranslate nohighlight">\(w(t) \leq 0\)</span> und damit <span class="math notranslate nohighlight">\(u(t) \leq a e^{bt}\)</span> für alle
+<span class="math notranslate nohighlight">\(0 \leq t \leq T\)</span> gelten. ◻</p>
+</div>
+<p>Abstrakt gesehen liefert das obige Lemma von Gronwall eine
+Stabilitätsaussage für die Differentialgleichung, denn es besagt, dass
+die Norm der Lösung in endlicher Zeit nicht beliebig wachsen kann.
+Betrachten wir nämlich eine Differentialgleichung mit einer Funktion
+<span class="math notranslate nohighlight">\(F\)</span>, die Lipschitz-stetig im zweiten Argument ist, so folgt mit der Wahl
+der Funktion <span class="math notranslate nohighlight">\(v(t) = \vert u(t) - u_0 \vert\)</span> nämlich</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+v(t) \ = \ \vert u(t) -u_0 \vert \ &amp;= \ \left\vert \int_0^t F(s, u(s) \,\mathrm{d}s\right\vert \ \leq \ \int_0^t \vert F(s, u(s)\vert \,\mathrm{d}s\\ 
+&amp;= \int_0^t \vert F(s, u(s) - F(s, u_0) + F(s, u_0) \vert \,\mathrm{d}s \\
+&amp;\leq \ \int_0^t \vert F(s,u(s)) - F(s,u_0) \vert + \vert F(s,u_0) \vert \,\mathrm{d}s \\
+&amp;\leq \ \int_0^t \vert F(s,u(s)) - F(s,u_0) \vert \,\mathrm{d}s + \underbrace{T \cdot \max_{0 \leq t \leq T} \vert F(t,u_0)\vert}_{=: \ a} \\
+&amp;\leq \ L \cdot \int_0^t \vert u(s) - u_0\vert \,\mathrm{d}s + a \ = \ b \cdot \int_0^t v(s) \,\mathrm{d}s + a.
+\end{split}\end{split}\]</div>
+<p>Wir sehen also, dass die Voraussetzungen für <a class="reference internal" href="#lem:gronwall">Lemma 2.1</a>
+erfüllt sind für die Funktion <span class="math notranslate nohighlight">\(v(t)\)</span> mit <span class="math notranslate nohighlight">\(b \coloneqq L\)</span> und
+<span class="math notranslate nohighlight">\(a \coloneqq T \cdot \max\limits_{0 \leq t \leq T} \vert F(t,u_0)\vert\)</span>.
+Somit gilt also nach dem Lemma von Gronwall die Abschätzung</p>
+<div class="math notranslate nohighlight">
+\[\vert u(t) -u_0 \vert \ \leq \ a \cdot e^{bt} \ = \ T \cdot \max_{0 \leq t \leq T} \vert F(t,u_0)\vert \cdot e^{Lt}.\]</div>
+<p>Verwenden wir die umgekehrte Dreiecksungleichung
+<span class="math notranslate nohighlight">\(|u(t)| - |u_0| \leq |u(t) -u_0|\)</span> sehen wir, dass <span class="math notranslate nohighlight">\(u(t)\)</span> beschränkt ist
+und höchstens wie <span class="math notranslate nohighlight">\(e^{Lt}\)</span> wächst:</p>
+<div class="math notranslate nohighlight">
+\[|u(t)| \ \leq \ |u(t) -u_0| + |u_0| \ \leq \ T \cdot \max_{0 \leq t \leq T} \vert F(t,u_0)\vert \cdot e^{Lt} + |u_0|.\]</div>
+<p>Dies führt zu der Idee, die folgende gewichtete Norm zu betrachten:</p>
+<div class="math notranslate nohighlight">
+\[\Vert u \Vert_{\infty,L} \ \coloneqq \ \max_{0 \leq t \leq T} e^{-Lt} \cdot \vert u(t) \vert.
+\]</div>
+<p>Da <span class="math notranslate nohighlight">\(e^{-Lt}\)</span> nach oben durch Eins und nach unten durch <span class="math notranslate nohighlight">\(e^{-LT} \geq 0\)</span>
+beschränkt ist, ist dies eine äquivalente Norm im Raum der stetig
+differenzierbaren Funktionen <span class="math notranslate nohighlight">\(C^1([0,T])\)</span>.</p>
+<p>Wir wiederholen also unsere Abschätzung des Fixpunktoperators in dieser
+konstruierten Norm und erhalten somit</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\Vert {\cal F}(u_1) - {\cal F}(u_2) \Vert_{L,\infty} \ &amp;= \ \max_{0 \leq t \leq T}  e^{-Lt} \cdot \left\vert \int_0^t F(s,u_1(s)) - F(s,u_2(s)) \,\mathrm{d}s \right\vert \\
+&amp;\leq \ \max_{0 \leq t \leq T} \int_0^t e^{L(s-t)} \cdot e^{-Ls} \cdot \vert  F(s,u_1(s)) - F(s,u_2(s))\vert\,\mathrm{d}s\\
+&amp;\leq  \ \int_0^T e^{-L\tau}\,\mathrm{d}\tau \cdot \max_{0 \leq s \leq T}  e^{-Ls} \cdot L \cdot \vert u_1(s) - u_2(s) \vert \\
+&amp;= \ (1-e^{-LT}) \cdot \Vert u_1 - u_2 \Vert_{L,\infty}. 
+\end{split}\]</div>
+<p>Der Operator ist nun also kontraktiv bezüglich der gewählten Norm für
+beliebiges <span class="math notranslate nohighlight">\(T &gt; 0\)</span>, da stets <span class="math notranslate nohighlight">\(1- e^{-LT} &lt; 1\)</span> gilt.</p>
+<p>Wir haben mit Hilfe des Banachschen Fixpunktsatzes also die folgende
+Variante des Satzes von Picard-Lindelöf bewiesen.</p>
+<div class="proof theorem admonition" id="thm:picard-lindelöf">
+<p class="admonition-title"><span class="caption-number">Theorem 2.1 </span> (Satz von Picard-Lindelöf)</p>
+<section class="theorem-content" id="proof-content">
+<p>Sei <span class="math notranslate nohighlight">\(F\)</span> eine stetige Funktion, die Lipschitz-stetig bezüglich der
+zweiten Variable ist.</p>
+<p>Dann besitzt das Anfangswertproblem <a class="reference internal" href="#equation-eq-awp">(2.1)</a> eine eindeutige Lösung
+in <span class="math notranslate nohighlight">\(C^1([0,T])\)</span>.</p>
+</section>
+</div><p>Wir werden sehen, dass wir auch bei numerischen Verfahren zur Lösung von
+Anfangswertproblemen ähnliche Aussagen und insbesondere eine Variante
+des Lemma von Gronwall in <a class="reference internal" href="#lem:gronwall">Lemma 2.1</a> benötigen werden, um
+die Stabilität dieser Verfahren garantieren zu können.</p>
+</section>
+<section id="analytische-losungsverfahren">
+<span id="id3"></span><h2><span class="section-number">2.1.2. </span>Analytische Lösungsverfahren<a class="headerlink" href="#analytische-losungsverfahren" title="Permalink to this heading">#</a></h2>
+<p>Wir betrachten im Folgenden einige spezielle Fälle von gewöhnlichen
+Differentialgleichungen in denen wir analytisch eine geschlossene Form
+der Lösung berechnen können.</p>
+<p>Andererseits gibt es viele gewöhnliche Differentialgleichungen für die
+sich analytisch keine Lösung angeben lässt, wie zum Beispiel die
+folgende simple, nichtlineare Gleichung:</p>
+<div class="math notranslate nohighlight">
+\[u'(t) \ = \ t^2 + u^2(t).\]</div>
+<p>Ein weiteres bekanntes Phändomen, dass durch ein
+Differentialgleichungssystem beschrieben ist, jedoch nicht analytisch
+lösbar ist, ist das das <em><span class="math notranslate nohighlight">\(N\)</span>-Körper-Problem</em>
+<span id="id4">[<a class="reference internal" href="../../references.html#id7" title="Wikipedia. Das $n$-körper-problem. URL: https://de.wikipedia.org/wiki/N-K%C3%B6rper-Problem (visited on 2023-04-18).">Wika</a>]</span>, welches auch schon in
+<a class="reference internal" href="#ex:newton_bewegungsgleichung">Example 2.1</a> durch die geeignete Wahl des
+Kraftfeldes beschrieben wird. Aus diesem Grund wollen wir in dieser
+Vorlesung numerische Lösungsmethoden für gewöhnliche
+Differentialgleichungen diskutieren und untersuchen.</p>
+<p>Hierbei werden wir nur kurz die verschiedenen Herangehensweisen zur
+Herleitung einer Lösung skizzieren. Für eine formale Beschreibung dieser
+Ansätze verweisen wir auf beispielsweise auf <span id="id5">[<a class="reference internal" href="../../references.html#id6" title="Daniel Tenbrinck. Vorlesungsskript zur mathematik für data science 2 (ss 21) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_MfDS2.pdf (visited on 2023-05-23).">Ten</a>]</span>.</p>
+<section id="lineare-differentialgleichungen">
+<span id="id6"></span><h3><span class="section-number">2.1.2.1. </span>Lineare Differentialgleichungen<a class="headerlink" href="#lineare-differentialgleichungen" title="Permalink to this heading">#</a></h3>
+<p>Eine Klasse von gewöhnlichen Differentialgleichungen, die in folgender
+Definition erklärt sind, stellen sich als gut verständlich und
+analytisch lösbar heraus.</p>
+<div class="proof definition admonition" id="def:lineare_dgl">
+<p class="admonition-title"><span class="caption-number">Definition 2.2 </span> (Lineare Differentialgleichung)</p>
+<section class="definition-content" id="proof-content">
+<p>Wir nennen ein gewöhnliches Differentialgleichungssystem <span class="math notranslate nohighlight">\(n\)</span>-ter Ordnung
+<strong>linear</strong>, wenn es sich in folgender Form schreiben lässt:</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=0}^n a_i(t)u^{(i)}(t) \ = \ a_0(t) \cdot u(t) + a_1(t) \cdot u'(t) + \ldots + a_n(t) \cdot u^{(n)}(t) \ = \ b(t).\]</div>
+<p>Hierbei sind die
+<span class="math notranslate nohighlight">\(a_i \colon \R_+ \rightarrow \R^{n\times n}, i=0, \ldots,n\)</span> und
+<span class="math notranslate nohighlight">\(b \colon \R_+ \rightarrow \R^n\)</span> stetige Funktionen, die nicht von <span class="math notranslate nohighlight">\(u\)</span>
+abhängen, und <span class="math notranslate nohighlight">\(u^{(i)}\)</span> bezeichnet die <span class="math notranslate nohighlight">\(i\)</span>-te Ableitung der unbekannten
+Funktion <span class="math notranslate nohighlight">\(u\)</span>.</p>
+</section>
+</div><p>Ein wichtiger Spezialfall von <a class="reference internal" href="#def:lineare_dgl">Definition 2.2</a>, der uns auch
+kanonische Beispiele für numerische Verfahren liefert, ist ein lineares
+Differentialgleichungssystem <span class="math notranslate nohighlight">\(1\)</span>. Ordnung mit konstanten Koeffizienten
+der Form</p>
+<div class="math notranslate nohighlight" id="equation-eq-lin-dgl">
+<span class="eqno">(2.3)<a class="headerlink" href="#equation-eq-lin-dgl" title="Permalink to this equation">#</a></span>\[u'(t) \ = \ A \cdot u(t) + b(t),\]</div>
+<p>mit einer gegebenen Matrix <span class="math notranslate nohighlight">\(A \in \R^{n \times n}\)</span>.</p>
+</section>
+<section id="matrixexponential">
+<span id="id7"></span><h3><span class="section-number">2.1.2.2. </span>Matrixexponential<a class="headerlink" href="#matrixexponential" title="Permalink to this heading">#</a></h3>
+<p>Wir betrachten zunächst den homogenen Fall für <span class="math notranslate nohighlight">\(b\equiv\vec{0}\)</span> des
+linearen Differentialgleichungssystem in <a class="reference internal" href="#equation-eq-lin-dgl">(2.3)</a>. Ist die
+Matrix <span class="math notranslate nohighlight">\(A\)</span> diagonalisierbar durch <span class="math notranslate nohighlight">\(A = B^{-1}\cdot D\cdot B\)</span> mit einer
+Diagonalmatrix <span class="math notranslate nohighlight">\(D \in \R^{n \times n}\)</span>, so können wir analog eine
+unbekannte Hilfsvariable <span class="math notranslate nohighlight">\(v(t) = B \cdot u(t)\)</span> betrachten. Damit können
+wir nun das lineare Differentialgleichungssystem <a class="reference internal" href="#equation-eq-lin-dgl">(2.3)</a>
+schreiben als</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+u'(t) \ &amp;= \ A \cdot u(t) \ = \ B^{-1}\cdot D\cdot B \cdot u(t) \ = \ B^{-1}\cdot D\cdot v(t)\\
+\Rightarrow \ v'(t) \ &amp;= \ (B \cdot u(t))' \ = \ B \cdot u'(t) \ = \ D \cdot v(t).
+\end{split}\end{split}\]</div>
+<p>Somit können wir also äquivalent das folgende simple
+Differentialgleichungssystem lösen:</p>
+<div class="math notranslate nohighlight">
+\[v'(t) \ = \ D \cdot v(t).\]</div>
+<p>Da <span class="math notranslate nohighlight">\(D\)</span> eine Diagonalmatrix ist, sind die Gleichungen entkoppelt und das
+bedeutet, dass wir für jede Zeile eine gewöhnliche Differentialgleichung
+mit konstantem Vorfaktor der Form <span class="math notranslate nohighlight">\(v_i'(t) = D_{ii} v_i(t)\)</span> erhalten.
+Für diese können wir analog zu <a class="reference internal" href="#ex:dgl_einfach">Example 2.2</a> eine explizite
+Lösung angeben als</p>
+<div class="math notranslate nohighlight">
+\[v_i(t) \ = \ v_i(0) \cdot e^{D_{ii}\cdot t}.\]</div>
+<p>Die unbekannte Lösung <span class="math notranslate nohighlight">\(u\)</span> der urspünglichen Differentialgleichung
+<a class="reference internal" href="#equation-eq-lin-dgl">(2.3)</a> erhalten wir anschließend durch</p>
+<div class="math notranslate nohighlight">
+\[u(t) \ = \ B^{-1} \cdot v(t).\]</div>
+<p>Zur Vereinfachung lässt sich dieser Lösungsansatz mit Hilfe des
+sogenannten Matrixexponentials schreiben.</p>
+<div class="proof definition admonition" id="def:matrixexponential">
+<p class="admonition-title"><span class="caption-number">Definition 2.3 </span> (Matrixexponential)</p>
+<section class="definition-content" id="proof-content">
+<p>Sei <span class="math notranslate nohighlight">\(A \in \R^{n \times n}\)</span> eine quadratische Matrix. Das
+<strong>Matrixexponential</strong> <span class="math notranslate nohighlight">\(e^A \in \R^{n \times n}\)</span> ist dann definiert durch
+die folgende Potenzreihe</p>
+<div class="math notranslate nohighlight">
+\[e^A \ \coloneqq \ \sum_{k=0}^\infty \frac{A^k}{k!} \ = \  I_n + A + \frac{A^2}{2} +  \ldots\]</div>
+</section>
+</div><p>Für den Fall einer Diagonalmatrix <span class="math notranslate nohighlight">\(D \in \R^{n\times n}\)</span> und einem
+Skalar <span class="math notranslate nohighlight">\(t \in R\)</span> ist das Matrixexponential <span class="math notranslate nohighlight">\(e^{Dt}\)</span> in
+<a class="reference internal" href="#def:matrixexponential">Definition 2.3</a> eine Diagonalmatrix mit Einträgen
+<span class="math notranslate nohighlight">\((e^{Dt})_{i,i} = e^{D_{i,i}\cdot t}\)</span> für <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>. Mit dieser
+Erkenntnis lässt sich die Lösung der Differentialgleichung
+<a class="reference internal" href="#equation-eq-lin-dgl">(2.3)</a> kompakt angeben als:</p>
+<div class="math notranslate nohighlight" id="equation-eq-lin-dgl-homogene-loesung">
+<span class="eqno">(2.4)<a class="headerlink" href="#equation-eq-lin-dgl-homogene-loesung" title="Permalink to this equation">#</a></span>\[u(t) \ = \ B^{-1} \cdot v(t) \ = \ B^{-1} \cdot e^{Dt} \cdot v(0) \ = \  B^{-1} \cdot e^{Dt} \cdot B \cdot u(0) \ =: \ e^{At} \cdot u(0).\]</div>
+<p>Wir bekommen durch Diagonalisieren der Matrix <span class="math notranslate nohighlight">\(A\)</span> also eine simple Form
+des Matrixexponentials, die uns direkt eine Lösung des
+Anfangswertproblems liefert. Im Fall einer nicht diagonalisierbaren
+Matrix ist ein ähnliches Vorgehen über die Jordan’sche Normalform
+möglich, was an dieser Stelle aber über den Rahmen dieser Vorlesung
+hinaus gehen würde.</p>
+</section>
+<section id="variation-der-konstanten">
+<span id="id8"></span><h3><span class="section-number">2.1.2.3. </span>Variation der Konstanten<a class="headerlink" href="#variation-der-konstanten" title="Permalink to this heading">#</a></h3>
+<p>Im inhomogenen Fall <span class="math notranslate nohighlight">\(b \neq \vec{0}\)</span> eines linearen
+Differentialgleichungssystems erster Ordnung in <a class="reference internal" href="#equation-eq-lin-dgl">(2.3)</a> lässt
+sich die sogenannte Variation der Konstanten benutzen um eine Lösung zu
+berechnen. Die Idee hierbei ist es einen Produktansatz der unbekannten
+Lösung <span class="math notranslate nohighlight">\(u\)</span> zu betrachten mit</p>
+<div class="math notranslate nohighlight">
+\[u(t) \ = \ e^{At} \cdot w(t).\]</div>
+<p>Anstatt der Konstanten <span class="math notranslate nohighlight">\(u(0) = u_0 \in \R^n\)</span> in der homogenen Lösung in
+<a class="reference internal" href="#equation-eq-lin-dgl-homogene-loesung">(2.4)</a> betrachten wir also jetzt eine
+zeitabhängige Funktion <span class="math notranslate nohighlight">\(w(t)\)</span>.</p>
+<p>Mit Hilfe der Produktregel für Differentiation und der Eigenschaften des
+Matrixexponentials lässt sich somit die Ableitung der Funktion <span class="math notranslate nohighlight">\(u\)</span>
+schreiben als</p>
+<div class="math notranslate nohighlight">
+\[u'(t) \ = \ \frac{d}{dt}(e^{At} \cdot w(t)) \ = \ A \cdot \underbrace{e^{At} \cdot w(t)}_{=\, u(t)} + \, e^{At} \cdot w'(t) \ = \ A \cdot u(t) + e^{At}\cdot w'(t),\]</div>
+<p>Vergleichen wir nun diesen Ausdruck der Ableitung der unbekannten
+Funktion <span class="math notranslate nohighlight">\(u\)</span> mit rechten Seite der Differentialgleichung
+<a class="reference internal" href="#equation-eq-lin-dgl">(2.3)</a>, so sehen wir ein, dass <span class="math notranslate nohighlight">\(b(t) = e^{At} \cdot w'(t)\)</span>
+gelten muss. Durch Umstellen sehen wir ein, dass für die Ableitung der
+unbekannten Hilfsfunktion <span class="math notranslate nohighlight">\(w'(t) = e^{-At} \cdot b(t)\)</span> gilt. Integrieren
+wir diesen Ausdruck, so lässt sich die unbekannte Lösung <span class="math notranslate nohighlight">\(u\)</span> durch die
+folgende Identität berechnen:</p>
+<div class="math notranslate nohighlight">
+\[u(t) \ = \ e^{At} \cdot w(t) \ = \ e^{At} \cdot \left( c + \int_0^t w'(s) \,\mathrm{d}s \right) \ = \ e^{At} \cdot \left( c + \int_0^t e^{-As} \cdot b(s) \,\mathrm{d}s\right).\]</div>
+<p>Hierbei lässt sich das Matrixexponential
+<span class="math notranslate nohighlight">\(e^{\pm At} \in \R^{n \times n}\)</span> wie im homogenen Fall beschrieben
+bestimmen und die Integrationskonstante <span class="math notranslate nohighlight">\(c \in \R\)</span> erhält man durch
+Anwendung der Anfangswertbedingung <span class="math notranslate nohighlight">\(u(0) = u_0 \in \R^n\)</span>.</p>
+</section>
+<section id="trennung-der-variablen">
+<span id="id9"></span><h3><span class="section-number">2.1.2.4. </span>Trennung der Variablen<a class="headerlink" href="#trennung-der-variablen" title="Permalink to this heading">#</a></h3>
+<p>Ein weiterer Spezialfall für die analytische Bestimmung von Lösungen
+gewöhnlicher Differentialgleichungen in Dimension <span class="math notranslate nohighlight">\(n=1\)</span> sind sogenannte
+separable Gleichungen der folgenden Form:</p>
+<div class="math notranslate nohighlight">
+\[u'(t) \ = \ g(u(t)) \cdot h(t),\]</div>
+<p>wobei <span class="math notranslate nohighlight">\(g,h \colon \R_+ \rightarrow \R\)</span> zwei stetige Funktionen sind.
+Nehmen wir an, dass <span class="math notranslate nohighlight">\(g(u(t))\)</span> nicht Null wird, so können wir durch
+diesen Term teilen und erhalten</p>
+<div class="math notranslate nohighlight">
+\[\frac{u'(t)}{g(u(t))} \ = \ h(t).\]</div>
+<p>Ist <span class="math notranslate nohighlight">\(G\)</span> eine Stammfunktion von <span class="math notranslate nohighlight">\(\frac{1}g\)</span> und <span class="math notranslate nohighlight">\(H\)</span> eine Stammfunktion
+von <span class="math notranslate nohighlight">\(h\)</span>, so schreiben wir diese Gleichung mit Hilfe der Kettenregel der
+Differentiation als</p>
+<div class="math notranslate nohighlight">
+\[\frac{d}{dt} G(u(t)) \ = \ G'(u(t)) \cdot u'(t) \ = \ H'(t).\]</div>
+<p>Diese Gleichung können wir nun aufintegrieren zu <span class="math notranslate nohighlight">\(G(u(t)) = H(t) + c\)</span>.
+Die Integrationskonstante <span class="math notranslate nohighlight">\(c \in \R\)</span> können wir anschließend aus dem
+Anfangswert mit <span class="math notranslate nohighlight">\(c = G(u_0) - H(0)\)</span> berechnen.</p>
+<p>Setzen wir weiter voraus, dass die Stammfunktion <span class="math notranslate nohighlight">\(G\)</span> von <span class="math notranslate nohighlight">\(g^{-1}\)</span>
+invertierbar ist, lässt sich die unbekannte Lösung <span class="math notranslate nohighlight">\(u\)</span> nun wie folgt
+berechnen:</p>
+<div class="math notranslate nohighlight">
+\[u(t) \ = \ G^{-1} (H(t) - H(0) + G(u_0)).\]</div>
+</section>
+<section id="gradientenfluss">
+<span id="id10"></span><h3><span class="section-number">2.1.2.5. </span>Gradientenfluss<a class="headerlink" href="#gradientenfluss" title="Permalink to this heading">#</a></h3>
+<p>Zum Abschluss betrachten wir noch eine Klasse von gewöhnlichen
+Differentialgleichungen, die wir aus dem Gradientenabstiegsverfahren der
+numerischen Optimierung in <a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html#ss-gradient-descent"><span class="std std-ref">Gradientenabstiegsverfahren</span></a> erhalten. Hierbei
+interpretieren wir die Iterationsschritte <span class="math notranslate nohighlight">\(x_k \in \R^n\)</span> als Wert einer
+Funktion <span class="math notranslate nohighlight">\(u \colon \R_+ \rightarrow \R^n\)</span> zur Zeit <span class="math notranslate nohighlight">\(t &gt; 0\)</span> und nehmen
+an, dass die Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> stetig differenzierbar ist. Damit können
+wir das Gradientenabstiegsverfahren schreiben als</p>
+<div class="math notranslate nohighlight">
+\[u(t+\alpha_k ) \ = \ u(t) - \alpha_k \nabla F(u(t)), \qquad \alpha_k &gt; 0.\]</div>
+<p>Lassen wir nun die Schrittweiten <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> gegen Null gehen, so
+erhalten wir im Grenzwert eine als Gradientenfluss bekannte
+Differentialgleichung der Form</p>
+<div class="math notranslate nohighlight">
+\[u'(t) \ = \ - \nabla F(u(t)).\]</div>
+<p>Hierbei bleibt die Abstiegseigenschaft erhalten, denn es gilt</p>
+<div class="math notranslate nohighlight">
+\[\frac{d}{dt} F(u(t)) \ = \ \langle \nabla F(u(t)), u'(t) \rangle \ = \ - \Vert \nabla F(u(t)) \Vert^2 \ = \ - \Vert u'(t)\Vert^2 \ \leq \ 0.\]</div>
+<p>Ist die Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> zusätzlich konvex, d.h. wir wissen</p>
+<div class="math notranslate nohighlight">
+\[\langle v - u, \nabla F(u) \rangle \ \leq \ F(v) - F(u), \qquad \forall \, v,u \in \R^n,\]</div>
+<p>dann gilt für einen Minimierer <span class="math notranslate nohighlight">\(u^*(t) \equiv u^* \in \R^n\)</span> von <span class="math notranslate nohighlight">\(F\)</span> (der
+gleichzeitig eine stationäre Lösung des Gradientenflusses darstellt)
+sogar</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+\frac{d}{dt} \left( \frac{1}{2} \Vert u(t) - u^*(t) \Vert^2 \right) \ &amp;= \ \langle u(t) - u^*(t), u'(t) - {u^*}'(t) \rangle\\
+&amp;= \ - \langle u(t) - u^*(t), \nabla F(u(t)) - \underbrace{\nabla F(u^*(t))}_{= \, \vec{0}} \rangle \\
+&amp;= \ \langle u^*(t) - u(t), \nabla F(u(t)) \rangle \\
+&amp;\leq \ F(u^*(t)) - F(u(t)) \ \leq \ 0.
+\end{split}\end{split}\]</div>
+<p>Hieran erkennen wir, dass der Abstand der Lösung <span class="math notranslate nohighlight">\(u\)</span> zum Minimierer
+<span class="math notranslate nohighlight">\(u^*\)</span> monoton fällt in der Zeit und wir die Norm der unbekannten Lösung
+sogar gleichmäßig durch die Anfangswertbedingung <span class="math notranslate nohighlight">\(u(0) = u_0 \in \R^n\)</span>
+beschränken können.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./ode\04_Anfangswertprobleme"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="00_04_Anfangswertprobleme.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">zurück</p>
+        <p class="prev-next-title"><span class="section-number">2. </span>Numerische Lösungsverfahren für Anfangswertprobleme</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="02_04_Anfangswertprobleme.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">weiter</p>
+        <p class="prev-next-title"><span class="section-number">2.2. </span>Einschrittverfahren für Anfangswertprobleme</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Inhalt
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#existenz-und-eindeutigkeit-von-losungen">2.1.1. Existenz und Eindeutigkeit von Lösungen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analytische-losungsverfahren">2.1.2. Analytische Lösungsverfahren</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineare-differentialgleichungen">2.1.2.1. Lineare Differentialgleichungen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#matrixexponential">2.1.2.2. Matrixexponential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variation-der-konstanten">2.1.2.3. Variation der Konstanten</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trennung-der-variablen">2.1.2.4. Trennung der Variablen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gradientenfluss">2.1.2.5. Gradientenfluss</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+Durch J. Laubmann, T. Roith, D. Tenbrinck
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <script type="application/json" class="js-hypothesis-config">{"assetRoot": "http://hypothesis.fau-mads.eu:3001/hypothesis/1.0.0-dummy-version/", "sidebarAppUrl":"http://hypothesis.fau-mads.eu:5000/app.html"}</script>
+<script async="async" kind="hypothesis" src="http://hypothesis.fau-mads.eu:5000/embed.js"></script>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

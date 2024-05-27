@@ -1,0 +1,1004 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="de" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>3.2. Differenzenverfahren für Randwertprobleme &#8212; Diskretisierung und numerische Optimierung</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ode/05_Randwertprobleme/02_05_Randwertprobleme';</script>
+    <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
+    <link rel="search" title="Suche" href="../../search.html" />
+    <link rel="next" title="4. Bibliography" href="../../references.html" />
+    <link rel="prev" title="3.1. Existenz und Eindeutigkeit von Lösungen" href="01_05_Randwertprobleme.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="de"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../01_Einleitung.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Diskretisierung und numerische Optimierung</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../01_Einleitung.html">
+                    Einleitung
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/00_02_NichtlineareOptimierung.html">1. Numerische Optimierung</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/01_02_NichtlineareOptimierung.html">1.1. Mathematische Grundlagen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html">1.2. Abstiegsverfahren</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../04_Anfangswertprobleme/00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../04_Anfangswertprobleme/01_04_Anfangswertprobleme.html">2.1. Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../04_Anfangswertprobleme/02_04_Anfangswertprobleme.html">2.2. Einschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../04_Anfangswertprobleme/03_04_Anfangswertprobleme.html">2.3. Mehrschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../04_Anfangswertprobleme/04_04_Anfangswertprobleme.html">2.4. Weiterführende Themen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="00_05_Randwertprobleme.html">3. Numerische Lösung von Randwertproblemen</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_05_Randwertprobleme.html">3.1. Existenz und Eindeutigkeit von Lösungen</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">3.2. Differenzenverfahren für Randwertprobleme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">4. Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/FAU-AMMN/MathPhysicsC" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Quell-Repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Laden Sie diese Seite herunter">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/ode/05_Randwertprobleme/02_05_Randwertprobleme.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Quelldatei herunterladen"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="In PDF drucken"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Vollbildmodus"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Suche" aria-label="Suche" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Differenzenverfahren für Randwertprobleme</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Inhalt </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dirichlet-randbedingungen">3.2.1. Dirichlet Randbedingungen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konvergenz-von-differenzenverfahren">3.2.2. Konvergenz von Differenzenverfahren</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-matrizen">3.2.2.1. M-Matrizen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#konvergenz-von-differenzenverfahren-1">3.2.2.2. Konvergenz von Differenzenverfahren</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="differenzenverfahren-fur-randwertprobleme">
+<span id="id1"></span><h1><span class="section-number">3.2. </span>Differenzenverfahren für Randwertprobleme<a class="headerlink" href="#differenzenverfahren-fur-randwertprobleme" title="Permalink to this heading">#</a></h1>
+<p>Zur Diskretisierung von Randwertproblemen können wir zunächst genauso
+vorgehen wie bei der numerischen Lösung von Anfangswertproblemen. Wir
+konstruieren also zunächst ein Gitter <span class="math notranslate nohighlight">\(0 = x_0 &lt; x_1 &lt; \ldots &lt; x_N = 1\)</span>
+als Ortsdiskretisierung des Intervalls <span class="math notranslate nohighlight">\([0,1]\)</span>. Im einfachsten Fall
+wählen wir die Gitterpunkte wieder äquidistant mit Schrittweite
+<span class="math notranslate nohighlight">\(h\coloneqq \frac{1}{N}\)</span> als</p>
+<div class="math notranslate nohighlight">
+\[\Omega_h \ \coloneqq \ \lbrace x_k \in [0,1] : x_k \coloneqq k\cdot h, k=0,\ldots,N \rbrace.\]</div>
+<p>Auf diesem Gitter approximieren wir nun Ableitungen durch finite
+Differenzen. Für die zweite Ableitung in <span class="math notranslate nohighlight">\(x_k\)</span> verwenden wir in der
+Regel ein <strong>Differenzenverfahren zweiter Ordnung</strong> mit</p>
+<div class="math notranslate nohighlight">
+\[u''(x_k) \ \approx \ \frac{u(x_k+h) - 2 u(x_k) + u(x_{k}-h)}{h^2} \ = \ \frac{u(x_{k+1}) - 2 u(x_k) + u(x_{k-1})}{h^2}.\]</div>
+<p>Im <em>nichtäquidistanten Fall</em> sieht eine entsprechende Approximation
+hingegen wie folgt aus:</p>
+<div class="math notranslate nohighlight" id="equation-eq-diskretisierung-2-ordnung">
+<span class="eqno">(3.10)<a class="headerlink" href="#equation-eq-diskretisierung-2-ordnung" title="Permalink to this equation">#</a></span>\[u''(x_k) \ \approx \ \frac{1}{h_k} \cdot \left( \frac{u(x_{k+1}) -  u(x_k)}{x_{k+1}-x_k} -\frac{u(x_k)- u(x_{k-1})}{x_k - x_{k-1}} \right).\]</div>
+<p>Hier ist zunächst die Frage wie wir den Parameter <span class="math notranslate nohighlight">\(h_k &gt; 0\)</span> (abhängig
+von den Gitterpunkten <span class="math notranslate nohighlight">\(x_{k-1}, x_k, x_{k+1}\)</span>) wählen sollen. Dies
+können wir als Bedingung an die maximale Konsistenzordnung eines
+numerischen Verfahrens formulieren.</p>
+<p>Für hinreichend glatte Funktionen <span class="math notranslate nohighlight">\(u\)</span> und</p>
+<div class="math notranslate nohighlight">
+\[h \ \coloneqq \!\! \max_{k=0,\ldots,N-1} \vert x_{k+1} -x_k\vert\]</div>
+<p>gilt per Taylor-Entwicklung der Funktionswerte <span class="math notranslate nohighlight">\(u(x_{k+1})\)</span> und
+<span class="math notranslate nohighlight">\(u(x_{k-1})\)</span> jeweils im Punkt <span class="math notranslate nohighlight">\(x_k \in [0,1]\)</span> dann</p>
+<div class="math notranslate nohighlight" id="equation-eq-differenzenverfahren-konsistenz">
+<span class="eqno">(3.11)<a class="headerlink" href="#equation-eq-differenzenverfahren-konsistenz" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
+    &amp;\hphantom{=} \ \frac{u(x_{k+1}) -  u(x_k)}{x_{k+1}-x_k} -\frac{u(x_k)- u(x_{k-1})}{x_k - x_{k-1}}  \\
+    &amp;= \ u'(x_k) + \frac{1}2 u''(x_k) (x_{k+1} -x_k)  +  \frac{1}6 u'''(x_k) (x_{k+1} -x_k)^2  - \\
+    &amp; \hspace{0.65cm} u'(x_k) + \frac{1}2 u''(x_k) (x_k-x_{k-1})  -  \frac{1}6 u'''(x_k) (x_k-x_{k-1})^2 + {\cal O}(h^3)\\
+    &amp;= \ u''(x_k) \frac{ x_{k+1}-x_{k-1}}2 +   \frac{1}6 u'''(x_k) (x_{k+1} -2 x_k +x_{k-1})( x_{k+1}-x_{k-1} ) + {\cal O}(h^3).
+\end{split}\end{split}\]</div>
+<p>Wir sehen, dass wir eine konsistente Approximation der zweiten Ableitung
+mit der Wahl von <span class="math notranslate nohighlight">\(h_k=\frac{x_{k+1}-x_{k-1}}2\)</span> im Vorfaktor erreichen.</p>
+<p>Im äquidistanten Fall erkennen wir an obiger Rechnung wieder, dass die
+Konsistenzordnung <span class="math notranslate nohighlight">\(\mathcal{O}(h^2)\)</span> erreicht wird, da dann gilt</p>
+<div class="math notranslate nohighlight">
+\[x_{k+1} -2 x_k +x_{k-1} \ = \ \underbrace{(x_{k+1} - x_k)}_{= \:h} - \underbrace{(x_k - x_{k-1})}_{= \:h} \ = \ 0.\]</div>
+<p>Die konsistente Wahl des Vorfaktors <span class="math notranslate nohighlight">\(h_k=\frac{x_{k+1}-x_{k-1}}2\)</span> lässt
+sich ebenfalls anders motivieren: eigentlich berechnen wir numerische
+Approximationen erster Ableitungen mit Hilfe des zentralen
+Differenzenquotienten als</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}    \frac{u(x_{k+1}) -  u(x_k)}{x_{k+1}-x_k} \ &amp;= \ u'(x_{k+1/2}) + \mathcal{O}(h^2),\\
+    \frac{u(x_k)- u(x_{k-1})}{x_k - x_{k-1}} \ &amp;= \ u'(x_{k-1/2}) + \mathcal{O}(h^2)
+\end{split}\]</div>
+<p>mit den beiden (impliziten) Mittelpunkten</p>
+<div class="math notranslate nohighlight">
+\[x_{k-1/2} \ \coloneqq \ \frac{1}2 (x_{k-1} + x_k), \qquad x_{k+1/2} \ \coloneqq \ \frac{1}2 (x_{k+1} + x_k).\]</div>
+<p>Diese beiden Mittelpunkte liegen also auf einem versetzten Gitter.</p>
+<p>Nun können wir die zweite Ableitung wiederum als numerische
+Approximation der Ableitung der Diskretisierungen der ersten Ableitungen
+betrachten. Eine weitere Anwendung des zentralen Differenzenquotienten
+auf die Werte der versetzten Gitterpunkte <span class="math notranslate nohighlight">\(x_{k\pm1/2}\)</span> liefert nämlich
+genau eine Approximation der zweiten Ableitung im Punkt
+<span class="math notranslate nohighlight">\(x_k \in \Omega_h\)</span>. Die Schrittweite für diesen zweiten
+Diskretisierungsschritt ist genau der von uns berechnete Vorfaktor</p>
+<div class="math notranslate nohighlight">
+\[h_k \ = \ \frac{x_{k+1} - x_{k-1}}2 \ = \ \frac{x_{k+1}+x_k}2 - \frac{x_k+x_{k-1}}2 \ = \ x_{k+1/2} - x_{k-1/2}.\]</div>
+<section id="dirichlet-randbedingungen">
+<span id="dirichlet-randbedingungen-1"></span><h2><span class="section-number">3.2.1. </span>Dirichlet Randbedingungen<a class="headerlink" href="#dirichlet-randbedingungen" title="Permalink to this heading">#</a></h2>
+<p>Mit den oben eingeführten Differenzenverfahren können wir nun bereits
+Gleichungen der Form</p>
+<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-numerik-a-0">
+<span class="eqno">(3.12)<a class="headerlink" href="#equation-eq-randwertproblem-numerik-a-0" title="Permalink to this equation">#</a></span>\[- u''(x) + c(x) \cdot u(x) \ = \ f(x)\]</div>
+<p>für <span class="math notranslate nohighlight">\(x \in [0,1]\)</span> direkt diskretisieren. In diesem Kontext betrachten
+wir im Folgenden das Randwertproblem mit Dirichlet-Randwertbedingungen,
+welches wir als lineares Gleichungssystem für den unbekannten
+Lösungsvektor</p>
+<div class="math notranslate nohighlight">
+\[U_h \ = \ (u_1,\ldots,u_{N-1})^T \in \R^{N-1}\]</div>
+<p>schreiben können. Die beiden Werte <span class="math notranslate nohighlight">\(u_0 = u(0) = g_0\)</span> und
+<span class="math notranslate nohighlight">\(u_N = u(1) = g_1\)</span> ergeben sich ganz natürlich aus den
+Dirichlet-Randbedingungen und können direkt in einen Lösungsvektor für
+das gesamte numerische Gitter <span class="math notranslate nohighlight">\(\Omega_h\)</span> eingesetzt werden.</p>
+<p>Verwenden wir nun das Differenzenschema zweiter Ordnung in
+<a class="reference internal" href="#equation-eq-diskretisierung-2-ordnung">(3.10)</a> zur numerischen Diskretisierung der
+Differentialgleichung, so können wir die Koeffizienten des
+Differenzenschemas für jeden Punkt in eine Zeile der Systemmatrix
+<span class="math notranslate nohighlight">\(A \in \R^{N-1 \times N-1}\)</span> des Problems schreiben. Hierzu können wir
+genauer für die Matrix-Einträge von <span class="math notranslate nohighlight">\(A\)</span> definieren als:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}A_{k,k} \ &amp;\coloneqq \ \frac{1}{h_k} \left( \frac{1}{x_{k+1}-x_k} +  \frac{1}{x_k+x_{k-1}} \right) + c(x_k), \qquad k=1,\ldots,N-1\\
+A_{k,k-1} \ \coloneqq \ - \, &amp;\frac{1}{h_k(x_k - x_{k-1})}, \qquad  A_{k-1,k} \ \coloneqq \ - \, \frac{1}{h_k(x_{k+1} - x_{k})} \qquad k=2,\ldots,N-1\\
+&amp; \hspace{2cm} A_{k,j} \ \coloneqq \ 0 \qquad \text{sonst, }
+\end{split}\]</div>
+<p>Wir erhalten damit also eine Tridiagonalmatrix
+<span class="math notranslate nohighlight">\(A \in \R^{N-1 \times N-1}\)</span>, die sich im äquidistanten Fall vereinfacht
+zu</p>
+<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-systemmatrix">
+<span class="eqno">(3.13)<a class="headerlink" href="#equation-eq-randwertproblem-systemmatrix" title="Permalink to this equation">#</a></span>\[\begin{split}A \ \coloneqq \ \frac{1}{h^2} \left( \begin{array}{ccccc} 2 + h^2 c(x_1) &amp; - 1 &amp; 0 &amp; \ldots &amp; 0 \\
+-1 &amp; 2 + h^2 c(x_2)  &amp; -1 &amp; \ldots &amp; 0 \\ 0 &amp; -1 &amp; 2 + h^2 c(x_3) &amp; \ldots &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp;0 &amp; \ldots &amp; 2 + h^2 c(x_{N-1})\end{array} \right).\end{split}\]</div>
+<p>Für die rechte Seite des linearen Gleichungssystems müssen wir zum einen
+die rechte Seite <span class="math notranslate nohighlight">\(f(x)\)</span> der Differentialgleichung abbilden, als auch die
+Randwertbedingungen <span class="math notranslate nohighlight">\(u(0) = g_0\)</span> und <span class="math notranslate nohighlight">\(u(1) = g_1\)</span> berücksichtigen.
+Hierzu definieren wir uns entsprechend den Vektor <span class="math notranslate nohighlight">\(F \in \R^{N-1}\)</span> mit:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}F_k \ &amp;\coloneqq \  f(x_k),  \qquad k \in \{2, \ldots,N-2\} \\
+F_1 \ &amp;\coloneqq \ f(x_1) + \frac{g_0}{h_1(x_1-x_0)}, \\
+F_{N-1} \ &amp;\coloneqq \ f(x_{N-1}) + \frac{g_1}{h_{N-1}(x_N-x_{N-1})}.
+\end{split}\]</div>
+<p>Insgesamt müssen wir also das lineare <span class="math notranslate nohighlight">\((N-1) \times (N-1)\)</span>
+Gleichungssystem <span class="math notranslate nohighlight">\(A U_h  \ = \ F\)</span> numerisch lösen um eine diskrete
+Lösung des Randwertproblems <a class="reference internal" href="#equation-eq-randwertproblem-numerik-a-0">(3.12)</a> mit
+Dirichlet-Randbedingungen <span class="math notranslate nohighlight">\(u(0) = g_0\)</span> und <span class="math notranslate nohighlight">\(u(1) = g_1\)</span> zu erhalten.</p>
+<p>Im allgemeinen Fall einer nichtkonstanten Funktion
+<span class="math notranslate nohighlight">\(a(x) \not \equiv c \in \R\)</span> können wir die selbe Einsicht über
+verschobene Gitter wie oben benutzen. Die erste Ableitung
+<span class="math notranslate nohighlight">\((a(x_k)\cdot u'(x_k)'\)</span> interpretieren wir diskret als Wert am
+Mittelpunkt der Gitterzellen <span class="math notranslate nohighlight">\(x_{k\pm1/2}\)</span>. Da wir diese mit der
+Funktion <span class="math notranslate nohighlight">\(a\)</span> multiplizieren, verwenden wir auch den Wert von <span class="math notranslate nohighlight">\(a\)</span> an
+diesen Gitterpunkten. Dementsprechend approximieren wir</p>
+<div class="math notranslate nohighlight" id="equation-eq-diskretisierung-2-ordnung-mit-a">
+<span class="eqno">(3.14)<a class="headerlink" href="#equation-eq-diskretisierung-2-ordnung-mit-a" title="Permalink to this equation">#</a></span>\[(a u')'(x_k) \ \approx \ \frac{1}{h_k} \left( a(x_{k+1/2}) \frac{u_{k+1} -  u_k}{x_{k+1}-x_k} - a(x_{k-1/2}) \frac{u_k- u_{k-1}}{x_k - x_{k-1}} \right).\]</div>
+<p>In der folgenden Bemerkung wollen wir auf Eigenschaften der Systemmatrix
+<span class="math notranslate nohighlight">\(A\)</span> eingehen, die allgemein bei der Lösung von Randwertproblemen eine
+wichtige Rolle spielen.</p>
+<div class="proof remark admonition" id="rem:systemmatrix_eigenschaften">
+<p class="admonition-title"><span class="caption-number">Remark 3.1 </span> (Eigenschaften der Systemmatrix A)</p>
+<section class="remark-content" id="proof-content">
+<p>Wir können folgende Beobachtungen zu den Eigenschaften der Matrix <span class="math notranslate nohighlight">\(A\)</span> in
+<a class="reference internal" href="#equation-eq-randwertproblem-systemmatrix">(3.13)</a> machen.</p>
+<ul>
+<li><p>Die Matrix <span class="math notranslate nohighlight">\(A\)</span> ist <strong>dünnbesetzt</strong> (im Englischen: <em>sparse</em>), d.h.
+die meisten Einträge von <span class="math notranslate nohighlight">\(A\)</span> sind gleich null. Genauer noch
+existieren von den <span class="math notranslate nohighlight">\((N-1)^2\)</span> möglichen Matrixeinträgen von <span class="math notranslate nohighlight">\(A\)</span> nur
+<span class="math notranslate nohighlight">\(3\cdot (N-1)-2 = 3N - 5\)</span> Einträge, die nicht verschwinden. Dies hat
+einige Konsequenzen für die effiziente Speicherung von <span class="math notranslate nohighlight">\(A\)</span>, sowie
+bei der Lösung des Systems <span class="math notranslate nohighlight">\(AU_h =F\)</span>. Wir können die Matrix im
+sogenannten <strong>Sparse-Format</strong> speichern. Hierbei handelt es sich in
+der Regel um eine lineare Liste für alle Nichtnulleinträge der Form
+<span class="math notranslate nohighlight">\((i,j,A_{ij})\)</span>. Statt <span class="math notranslate nohighlight">\((n-1)^2\)</span> reeller Zahlen speichern wir hier
+nur <span class="math notranslate nohighlight">\(6N-10\)</span> ganze und <span class="math notranslate nohighlight">\(3N-5\)</span> reelle Zahlen. Gegenüber potentiell
+<span class="math notranslate nohighlight">\((N-1)^2\)</span> zu speichernden reellen Zahlen ist dies eine enorme
+Einsparung für großes <span class="math notranslate nohighlight">\(N \in \N\)</span>.</p>
+<p>Bei der numerischen Lösung des linearen Systems ist es ebenfalls
+vorteilhaft diese Struktur zu benutzen. Bei direkten Verfahren wie
+der LR-Zerlegung jedoch ist dies nicht der Fall. Dort kann es zum
+sogenannten <strong>Fill-In</strong> kommen, d.h. <span class="math notranslate nohighlight">\(L\)</span> und <span class="math notranslate nohighlight">\(R\)</span> sind nicht mehr
+dünnbesetzt. Grob können wir uns den Effekt bei der LR-Zerlegung wie
+bei der Integration von <span class="math notranslate nohighlight">\(-u''=f\)</span>, <span class="math notranslate nohighlight">\(u(0) = g_0\)</span>, <span class="math notranslate nohighlight">\(u(1) =g_1\)</span>
+vorstellen. Hier erhalten wir durch die Integration von <span class="math notranslate nohighlight">\(0\)</span> bis <span class="math notranslate nohighlight">\(x\)</span>
+eine Integraldarstellung für <span class="math notranslate nohighlight">\(u'(x)\)</span>, die im diskreten einer linken
+unteren Dreiecksmatrix enstpricht. Integrieren wir wiederum von <span class="math notranslate nohighlight">\(1\)</span>
+bis <span class="math notranslate nohighlight">\(x\)</span> um <span class="math notranslate nohighlight">\(u(x)\)</span> zu erhalten, entspricht dies einer rechten oberen
+Dreiecksmatrix. Beide Matrizen haben dann keine dünnbesetzte
+Struktur mehr, da das diskrete Integral alle vorhandenen
+Gitterpunkte benutzt.</p>
+</li>
+<li><p>Für nichtnegative Funktionen <span class="math notranslate nohighlight">\(c(x) \geq 0\)</span> ist die Matrix <span class="math notranslate nohighlight">\(A\)</span>
+<strong>schwach diagonaldominant</strong>, d.h. es gilt
+<span class="math notranslate nohighlight">\(A_{kk} \geq \sum_{j \neq k} \vert A_{kj} \vert\)</span> (bzw. auch in den
+Spalten <span class="math notranslate nohighlight">\(A_{kk} \geq \sum_{j \neq k} \vert A_{jk} \vert\)</span>). In der
+ersten Zeile für <span class="math notranslate nohighlight">\(k=1\)</span> und in der letzten Zeile für <span class="math notranslate nohighlight">\(k=N-1\)</span> der
+Matrix <span class="math notranslate nohighlight">\(A\)</span> sind diese Ungleichungen sogar strikt.</p>
+<p>Darüber hinaus hat <span class="math notranslate nohighlight">\(A\)</span> nur positive Diagonaleinträge und
+nichtpositive Nebendiagonaleinträge. Wie wir später sehen werden ist
+die Matrix <span class="math notranslate nohighlight">\(A\)</span> dann invertierbar und die Inverse enthält nur
+nichtnegative Einträge. Dies ist das diskrete Äquivalent zum
+Maximumsprinzip, denn hat <span class="math notranslate nohighlight">\(F\)</span> nur nichtnegative Einträge, so gilt
+auch <span class="math notranslate nohighlight">\(U_h = A^{-1} F \geq 0\)</span>.</p>
+</li>
+<li><p>Die Matrix <span class="math notranslate nohighlight">\(A\)</span> ist <strong>symmetrisch</strong>, d.h. es gilt <span class="math notranslate nohighlight">\(A_{jk}  = A_{kj}\)</span>
+für alle <span class="math notranslate nohighlight">\(k,j\)</span>. Dies ist eine Konsequenz aus der Divergenzform
+<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a>, da der Operator <span class="math notranslate nohighlight">\(L: u \mapsto - (au')' + cu\)</span>
+formal selbstadjungiert ist. Es gilt mit partieller Integration für
+<span class="math notranslate nohighlight">\(u\)</span> und <span class="math notranslate nohighlight">\(v\)</span> und angenommenen Dirichlet-Nullrandwerten:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\langle Lu, v \rangle_{L^2} \ &amp;= \ \int_0^1 (Lu)(x)~v(x)\, \mathrm{d}x \ = \ \int_0^1 (-(a(x) u'(x))v(x) + c(x) u(x) v(x)\, \mathrm{d}x \\
+&amp;= \ \int_0^1 a(x) u'(x) v'(x)  + c(x) u(x) v(x)\, \mathrm{d}x \\
+&amp;= \ \int_0^1 (-(a(x) v'(x)) u(x) + c(x)  v(x)u(x))\, \mathrm{d}x \ = \ \langle v, Lu \rangle_{L^2} .
+\end{split}\]</div>
+<p>Ist <span class="math notranslate nohighlight">\(c(x) \geq 0\)</span>, dann ist die Matrix <span class="math notranslate nohighlight">\(A\)</span> sogar symmetrisch positiv
+definit. Dies ist für <span class="math notranslate nohighlight">\(u(x) \not \equiv 0\)</span> eine Konsequenz aus</p>
+<div class="math notranslate nohighlight">
+\[\langle L u, u \rangle \ = \ \int_0^1 a(x) \cdot |u'(x)|^2   + c(x) \cdot u(x)^2 \mathrm{d}x \ &gt; \ 0.\]</div>
+</li>
+</ul>
+</section>
+</div><p>Mit den oben diskutierten Eigenschaften der Systemmatrix <span class="math notranslate nohighlight">\(A\)</span> erhalten
+wir insbesondere ihre Invertierbarkeit aus der positiven Definitheit.
+Also existiert eine eindeutige Lösung <span class="math notranslate nohighlight">\(U_h \in \R^{N-1}\)</span> des linearen
+Gleichungssystems <span class="math notranslate nohighlight">\(AU_h=F\)</span>.</p>
+</section>
+<section id="konvergenz-von-differenzenverfahren">
+<span id="id2"></span><h2><span class="section-number">3.2.2. </span>Konvergenz von Differenzenverfahren<a class="headerlink" href="#konvergenz-von-differenzenverfahren" title="Permalink to this heading">#</a></h2>
+<p>In diesem Abschnitt wollen wir uns mit der Frage beschäftigen welche
+Bedingungen gelten müssen, damit ein Differenzenverfahren zur
+numerischen Lösung eines Randwertproblems gegen die echte Lösung der
+Differentialgleichung konvergiert. Wie wir bereits gesehen haben führt
+das Differenzenverfahren zu einem linearen Gleichungssystem der Form
+<span class="math notranslate nohighlight">\(A U_h = F\)</span>, wobei <span class="math notranslate nohighlight">\(U_h \in \R^{N-1}\)</span> die numerische Approximation der
+echten Lösung <span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> in den Gitterpunkten darstellt, d.h.,
+es gilt <span class="math notranslate nohighlight">\((U_h) _k = u_k \approx u(x_k)\)</span> für <span class="math notranslate nohighlight">\(k=1,\ldots,N-1\)</span>.</p>
+<section id="m-matrizen">
+<span id="id3"></span><h3><span class="section-number">3.2.2.1. </span>M-Matrizen<a class="headerlink" href="#m-matrizen" title="Permalink to this heading">#</a></h3>
+<p>Wie wir im Folgenden feststellen werden hängt die Stabilität und
+folglich damit die Konvergenz eines Differenzenverfahrens maßgeblich von
+den Eigenschaften der Systemmatrix <span class="math notranslate nohighlight">\(A \in \R^{N-1 \times N-1}\)</span> ab. Die
+in
+<span class="xref myst">[rem:systemmatrix_eigenschaften]</span>{reference-type=“ref+label“
+reference=“rem:systemmatrix_eigenschaften“} diskutierten Eigenschaften
+der speziellen Systemmatrix <span class="math notranslate nohighlight">\(A\)</span> motivieren die folgende Definition.</p>
+<div class="proof definition admonition" id="def:m-matrix">
+<p class="admonition-title"><span class="caption-number">Definition 3.1 </span> (M-Matrix)</p>
+<section class="definition-content" id="proof-content">
+<p>Eine Matrix <span class="math notranslate nohighlight">\(A \in \R^{n \times n}\)</span> heißt <strong>M-Matrix</strong>, wenn sie
+folgende Eigenschaften erfüllt:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(A\)</span> hat nur positive Diagonaleinträge und nichtpositive
+Nebendiagonaleinträge.</p></li>
+<li><p><span class="math notranslate nohighlight">\(A\)</span> ist schwach diagonaldominant, d.h. es gilt
+<span class="math notranslate nohighlight">\(A_{kk} \: \geq \: \sum_{j \neq k} \vert A_{jk} \vert\)</span>.</p></li>
+<li><p>Für mindestens ein <span class="math notranslate nohighlight">\(j \in \{1,\ldots,n\}\)</span> gilt
+<span class="math notranslate nohighlight">\(A_{kk} \: &gt; \: \sum_{j \neq k} \vert A_{jk} \vert\)</span>.</p></li>
+</ul>
+</section>
+</div><p>Wie wir leicht nachrechnen können erfüllt unsere Diskretisierung diese
+Eigenschaft:</p>
+<div class="proof corollary admonition" id="corollary-2">
+<p class="admonition-title"><span class="caption-number">Corollary 3.2 </span></p>
+<section class="corollary-content" id="proof-content">
+<p>Sei <span class="math notranslate nohighlight">\(A\)</span> die Matrix aus dem obigen Differenzenverfahren in
+<a class="reference internal" href="#equation-eq-randwertproblem-systemmatrix">(3.13)</a> für eine nichtnegative Funktion
+<span class="math notranslate nohighlight">\(c(x) \geq 0\)</span> für <span class="math notranslate nohighlight">\(x \in [0,1]\)</span>. Dann ist <span class="math notranslate nohighlight">\(A\)</span> eine M-Matrix.</p>
+</section>
+</div><p>Die letzte Eigenschaft einer M-Matrix in
+<span class="xref myst">[def:m-matrix]</span>{reference-type=“ref+label“
+reference=“def:m-matrix“} ist entscheidend für deren Invertierbarkeit,
+da sonst beispielsweise auch die folgende Matrix zulässig wäre:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}A \ \coloneqq \ \left( \begin{array}{cc} 1 &amp; -1 \\ -1 &amp; 1 \end{array} \right)\end{split}\]</div>
+<p>Diese Eigenschaft können wir allgemein für M-Matrizen beweisen und
+darüber hinaus etwas über die Einträge der Inversen aussagen.</p>
+<div class="proof lemma admonition" id="lem:m-matrix_inverse">
+<p class="admonition-title"><span class="caption-number">Lemma 3.2 </span> (Inverse einer M-Matrix)</p>
+<section class="lemma-content" id="proof-content">
+<p>Sei <span class="math notranslate nohighlight">\(A \in \R^{n \times n}\)</span> für <span class="math notranslate nohighlight">\(n \in \N\)</span> eine M-Matrix. Dann ist <span class="math notranslate nohighlight">\(A\)</span>
+invertierbar und <span class="math notranslate nohighlight">\(A^{-1}\)</span> hat nur nicht-negative Einträge.</p>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. Wir nehmen zunächst an, dass <span class="math notranslate nohighlight">\(A\)</span> irreduzibel ist, d.h. es existiert eine
+Permutation <span class="math notranslate nohighlight">\(\pi \in \Pi_n\)</span> von <span class="math notranslate nohighlight">\(\{1,\ldots,n\}\)</span>, sodass
+<span class="math notranslate nohighlight">\(A_{\pi(i)\pi(i+1)} \neq 0\)</span> gilt. Andernfalls können wir analog wie im
+Folgenden für alle irreduziblen Blöcke von <span class="math notranslate nohighlight">\(A\)</span> vorgehen.</p>
+<p>Zunächst zeigen wir, dass <span class="math notranslate nohighlight">\(A\)</span> invertierbar ist, d.h. wir müssen zeigen,
+dass der Nullraum trivial ist. Sei <span class="math notranslate nohighlight">\(z \in {\cal N}(A)\)</span> ein Vektor des
+Nullraums und es sei ein Vektoreintrag <span class="math notranslate nohighlight">\(z_m\)</span> für
+<span class="math notranslate nohighlight">\(m \in \lbrace 1, \ldots, n\rbrace\)</span> so, dass <span class="math notranslate nohighlight">\(z_m \leq z_k\)</span> für alle <span class="math notranslate nohighlight">\(k\)</span>
+gilt. Nehmen wir nun an, dass <span class="math notranslate nohighlight">\(z_m &lt; 0\)</span> ist, dann folgt</p>
+<div class="math notranslate nohighlight">
+\[A_{mm} z_m \ = \ - \sum_{j \neq m} A_{mj} z_j \ =\ \sum_{j \neq m} \vert A_{mj} \vert  z_j \geq \sum_{j \neq m} \vert A_{mj} \vert  z_m .\]</div>
+<p>Ist <span class="math notranslate nohighlight">\(z_m &lt;0\)</span>, so folgt wegen der Diagonaldominanz
+<span class="math notranslate nohighlight">\(\sum_{j \neq m} \vert A_{mj} \vert  z_m \geq A_{mm} z_m\)</span>. Dies ist aber
+nur möglich, wenn <span class="math notranslate nohighlight">\(z_j = z_m\)</span> für alle <span class="math notranslate nohighlight">\(j\)</span> mit <span class="math notranslate nohighlight">\(A_{mj} \neq 0\)</span> gilt.
+Damit ist auch <span class="math notranslate nohighlight">\(z_j\)</span> minimal und wir können das gleiche Argument auf
+<span class="math notranslate nohighlight">\(z_j\)</span> anwenden, wegen der Irreduzibilität erreichen wir dann
+schrittweise alle Einträge von <span class="math notranslate nohighlight">\(z\)</span>. Dies bedeutet der konstante Vektor
+<span class="math notranslate nohighlight">\(z_j = 1\)</span> für alle <span class="math notranslate nohighlight">\(j\)</span> ist eine Lösung, was aber der Bedingung</p>
+<div class="math notranslate nohighlight">
+\[A_{kk} \ &gt; \ \sum_{j \neq k} \vert A_{jk} \vert \ = \ -\sum_{j \neq k}  A_{jk},\]</div>
+<p>für ein <span class="math notranslate nohighlight">\(k\)</span> gilt. Also muss <span class="math notranslate nohighlight">\(\min_k z_k\geq 0\)</span> gelten. Analog können wir
+aber auch <span class="math notranslate nohighlight">\(\max_k z_k \leq 0\)</span> zeigen, also bleibt nur <span class="math notranslate nohighlight">\(z \equiv 0\)</span> im
+Nullraum.</p>
+<p>Um zu zeigen, dass die Inverse von <span class="math notranslate nohighlight">\(A\)</span> nur nicht-negative Einträge hat,
+können wir zeigen, dass die Lösung <span class="math notranslate nohighlight">\(z\)</span> von <span class="math notranslate nohighlight">\(Az=y\)</span>, mit <span class="math notranslate nohighlight">\(y\)</span> gleich einem
+Einheitsvektor, nur nicht-negative Einträge hat. Dies ist natürlich
+äquivalent dazu, dass die Lösung von <span class="math notranslate nohighlight">\(Az = y\)</span> mit nicht-negativem <span class="math notranslate nohighlight">\(y\)</span>
+nur nicht-negative Einträge hat. Dazu benutzen wir das selbe Argument
+wie oben: Sei <span class="math notranslate nohighlight">\(z_k = \min_j z_j &lt; 0\)</span>. Dann ist</p>
+<div class="math notranslate nohighlight">
+\[A_{kk} z_k \ = \ - \sum_{j\neq k} A_{kj} z_j + y_k \geq -  \sum_{j\neq k} A_{kj} z_k \ \geq \ A_{kk} z_k\]</div>
+<p>mit Gleichheit wenn <span class="math notranslate nohighlight">\(y_k = 0\)</span> und <span class="math notranslate nohighlight">\(x_j = x_k\)</span> für alle <span class="math notranslate nohighlight">\(j\)</span>. Dann folgt
+aber auch <span class="math notranslate nohighlight">\(y_j =0\)</span> für alle <span class="math notranslate nohighlight">\(j\)</span> und deshalb <span class="math notranslate nohighlight">\(z = 0\)</span>, ein Widerspruch zu
+<span class="math notranslate nohighlight">\(z_k &lt; 0\)</span>. ◻</p>
+</div>
+</section>
+<section id="konvergenz-von-differenzenverfahren-1">
+<span id="id4"></span><h3><span class="section-number">3.2.2.2. </span>Konvergenz von Differenzenverfahren<a class="headerlink" href="#konvergenz-von-differenzenverfahren-1" title="Permalink to this heading">#</a></h3>
+<p>Um die Konvergenz eines numerischen Differenzenverfahrens für ein
+Randwertproblem zu untersuchen, benötigen wir wieder die üblichen
+Begriffe der Konsistenz und Stabilität. Diese wollen wir im Folgenden
+einführen bevor wir hinreichende Bedingungen angeben. Sei
+<span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> die Lösung des Randwertproblems und dementsprechend
+sei <span class="math notranslate nohighlight">\(U \coloneqq (u(x_k)) \in \R^{N-1}\)</span> die Auswertung der Lösung auf
+dem Diskretisierungsgitter. Sei außerdem <span class="math notranslate nohighlight">\(U_h \in \R^{N-1}\)</span> die
+numerische Lösung des linearen Gleichungssystems <span class="math notranslate nohighlight">\(A U_h = F\)</span> des
+Randwertproblems. Dann können wir den Unterschied zwischen der
+numerischen Lösung und der echten Lösung der Differentialgleichung
+bezüglich der rechten Seite <span class="math notranslate nohighlight">\(F\)</span> betrachten mit</p>
+<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-konsistenz">
+<span class="eqno">(3.15)<a class="headerlink" href="#equation-eq-randwertproblem-konsistenz" title="Permalink to this equation">#</a></span>\[A (U_h - U) \ = \ F - A U \ =: \ G \in \R^{N-1}.\]</div>
+<p>Die rechte Seite <span class="math notranslate nohighlight">\(G\)</span> misst also die Auswirkung des
+Diskretisierungsfehlers, der durch das Aufstellen der Systemmatrix <span class="math notranslate nohighlight">\(A\)</span>
+entsteht, bei Anwendung auf die echte Lösung der Differentialgleichung.
+Für die in <a class="reference internal" href="#equation-eq-diskretisierung-2-ordnung-mit-a">(3.14)</a> betrachtete
+Diskretisierung ergibt sich somit für die rechte Seite <span class="math notranslate nohighlight">\(G\)</span> unter
+Verwendung von <span class="math notranslate nohighlight">\(F_k = f(x_k) = (a\cdot u')'(x_k)\)</span> für <span class="math notranslate nohighlight">\(k=1,\ldots,N-1\)</span></p>
+<div class="math notranslate nohighlight">
+\[G_k \ = \ (a u')'(x_k) - \frac{1}{h_k} \left( a(x_{k+1/2}) \frac{u_{k+1} -  u_k}{x_{k+1}-x_k} - a(x_{k-1/2}) \frac{u_k- u_{k-1}}{x_k - x_{k-1}} \right).\]</div>
+<p>Wir beachten dabei, dass der Term <span class="math notranslate nohighlight">\(c(x)\cdot u(x)\)</span> als
+Funktionsauswertung exakt diskretisiert wird und daher nicht weiter zum
+Fehler beiträgt. Hierauf aufbauend können wir also den Konsistenzfehler
+definieren.</p>
+<div class="proof definition admonition" id="def:randwertproblem_konsistenzfehler">
+<p class="admonition-title"><span class="caption-number">Definition 3.2 </span> (Konsistenzfehler und -ordnung)</p>
+<section class="definition-content" id="proof-content">
+<p>Sei <span class="math notranslate nohighlight">\(A \in \R^{N-1 \times N-1}\)</span> eine Systemmatrix, die ein
+Differenzenverfahren für ein Randwertproblem in Divergenzform
+<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> realisiert. Dann definieren wir den <strong>globalen
+Konsistenzfehler</strong> des Verfahrens als</p>
+<div class="math notranslate nohighlight">
+\[K_h \ \coloneqq \ \Vert G\Vert_\infty \ = \! \max_{k=1,\ldots,N-1} \vert G_k \vert\]</div>
+<p>Ein Differenzenverfahren heißt <strong>konsistent von der Ordnung</strong>
+<span class="math notranslate nohighlight">\(\mathbf{p \in \N}\)</span>, wenn für den Konsistenzfehler <span class="math notranslate nohighlight">\(K_h = {\cal O}(h^p)\)</span>
+gilt.</p>
+</section>
+</div><p>Wie wir bereits in <a class="reference internal" href="#equation-eq-differenzenverfahren-konsistenz">(3.11)</a>
+nachgerechnet haben für den Spezialfall einer konstanten Funktion
+<span class="math notranslate nohighlight">\(a(x) \equiv 1\)</span> für <span class="math notranslate nohighlight">\(x \in [0,1]\)</span> ist das diskutierte
+Differenzenverfahren konsistent von Ordnung <span class="math notranslate nohighlight">\(2\)</span>. Dieses Ergebnis lässt
+sich leicht mittels Taylorentwicklung für allgemeine Funktionen <span class="math notranslate nohighlight">\(a(x)\)</span>
+erweitern.</p>
+<p>Um eine Konvergenz des Differenzenverfahrens zu erhalten benötigen wir
+eine Abschätzung an die Inverse von <span class="math notranslate nohighlight">\(A\)</span>, denn ist <span class="math notranslate nohighlight">\(A\)</span> invertierbar so
+gilt für den Konvergenzfehler <span class="math notranslate nohighlight">\(E_h\)</span> mit der Submultiplikativität der
+Matrixnorm:</p>
+<div class="math notranslate nohighlight">
+\[E_h \ := \ \Vert U_h - U\Vert_\infty \ = \ \Vert A^{-1} \cdot \underbrace{A(U_h - U)}_{= \:G} \Vert_\infty \ \leq \ \Vert A^{-1}  \Vert_\infty \cdot \Vert G \Vert_\infty \ = \ \Vert A^{-1}  \Vert_\infty \cdot K_h.\]</div>
+<p>Wir sehen aus dieser Abschätzung sofort, dass aus Konsistenzordnung
+<span class="math notranslate nohighlight">\(p\in \N\)</span> auch schon direkt Konvergenzordnung <span class="math notranslate nohighlight">\(p\)</span> folgt, wenn
+<span class="math notranslate nohighlight">\(\Vert A^{-1}\Vert_\infty\)</span> beschränkt ist für <span class="math notranslate nohighlight">\(N\rightarrow \infty\)</span> bzw.
+<span class="math notranslate nohighlight">\(h \rightarrow 0\)</span> und somit <span class="math notranslate nohighlight">\(E_h \in \mathcal{O}(h^p)\)</span> gilt. Dies
+bezeichnen wir folglich als Stabilität und halten dies entsprechend in
+einer Definition fest.</p>
+<div class="proof definition admonition" id="definition-5">
+<p class="admonition-title"><span class="caption-number">Definition 3.3 </span> (Stabilität von Differenzenverfahren)</p>
+<section class="definition-content" id="proof-content">
+<p>Wir nennen ein Differenzenverfahren eines Randwertproblems <strong>stabil</strong>,
+falls für den Konvergenzfehler folgende Abschätzung gilt:</p>
+<div class="math notranslate nohighlight">
+\[E_h \ = \ \Vert U_h - U\Vert_\infty \ \leq \ C \cdot K_h,\]</div>
+<p>wobei <span class="math notranslate nohighlight">\(K_h\)</span> der globale Konsistenzfehler aus
+<span class="xref myst">[def:randwertproblem_konsistenzfehler]</span>{reference-type=“ref+label“
+reference=“def:randwertproblem_konsistenzfehler“} ist und <span class="math notranslate nohighlight">\(C &gt; 0\)</span> eine
+von der Diskretisierungsschrittweite
+<span class="math notranslate nohighlight">\(h \coloneqq \max_{k=1,\ldots,N-1} |x_{k-1} - x_k|\)</span> unabhängige
+Konstante.</p>
+</section>
+</div><p>Wie wir sehen werden ist die M-Matrix Eigenschaft eine hinreichende
+Bedingung für die Stabilität eines Differenzenverfahrens. Wie beim
+Maximumsprinzip für die Differentialgleichung in
+<span class="xref myst">1.1</span>{reference-type=“ref+label“
+reference=“s:randwertproblem_existenz_eindeutigkeit“} werden wir
+Vergleichslösungen suchen, um Fehlerschranken zu erhalten. Dazu ist es
+wichtig, dass die Vergleichslösung unabhängig von der Schrittweite
+<span class="math notranslate nohighlight">\(h &gt; 0\)</span> (bzw. der Anzahl der Gitterpunkte <span class="math notranslate nohighlight">\(N \in \N\)</span>) ist.</p>
+<p>Im Folgenden sei <span class="math notranslate nohighlight">\(v \in C^2([0,1])\)</span> die Lösung des Randwertproblems mit
+<em>homogenen Dirichlet-Randwertbedingungen</em></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+ - (a(x)\cdot v'(x))' +c(x) \cdot v(x) \ &amp;= \ f(x), \qquad x \in (0,1),\\
+ v(0) \ = \ v(1) \ &amp;= \ 0.
+ \end{split}\end{split}\]</div>
+<p>Außerdem sei <span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> die Lösung des Randwertproblems mit
+<em>allgemeinen Dirichlet-Randwertbedingungen</em></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+ - (a(x)\cdot u'(x))' +c(x) \cdot u(x) \ &amp;= \ f(x), \qquad x \in (0,1),\\
+ u(0) \ = \ g_0, \quad u(1) \ &amp;= \ g_1.
+ \end{split}\end{split}\]</div>
+<p>Die numerische Lösung von <span class="math notranslate nohighlight">\(A U_h = F\)</span> bezeichnen wir mit
+<span class="math notranslate nohighlight">\(U_h = (u_k)_{k=1,\ldots,N-1}\)</span>. Mit dem üblichen Konsistenzfehler <span class="math notranslate nohighlight">\(G\)</span>
+gilt</p>
+<div class="math notranslate nohighlight">
+\[A (U - U_h) \ = \ G,\]</div>
+<p>wobei <span class="math notranslate nohighlight">\(U = (u(x_k))_{k=1,\ldots,N-1}\)</span> die Auswertung der Lösung des
+allgemeinen Dirichletproblems an den Gitterpunkten ist. Nun betrachten
+wir die beiden Vektoren</p>
+<div class="math notranslate nohighlight">
+\[H_\pm \ \coloneqq \ U - U_h \ \pm \ 2 \cdot K_h \cdot V\]</div>
+<p>mit dem globalen Konsistenzfehler <span class="math notranslate nohighlight">\(K_h = \Vert G \Vert_\infty\)</span> und der
+Lösung des homogenen Dirichletproblems ausgewertet an den Gitterpunkten
+<span class="math notranslate nohighlight">\(V = (v(x_k))_{k=1,\ldots,N-1}\)</span>. Das folgende Lemma liefert uns
+praktische Abschätzungen.</p>
+<div class="proof lemma admonition" id="lem:abschaetzungen_vergleichsloesungen">
+<p class="admonition-title"><span class="caption-number">Lemma 3.3 </span> (Abschätzungen durch Vergleichslösungen)</p>
+<section class="lemma-content" id="proof-content">
+<p>Mit den obigen Definitionen von <span class="math notranslate nohighlight">\(U,U_h,V \in \R^{N-1}\)</span> und dem globalen
+Konsistenzfehler <span class="math notranslate nohighlight">\(K_h\)</span> betrachten wir die beiden Vektoren
+<span class="math notranslate nohighlight">\(H_\pm \coloneqq U - U_h \ \pm \ 2 \cdot K_h \cdot V \in \R^{N-1}\)</span>. Sei
+außerdem <span class="math notranslate nohighlight">\(A \in \R^{N-1 \times N-1}\)</span> eine M-Matrix.</p>
+<p>Dann gelten für hinreichend kleine Schrittweiten <span class="math notranslate nohighlight">\(h &gt; 0\)</span> die
+Ungleichungen</p>
+<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-fehler-ungleichungen">
+<span class="eqno">(3.16)<a class="headerlink" href="#equation-eq-randwertproblem-fehler-ungleichungen" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
+    A \cdot H_+ \ = \ A \cdot (U - U_h+2 \cdot K_h \cdot V) \ &amp;\geq \ 0, \\
+    A \cdot H_- \ = \ A \cdot (U - U_h-2 \cdot K_h \cdot V) \ &amp;\leq \ 0.
+\end{split}\end{split}\]</div>
+<p>Die Ungleichungen <a class="reference internal" href="#equation-eq-randwertproblem-fehler-ungleichungen">(3.16)</a> sind
+hierbei komponentenweise gemeint.</p>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. Wegen der Konsistenz des Verfahrens wird für hinreichend kleine
+Schrittweiten <span class="math notranslate nohighlight">\(h &gt; 0\)</span> die Differenz</p>
+<div class="math notranslate nohighlight">
+\[A \cdot V - (-(av')'(x_k) + c(x_k))_{k=1,\ldots,N-1} \ = \ A \cdot V - (1)_{k=1,\ldots,N-1}\]</div>
+<p>beliebig klein, insbesondere gilt dann</p>
+<div class="math notranslate nohighlight">
+\[A \cdot V \ \geq \ (\frac{1}2)_{k=1,\ldots,N-1}.\]</div>
+<p>Setzen wir nun ein, so folgt</p>
+<div class="math notranslate nohighlight">
+\[A \cdot  (U - U_h+2 \cdot K_h \cdot V) \ = \ G_h + 2 \cdot K_h \cdot A \cdot V \ \geq \ G + K_h (1)_{k=1,\ldots,N-1} \ \geq \ 0\]</div>
+<p>und da <span class="math notranslate nohighlight">\(K_h = \Vert G \Vert_\infty\)</span> gilt. Analog folgt die zweite
+Ungleichung. ◻</p>
+</div>
+<p>Nun können wir eine hinreichende Bedingung für die Stabilität eines
+Differenzenverfahrens formulieren.</p>
+<div class="proof theorem admonition" id="theorem-7">
+<p class="admonition-title"><span class="caption-number">Theorem 3.3 </span> (Stabilität eines Differenzenverfahrens)</p>
+<section class="theorem-content" id="proof-content">
+<p>Sei <span class="math notranslate nohighlight">\(A \in \R^{N-1 \times N-1}\)</span> eine Systemmatrix, die ein
+Differenzenverfahren für ein Randwertproblem in Divergenzform
+<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> realisiert. Seien <span class="math notranslate nohighlight">\(U,U_h,V \in \R^{N-1}\)</span>
+definiert wie oben und <span class="math notranslate nohighlight">\(K_h\)</span> sei der globale Konsistenzfehler. Außerdem
+sei <span class="math notranslate nohighlight">\(A\)</span> eine M-Matrix.</p>
+<p>Dann ist das Differenzenverfahren stabil.</p>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. Um die Stabilität des Differenzenverfahrens zu zeigen betrachten wir
+zunächst wieder die Vektoren</p>
+<div class="math notranslate nohighlight">
+\[H_\pm \ \coloneqq \ U - U_h \, \pm \, 2 \cdot K_h \cdot V.\]</div>
+<p>Da <span class="math notranslate nohighlight">\(A\)</span> eine M-Matrix ist nach Voraussetzung können wir
+<span class="xref myst">[lem:abschaetzungen_vergleichsloesungen]</span>{reference-type=“ref+label“
+reference=“lem:abschaetzungen_vergleichsloesungen“} anwenden und es
+gelten somit die Abschätzungen
+<a class="reference internal" href="#equation-eq-randwertproblem-fehler-ungleichungen">(3.16)</a>. Wegen der
+Nichtnegativität der Matrixeinträge der Inversen <span class="math notranslate nohighlight">\(A^{-1}\)</span> können wir
+dann komponentenweise folgern</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+H_+ \ = \ U - U_h + 2 \cdot K_h \cdot V \ \geq \ A^{-1} \cdot 0 \ = \ 0,\\
+H_- \ = \ U - U_h - 2 \cdot K_h \cdot V \ \leq \ A^{-1} \cdot 0 \ = \ 0,\\
+\end{split}\end{split}\]</div>
+<p>Somit können wir also den Fehler zwischen der Lösung der
+Differentialgleichung <span class="math notranslate nohighlight">\(U\)</span> und der numerischen Lösung des
+Differenzenverfahren <span class="math notranslate nohighlight">\(U_h\)</span> nach oben und unten abschätzen durch:</p>
+<div class="math notranslate nohighlight">
+\[- 2 \cdot K_h \cdot V \ \leq \ U - U_h \ \leq \ 2 \cdot K_h \cdot V.\]</div>
+<p>Da die Lösung <span class="math notranslate nohighlight">\(v \in C^2([0,1])\)</span> insbesondere stetig ist, nimmt sie ihr
+betragliches Maximum auf dem kompakten Intervall <span class="math notranslate nohighlight">\([0,1] \subset \R\)</span> an
+und wir können somit ebenfalls unabhängig von der Schrittweite <span class="math notranslate nohighlight">\(h &gt; 0\)</span>
+des Gitters abschätzen:</p>
+<div class="math notranslate nohighlight">
+\[\Vert V \Vert_\infty \ \leq \ \max_{x \in [0,1]} \vert v(x) \vert.\]</div>
+<p>Mit diesen Abschätzungen erhalten wir schließlich eine gleichmäßige
+Schranke für den Konvergenzfehler <span class="math notranslate nohighlight">\(E_h\)</span> durch:</p>
+<div class="math notranslate nohighlight">
+\[E_h \ = \ ||U_h - U||_\infty \ \leq \ 2 \cdot ||V||_\infty \cdot K_h \ \leq \ \underbrace{2 \cdot \max_{x \in [0,1]} \vert v(x) \vert}_{=: \: C \: &gt; \: 0} \cdot \: K_h.\]</div>
+<p>◻</p>
+</div>
+<p>Mit der Stabilität eines Differenzenverfahrens erhalten wir als direkte
+Folgerung das folgende Konvergenzresultat.</p>
+<div class="proof corollary admonition" id="corollary-8">
+<p class="admonition-title"><span class="caption-number">Corollary 3.3 </span> (Konvergenz eines Differenzenverfahrens)</p>
+<section class="corollary-content" id="proof-content">
+<p>Seien <span class="math notranslate nohighlight">\(U,U_h,V \in \R^{N-1}\)</span> definiert wie oben und <span class="math notranslate nohighlight">\(K_h\)</span> sei der
+globale Konsistenzfehler. Dann gilt für <span class="math notranslate nohighlight">\(h\)</span> hinreichend klein</p>
+<div class="math notranslate nohighlight">
+\[E_h \ = \ \Vert U_h - U \Vert_\infty \ \leq \ 2 \cdot \Vert v \Vert_\infty \cdot K_h.\]</div>
+<p>Insbesondere stimmen die Konsistenz- und Konvergenzordnung überein.</p>
+</section>
+</div><p>Wir sehen, dass die obige Theorie auch leicht auf andere
+Differenzenverfahren anwendbar ist, solange Konsistenz vorliegt und die
+entsprechende M-Matrix Eigenschaft erfüllt ist. So kann man die Aussagen
+auch auf partielle Differentialgleichungen erweitern, etwa wenn wir</p>
+<div class="math notranslate nohighlight">
+\[- \nabla \cdot (a(x) \nabla u(x) ) + c(x) \cdot u(x)  \ = \ f(x), \qquad x \in [0,1]^2\]</div>
+<p>auf einem rechteckigen Gebiet lösen wollen, mit
+<span class="math notranslate nohighlight">\(\nabla \cdot (a(x) \nabla u(x) ) = \sum_{i=1}^n \partial_{x_i} (a(x) \partial_{x_i} u(x)).\)</span>
+Legen wir darüber ein Gitter und diskretisieren die zweiten Ableitungen
+in jeder Richtung analog, so erhalten wir wieder ein konsistentes
+Verfahren, das durch ein lineares System mit einer M-Matrix beschrieben
+wird. Damit können wir eine völlig analoge Theorie durchführen und
+Konvergenz beweisen. Der einzige kleine Unterschied ist, dass wir keine
+Tridiagonalmatrix erhalten, sondern eine etwas allgemeinere dünnbesetzte
+Matrix. Dies ändert aber wenig an der Struktur, nur die numerische
+Lösung des Gleichungssystems <span class="math notranslate nohighlight">\(AU=F\)</span> wird deutlich aufwändiger, da wir
+viel mehr Gitterpunkte benötigen. Wir werden uns deshalb später noch mit
+der numerischen Lösung dünnbesetzter linearer Systeme beschäftigen. Der
+einzige Nachteil in mehreren Dimensionen ist, dass finite Differenzen
+kanonisch für rechteckige Gitter verwendbar sind. Hat man andere Gebiete
+auf denen man partielle Differentialgleichungen lösen will, kommen eher
+Verfahren wie finite Elemente zum Einsatz, deren Idee wir im Folgenden
+noch kurz diskutieren wollen.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./ode\05_Randwertprobleme"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01_05_Randwertprobleme.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">zurück</p>
+        <p class="prev-next-title"><span class="section-number">3.1. </span>Existenz und Eindeutigkeit von Lösungen</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../../references.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">weiter</p>
+        <p class="prev-next-title"><span class="section-number">4. </span>Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Inhalt
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dirichlet-randbedingungen">3.2.1. Dirichlet Randbedingungen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konvergenz-von-differenzenverfahren">3.2.2. Konvergenz von Differenzenverfahren</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#m-matrizen">3.2.2.1. M-Matrizen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#konvergenz-von-differenzenverfahren-1">3.2.2.2. Konvergenz von Differenzenverfahren</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+Durch J. Laubmann, T. Roith, D. Tenbrinck
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <script type="application/json" class="js-hypothesis-config">{"assetRoot": "http://hypothesis.fau-mads.eu:3001/hypothesis/1.0.0-dummy-version/", "sidebarAppUrl":"http://hypothesis.fau-mads.eu:5000/app.html"}</script>
+<script async="async" kind="hypothesis" src="http://hypothesis.fau-mads.eu:5000/embed.js"></script>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

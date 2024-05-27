@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>1. Numerische Optimierung &#8212; Diskretisierung und numerische Optimierung</title>
+    <title>2. Numerische Lösungsverfahren für Anfangswertprobleme &#8212; Diskretisierung und numerische Optimierung</title>
   
   
   
@@ -58,24 +58,17 @@
     <script src="../../_static/translations.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js"></script>
-    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=G-Z9NNSYF13N"></script>
-    <script>
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){ dataLayer.push(arguments); }
-                gtag('js', new Date());
-                gtag('config', 'G-Z9NNSYF13N');
-            </script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'ode/02_NichtlineareOptimierung_folder/00_02_NichtlineareOptimierung';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ode/04_Anfangswertprobleme/00_04_Anfangswertprobleme';</script>
     <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
     <link rel="search" title="Suche" href="../../search.html" />
-    <link rel="next" title="1.1. Mathematische Grundlagen" href="01_02_NichtlineareOptimierung.html" />
-    <link rel="prev" title="Einleitung" href="../01_Einleitung.html" />
+    <link rel="next" title="2.1. Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen" href="01_04_Anfangswertprobleme.html" />
+    <link rel="prev" title="1.5. Nicht-differenzierbare Optimierung" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="de"/>
   </head>
@@ -151,7 +144,7 @@ const thebe_selector_output = ".output, .cell_output"
 
   
 
-<a class="navbar-brand logo" href="../01_Einleitung.html">
+<a class="navbar-brand logo" href="../../01_Einleitung.html">
   
   
   
@@ -166,19 +159,33 @@ const thebe_selector_output = ".output, .cell_output"
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
-                <a class="reference internal" href="../01_Einleitung.html">
+                <a class="reference internal" href="../../01_Einleitung.html">
                     Einleitung
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">1. Numerische Optimierung</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="01_02_NichtlineareOptimierung.html">1.1. Mathematische Grundlagen</a></li>
-<li class="toctree-l2"><a class="reference internal" href="02_02_NichtlineareOptimierung.html">1.2. Abstiegsverfahren</a></li>
-<li class="toctree-l2"><a class="reference internal" href="03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/00_02_NichtlineareOptimierung.html">1. Numerische Optimierung</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/01_02_NichtlineareOptimierung.html">1.1. Mathematische Grundlagen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html">1.2. Abstiegsverfahren</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../references.html">2. Bibliography</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="01_04_Anfangswertprobleme.html">2.1. Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_04_Anfangswertprobleme.html">2.2. Einschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03_04_Anfangswertprobleme.html">2.3. Mehrschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_04_Anfangswertprobleme.html">2.4. Weiterführende Themen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../05_Randwertprobleme/00_05_Randwertprobleme.html">3. Numerische Lösung von Randwertproblemen</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../05_Randwertprobleme/01_05_Randwertprobleme.html">3.1. Existenz und Eindeutigkeit von Lösungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../05_Randwertprobleme/02_05_Randwertprobleme.html">3.2. Differenzenverfahren für Randwertprobleme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">4. Bibliography</a></li>
 </ul>
 
     </div>
@@ -248,7 +255,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../../_sources/ode/02_NichtlineareOptimierung_folder/00_02_NichtlineareOptimierung.md" target="_blank"
+      <li><a href="../../_sources/ode/04_Anfangswertprobleme/00_04_Anfangswertprobleme.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Quelldatei herunterladen"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -330,7 +337,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Numerische Optimierung</h1>
+    <h1>Numerische Lösungsverfahren für Anfangswertprobleme</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -344,46 +351,39 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="numerische-optimierung">
-<span id="ch-optimierung"></span><h1><span class="section-number">1. </span>Numerische Optimierung<a class="headerlink" href="#numerische-optimierung" title="Permalink to this heading">#</a></h1>
-<p>Optimierung ist ein omnipräsentes Phänomen, dass nicht nur in der
-abstrakten Welt der Mathematik existiert. Viel mehr stellt es ein
-naturgegebenes Prinzip dar, welches überall um uns herum zur Anwendung
-kommt. In der Physik beispielsweise spielt Optimierung eine wesentliche
-Rolle bei der Modellierung von Energiezuständen auf unterschiedlichen
-Skalen: Moleküle formieren sich in einer Art, die die Gesamtenergie des
-Teilchensystems unter Berücksichtigung aller wechselseitigen Kräfte
-minimiert. Gleichzeitig strebt das Universum mit all seinen Planeten,
-Sternen und Galaxien nach einem Zustand von maximaler Verteilung,
-beschrieben durch die thermodynamische Größe der Entropie. Auch hier
-folgt die Zunahme der Entropie dem Prinzip der Energieminimierung des
-Gesamtsystems. Menschen betreiben seit jeher Optimierung in den
-verschiedensten Anwendungen, oft mit unterschiedlichen Motivationen.
-Flugzeuge werden von Ingenieuren so entworfen und gebaut, dass sie
-möglichst stromlinienförmig aussehen, um damit den Reibungswiderstand in
-der Luft zu minimieren und gleichzeitig den nötigen Auftrieb für einen
-sicheren Flug zu erzeugen. Fondmanager streben danach Portfolios zu
-erstellen, deren Gewinn möglichst maximal ist und dennoch
-Spekulationsrisiken vermeiden. Die gesamte Automatisierung der
-Industrie, angefangen bei den ersten Manufakturen hin zu modernen
-vollautomatischen Roboterfabriken, dient lediglich dem Prinzip der
-Gewinnmaximierung durch Minimierung der Produktionskosten.</p>
-<p>Es ist also nicht wirklich überraschend, dass sich ein gesamtes
-Teilgebiet der Angewandten Mathematik mit der Theorie der Optimierung
-befasst und somit dazu beiträgt viele Optimierungsprobleme besser zu
-verstehen und zu lösen. Im folgenden Abschnitt wollen wir uns
-hauptsächlich mit der unbeschränkten (oder: unrestringierten)
-Optimierung beschäftigen und uns nützliche Werkzeuge zum Lösen von
-numerischen Problemstellungen herleiten. Nach einer <em>allgemeinen
-mathematischen Einführung</em> in <a class="reference internal" href="01_02_NichtlineareOptimierung.html#s-opt-grundlagen"><span class="std std-ref">Mathematische Grundlagen</span></a> beginnen wir in
-Kapitel <a class="reference internal" href="02_02_NichtlineareOptimierung.html#s-abstiegsverfahren"><span class="std std-ref">Abstiegsverfahren</span></a> mit einer Klasse von Algorithmen, die
-einer einfachen Idee folgen: die <em>numerischen Abstiegsverfahren</em>. In
-<a class="reference internal" href="03_02_NichtlineareOptimierung.html#s-cg-verfahren"><span class="std std-ref">Verfahren der konjugierten Gradienten</span></a> behandeln wir insbesondere das Verfahren der
-<em>konjugierten Gradienten</em>, welches zur iterativen Lösung von großen,
-linearen Gleichungssystemen mit besonderen Eigenschaften genutzt werden
-kann. Zum Schluss untersuchen wir in <span class="xref std std-ref">s:nichtdiffbare_optimierung</span>
-zwei moderne Optimierungsalgorithmen zur Lösung von <em>konvexen,
-nicht-differenzierbaren Problemen</em>.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="numerische-losungsverfahren-fur-anfangswertprobleme">
+<span id="id1"></span><h1><span class="section-number">2. </span>Numerische Lösungsverfahren für Anfangswertprobleme<a class="headerlink" href="#numerische-losungsverfahren-fur-anfangswertprobleme" title="Permalink to this heading">#</a></h1>
+<p>Differentialgleichungen spielen eine wichtige Rolle in der Modellierung
+vieler naturwissenschaftlicher Phänomene. Insbesondere in der Physik und
+den Ingenieurswissenschaften ist das Verständnis und das Lösen von
+Differentialgleichungen essentiell, da sich viele physikalische Gesetze
+und Zusammenhänge durch diese beschreiben lassen. Leider existieren für
+viele Differentialgleichungen keine geschlossen darstellbaren
+analytischen Lösungen, so dass man Lösungen mit Hilfe numerischer
+Verfahren approximieren muss. In diesem und nächstem Kapitel widmen wir
+uns daher der numerischen Lösung von verschiedenen Problemen, die
+Differentialgleichungen beinhalten. Dies sind insbesondere Anfangswert-
+und Randwertprobleme.</p>
+<p>Mathematisch gesehen ist eine Differentialgleichung eine Gleichung, in
+der eine unbekannte Funktion und ihre Ableitungen auftreten. Hierbei
+werden folgende Kriterien zur Unterscheidung von Differentialgleichungen
+genutzt.</p>
+<ol class="arabic simple">
+<li><p>Die größte auftretende Ableitung der unbekannten Funktion bestimmt
+die <strong>Ordnung der Differentialgleichung</strong>.</p></li>
+<li><p>Je nachdem ob Ableitungen der unbekannten Funktion bezüglich einer
+einzigen Variablen oder unterschiedlicher Variablen auftreten
+sprechen wir von einer <strong>gewöhnlichen Differentialgleichung</strong> oder
+einer <strong>partiellen Differentialgleichung</strong>.</p></li>
+<li><p>Werden gleich mehrere solche Funktionen durch mehrere Gleichungen
+beschrieben, so spricht man von einem
+<strong>Differentialgleichungssystem</strong>.</p></li>
+</ol>
+<p>Wir werden in den folgenden Abschnitten zunächst die wichtigsten
+theoretischen Erkenntnisse für gewöhnliche Differentialgleichungen
+wiederholen und insbesondere Existenz- und Eindeutigkeitsaussagen
+diskutieren. Diese werden für die spätere Konstruktion und Analyse von
+numerischen Lösungsverfahren hilfreich sein.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -401,7 +401,7 @@ nicht-differenzierbaren Problemen</em>.</p>
         },
         kernelOptions: {
             name: "python3",
-            path: "./ode\02_NichtlineareOptimierung_folder"
+            path: "./ode\04_Anfangswertprobleme"
         },
         predefinedOutput: true
     }
@@ -419,20 +419,20 @@ nicht-differenzierbaren Problemen</em>.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../01_Einleitung.html"
+       href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">zurück</p>
-        <p class="prev-next-title">Einleitung</p>
+        <p class="prev-next-title"><span class="section-number">1.5. </span>Nicht-differenzierbare Optimierung</p>
       </div>
     </a>
     <a class="right-next"
-       href="01_02_NichtlineareOptimierung.html"
+       href="01_04_Anfangswertprobleme.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">weiter</p>
-        <p class="prev-next-title"><span class="section-number">1.1. </span>Mathematische Grundlagen</p>
+        <p class="prev-next-title"><span class="section-number">2.1. </span>Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -475,6 +475,11 @@ Durch J. Laubmann, T. Roith, D. Tenbrinck
   
   <div class="footer-item">
     
+<div class="extra_footer">
+  <script type="application/json" class="js-hypothesis-config">{"assetRoot": "http://hypothesis.fau-mads.eu:3001/hypothesis/1.0.0-dummy-version/", "sidebarAppUrl":"http://hypothesis.fau-mads.eu:5000/app.html"}</script>
+<script async="async" kind="hypothesis" src="http://hypothesis.fau-mads.eu:5000/embed.js"></script>
+
+</div>
   </div>
   
 </div>

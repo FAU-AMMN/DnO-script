@@ -1,0 +1,1082 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="de" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>2.3. Mehrschrittverfahren für Anfangswertprobleme &#8212; Diskretisierung und numerische Optimierung</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
+  <script src="../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script src="../../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ode/04_Anfangswertprobleme/03_04_Anfangswertprobleme';</script>
+    <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
+    <link rel="search" title="Suche" href="../../search.html" />
+    <link rel="next" title="2.4. Weiterführende Themen" href="04_04_Anfangswertprobleme.html" />
+    <link rel="prev" title="2.2. Einschrittverfahren für Anfangswertprobleme" href="02_04_Anfangswertprobleme.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="de"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="../../01_Einleitung.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Diskretisierung und numerische Optimierung</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../01_Einleitung.html">
+                    Einleitung
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/00_02_NichtlineareOptimierung.html">1. Numerische Optimierung</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/01_02_NichtlineareOptimierung.html">1.1. Mathematische Grundlagen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html">1.2. Abstiegsverfahren</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_04_Anfangswertprobleme.html">2.1. Theorie für Anfangswertprobleme gewöhnlicher Differentialgleichungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_04_Anfangswertprobleme.html">2.2. Einschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">2.3. Mehrschrittverfahren für Anfangswertprobleme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_04_Anfangswertprobleme.html">2.4. Weiterführende Themen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../05_Randwertprobleme/00_05_Randwertprobleme.html">3. Numerische Lösung von Randwertproblemen</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../05_Randwertprobleme/01_05_Randwertprobleme.html">3.1. Existenz und Eindeutigkeit von Lösungen</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../05_Randwertprobleme/02_05_Randwertprobleme.html">3.2. Differenzenverfahren für Randwertprobleme</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">4. Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/FAU-AMMN/MathPhysicsC" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Quell-Repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Laden Sie diese Seite herunter">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/ode/04_Anfangswertprobleme/03_04_Anfangswertprobleme.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Quelldatei herunterladen"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="In PDF drucken"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Vollbildmodus"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Suche" aria-label="Suche" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Mehrschrittverfahren für Anfangswertprobleme</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Inhalt </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsistenz-von-mehrschrittverfahren">2.3.1. Konsistenz von Mehrschrittverfahren</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stabilitat-von-mehrschrittverfahren">2.3.2. Stabilität von Mehrschrittverfahren</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="mehrschrittverfahren-fur-anfangswertprobleme">
+<span id="s-mehrschrittverfahren"></span><h1><span class="section-number">2.3. </span>Mehrschrittverfahren für Anfangswertprobleme<a class="headerlink" href="#mehrschrittverfahren-fur-anfangswertprobleme" title="Permalink to this heading">#</a></h1>
+<p>Im vorangegangenen Abschnitt haben wir Einschrittverfahren betrachtet,
+die zur Berechnung einer numerischen Approximation der unbekannten
+Lösung <span class="math notranslate nohighlight">\(u_\tau(t_{k+1}) \in \R^n\)</span> lediglich Informationen aus dem
+letzten Zeitschritt <span class="math notranslate nohighlight">\(t_k \in \Omega_\tau \subset [0, T]\)</span> verwendet
+haben. Dies erinnert ein wenig an Markow-Prozesse aus der Stochastik,
+die nur auf Informationen des aktuellen Zustands zurückgreifen und
+ansonsten gedächtnislos sind. Da sich das Verhalten einer
+Lösungsfunktion <span class="math notranslate nohighlight">\(u_\tau\)</span> nur schwer mit Hilfe eines einzigen Datenpunkts
+vorhersagen lässt, ist es sinnvoll auch die Werte der vorangehenden
+Zeitschritte zu berücksichtigen. Dieser Ansatz führt zu den sogenannten
+Mehrschrittverfahren für Anfangswertprobleme.</p>
+<p>Konkret verwenden wir nun zur Berechnung der numerischen Approximation
+<span class="math notranslate nohighlight">\(u_\tau(t_{k+s})\)</span> die bereits berechneten Werte der Zeitschritte
+<span class="math notranslate nohighlight">\(t_k, \ldots, t_{k+s-1} \in \Omega_\tau\)</span> für eine Zeitdiskretisierung
+<span class="math notranslate nohighlight">\(\Omega_\tau\)</span> des Intervalls <span class="math notranslate nohighlight">\([0,T]\)</span>. Hierbei bezeichnen wir mit
+<span class="math notranslate nohighlight">\(s \in \N^+\)</span> die Stufe des Mehrschrittverfahrens. Die bereits in
+<a class="reference internal" href="02_04_Anfangswertprobleme.html#s-einschrittverfahren"><span class="std std-ref">Einschrittverfahren für Anfangswertprobleme</span></a> diskutierten Einschrittverfahren lassen
+sich dementsprechend als Mehrschrittverfahren der Stufe <span class="math notranslate nohighlight">\(s=1\)</span>
+interpretieren. Wir werden in diesem Abschnitt die <strong>abkürzende
+Notation</strong> <span class="math notranslate nohighlight">\(F_k \coloneqq F(t_k,u_\tau(t_k))\)</span> verwenden.</p>
+<p>Wir betrachten zunächst einige einfache Beispiele für
+Mehrschrittverfahren der Stufe <span class="math notranslate nohighlight">\(s=2\)</span>.</p>
+<div class="proof example admonition" id="ex:mehrschrittverfahren_s=2">
+<p class="admonition-title"><span class="caption-number">Example 2.9 </span> (Mehrschrittverfahren für Stufe s=2)</p>
+<section class="example-content" id="proof-content">
+<p>Die beiden folgenden Beispiele erklären Mehrschrittverfahren der Stufe
+<span class="math notranslate nohighlight">\(s=2\)</span>, d.h., wir verwenden zur Berechnung der numerischen Approximation
+<span class="math notranslate nohighlight">\(u_\tau(t_{k+2})\)</span> die beiden vorigen Zeitschritte
+<span class="math notranslate nohighlight">\(t_k, t_{k+1} \in \Omega_\tau\)</span>. Die Grundidee ist es passende
+Quadraturformeln (siehe <span id="id1">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>) für die Approximation des
+Integrals auf der rechten Seite folgender Gleichung zu benutzen:</p>
+<div class="math notranslate nohighlight">
+\[u_\tau(t_{k+2}) - u_\tau(t_{k}) \ = \ \int^{t_{k+2}}_{t_{k}} u'_\tau(t) \, \mathrm{d}t \ = \ \int^{t_{k+2}}_{t_{k}} F(t, u_\tau(t)) \, \mathrm{d}t.\]</div>
+<ol class="arabic">
+<li><p>Verwenden wir zunächst die simple <strong>Mittelpunktsregel</strong> zur
+Approximation des Integrals im Intervall <span class="math notranslate nohighlight">\([t_{k}, t_{t+2}]\)</span>, so
+erhalten wir</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+u_\tau(t_{k+2}) - u_\tau(t_{k}) \ &amp;= \ \int^{t_{k+2}}_{t_{k}} F(t, u_\tau(t)) \, \mathrm{d}t \\
+ &amp;\approx \ (t_{k+2} - t_{k}) \cdot F\left(\frac{t_{k+2} + t_{k}}{2}, u_\tau\left(\frac{t_{k+2} + t_{k}}{2}\right)\right)\\
+ &amp;= \ 2\tau \cdot F(t_{k+1}, u_\tau(t_{k+1})).
+\end{split}\end{split}\]</div>
+<p>Durch Umstellen erhalten wir so ein <em>explizites Verfahren</em> zur
+Berechnung des nächsten Werts <span class="math notranslate nohighlight">\(u_\tau(t_{k+2})\)</span> der numerischen
+Approximation aus den letzten beiden Werten, nämlich</p>
+<div class="math notranslate nohighlight">
+\[u_\tau(t_{k+2})  \ = \ u_\tau(t_{k}) + 2\tau \cdot  F_{k+1}.\]</div>
+</li>
+<li><p>Verwenden wir stattdessen die <strong>Simpsonregel</strong> als interpolatorische
+Quadraturformel für die Approximation des Integrals im Intervall
+<span class="math notranslate nohighlight">\([t_{k}, t_{t+2}]\)</span>, so erhalten wir</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+u_\tau(t_{k+2}) \! - \! u_\tau(t_{k}) \, &amp;= \, \int_{t_{k}}^{t_{k+2}} F(t, u_\tau(t)) \, \mathrm{d}t \\
+ &amp;\approx \, \frac{t_{k+2} - t_{k}}{6} \cdot \Bigl( F(t_{k}, u_\tau(t_{k})) \\
+  &amp; \hspace{2.05cm} \left. + \ 4\cdot F\left(\frac{t_{k+2} + t_{k}}{2}, u_\tau\left(\frac{t_{k+2} + t_{k}}{2}\right) \right) \right. \\
+  &amp; \hspace{2.05cm} + F(t_{k+2}, u_\tau(t_{k+2}))\Bigr)\\
+  &amp;= \, \frac{\tau}{3} \cdot \left( F(t_{k},u_\tau(t_{k}))+ 4 F(t_{k+1},u_\tau(t_{k+1})) + F(t_{k+2},u_\tau(t_{k+2})) \right)\!.
+\end{split}\end{split}\]</div>
+<p>Durch Umstellen erhalten wir so ein <em>implizites Verfahren</em> zur
+Berechnung des nächsten Werts <span class="math notranslate nohighlight">\(u_\tau(t_{k+2})\)</span> der numerischen
+Approximation aus den letzten beiden Werten, nämlich</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+u_{\tau}(t_{k+2}) \, = \, u_\tau(t_{k}) + \frac{\tau}3 \cdot ( F_{k} + 4 \cdot F_{k+1} + F_{k+2}).
+\end{split}\]</div>
+</li>
+</ol>
+</section>
+</div><p>Die in <a class="reference internal" href="#ex:mehrschrittverfahren_s=2">Example 2.9</a> illustrierten
+Mehrschrittverfahren sind beide von einer linearen Gestalt, die in
+folgender Definition verallgemeinert wird.</p>
+<div class="proof definition admonition" id="def:mehrschrittverfahren_linear">
+<p class="admonition-title"><span class="caption-number">Definition 2.11 </span> (Lineare Mehrschrittverfahren)</p>
+<section class="definition-content" id="proof-content">
+<p>Sei eine Zeitdiskretisierung
+<span class="math notranslate nohighlight">\(\Omega_\tau \coloneqq \lbrace t_k \in [0,T] \colon t_k \coloneqq k \cdot \tau, k = 0,\ldots, N \rbrace\)</span>
+für ein gegebenes Intervall <span class="math notranslate nohighlight">\([0,T] \subset \R^+\)</span> mit Zeitschrittweite
+<span class="math notranslate nohighlight">\(\tau \coloneqq \frac{T}{N}\)</span> für <span class="math notranslate nohighlight">\(N \in \N^+\)</span> eines Anfangswertproblems
+der Form <span class="math notranslate nohighlight">\(u'(t) = F(t,u(t))\)</span> für <span class="math notranslate nohighlight">\(t \in [0,T]\)</span> mit
+<span class="math notranslate nohighlight">\(u(0) \coloneqq u_0 \in \R^n\)</span> gegeben.</p>
+<p>Wir nennen ein Mehrschrittverfahren der Stufe <span class="math notranslate nohighlight">\(s \in \N^+\)</span> <strong>linear</strong>,
+wenn es sich in folgender Form schreiben lässt:</p>
+<div class="math notranslate nohighlight" id="equation-eq-mehrschrittverfahren">
+<span class="eqno">(2.13)<a class="headerlink" href="#equation-eq-mehrschrittverfahren" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
+\sum_{i=0}^s \alpha_i u_\tau(t_{k+i}) \ &amp;= \ \alpha_0 u_\tau(t_{k}) + \alpha_{1} u_\tau(t_{k+1})+\ldots+\alpha_s u_\tau(t_{k+s})\\
+&amp;= \ \tau \cdot (\beta_0 F_{k}  + \beta_{1}  F_{k+1}+\ldots+\beta_s F_{k+s} ) \ = \ \tau \cdot \sum_{i=0}^s \beta_i F_{k+i},
+\end{split}\end{split}\]</div>
+<p>mit Koeffizienten <span class="math notranslate nohighlight">\(\alpha_i, \beta_i \in \R\)</span> für <span class="math notranslate nohighlight">\(i=0,\ldots,s\)</span>.</p>
+<p>Wir nennen das lineare Mehrschrittverfahren <strong>explizit</strong> falls
+<span class="math notranslate nohighlight">\(\beta_s = 0\)</span> gilt und ansonsten <strong>implizit</strong>.</p>
+</section>
+</div><p>Lineare Mehrschrittverfahren sind mit Abstand die gebräuchlichsten
+Methoden in der Numerik und daher werden wir uns im Folgenden auf diese
+Klasse von Verfahren einschränken. Damit wir wirklich ein <span class="math notranslate nohighlight">\(s\)</span>-stufiges
+lineares Mehrschrittverfahren vorliegen haben, werden wir immer
+annehmen, dass <span class="math notranslate nohighlight">\(\alpha_s \neq 0\)</span> und <span class="math notranslate nohighlight">\(|\alpha_0|+|\beta_0|&gt; 0\)</span> in
+<a class="reference internal" href="#def:mehrschrittverfahren_linear">Definition 2.11</a> gilt. An der Form eines
+linearen Mehrschrittverfahrens in <a class="reference internal" href="#equation-eq-mehrschrittverfahren">(2.13)</a> sehen
+wir ebenfalls einen allgemeinen Vorteil gegenüber den
+Einschrittverfahren in <a class="reference internal" href="02_04_Anfangswertprobleme.html#s-einschrittverfahren"><span class="std std-ref">Einschrittverfahren für Anfangswertprobleme</span></a>: Wir können in jeder
+Iteration <span class="math notranslate nohighlight">\(k=s,\ldots,N-s\)</span> zur Bestimmung des Werts
+<span class="math notranslate nohighlight">\(u_\tau(t_{k+s}) \in \R^n\)</span> auf bereits berechnete Funktionsauswertungen
+<span class="math notranslate nohighlight">\(F_k, \ldots, F_{k+s-1} \in \R^n\)</span> zurückgreifen und müssen nur eine
+einzige neue Funktionsauswertung <span class="math notranslate nohighlight">\(F_{k+s} \in \R^n\)</span> durchführen.</p>
+<p>Bei der numerischen Berechnung gehen wir analog wie bei
+Einschrittverfahren vor. Wir müssen nur zusätzlich zu
+<span class="math notranslate nohighlight">\(u_\tau(t_{k+s-1}) \in \R^n\)</span> auch die Werte
+<span class="math notranslate nohighlight">\(u_\tau(t_{k}),\ldots,u_\tau(t_{k+s-2}) \in \R^n\)</span> verwenden. Hierdurch
+ensteht ein effektiver Unterschied zu Einschrittverfahren mit Bezug auf
+die benötigten Anfangswerte. Um ein Mehrschrittverfahren der Stufe <span class="math notranslate nohighlight">\(s&gt;1\)</span>
+durchzuführen benötigen wir nicht nur den gegebenen Anfangswert
+<span class="math notranslate nohighlight">\(u_0 \in \R^n\)</span>, sondern auch numerische Approximationen der folgenden
+<span class="math notranslate nohighlight">\(s-1\)</span> Werte <span class="math notranslate nohighlight">\(u_\tau(t_1),\ldots,u_\tau(t_{s-1})\)</span> zu Berechnung des
+Wertes <span class="math notranslate nohighlight">\(u_\tau(t_{s})\)</span>. Da diese numerischen Approximationen zunächst
+unbekannt sind müssen wir sie erst durch ein anderes Verfahren, etwa ein
+Einschrittverfahren, berechnen. Dabei müssen wir insbesondere darauf
+achten, dass das gewählte Verfahren von der selben Konvergenzordnung wie
+das Mehrschrittverfahren gewählt wird, um diese insgesamt nicht zu
+verkleinern. Eine Diskussion der Konsistenz- und Konvergenzordnung von
+Mehrschrittverfahren folgt in <a class="reference internal" href="#ss-mehrschrittverfahren-konsistenz"><span class="std std-ref">Konsistenz von Mehrschrittverfahren</span></a>.</p>
+<div class="proof remark admonition" id="remark-2">
+<p class="admonition-title"><span class="caption-number">Remark 2.1 </span> (Wohldefiniertheit von Mehrschrittverfahren)</p>
+<section class="remark-content" id="proof-content">
+<p>Bei expliziten Verfahren, d.h. <span class="math notranslate nohighlight">\(\beta_s = 0\)</span>, ist die Wohldefiniertheit
+des Mehrschrittverfahrens natürlich gegeben, da eine numerische
+Approximation <span class="math notranslate nohighlight">\(u_\tau(t_{k+1}) \in \R^n\)</span> explizit bestimmt werden kann.
+Im impliziten Fall, d.h. für <span class="math notranslate nohighlight">\(\beta_s \neq 0\)</span>, ist die Existenz einer
+Lösung des auftretenden nichtlinearen Gleichungssystems jedoch im
+Allgemeinen nicht gesichert. Hier benötigen wir wieder das in
+<a class="reference internal" href="01_04_Anfangswertprobleme.html#ss-awp-existenz-eindeutigkeit"><span class="std std-ref">Existenz und Eindeutigkeit von Lösungen</span></a> diskutierte Fixpunktargument um die
+Wohldefiniertheit der beschriebenen Verfahren zu gewährleisten.</p>
+<p>Es lässt sich zeigen, dass folgende Aussage gilt: Für eine stetige
+Funktion <span class="math notranslate nohighlight">\(F\)</span> des Anfangswertproblems
+<span class="math notranslate nohighlight">\(u'(t) = F(t, u(t)), u(0) = u_0 \in \R^n\)</span>, die bezüglich des zweiten
+Arguments Lipschitz-stetig mit Lipschitz-Konstante <span class="math notranslate nohighlight">\(L &gt; 0\)</span> ist,
+existiert eine eindeutige Lösung <span class="math notranslate nohighlight">\(u_\tau(t_{k+s}) \in \R^n\)</span> des
+Mehrschrittverfahrens <a class="reference internal" href="#equation-eq-mehrschrittverfahren">(2.13)</a> falls für die
+Schrittweite <span class="math notranslate nohighlight">\(\tau &lt; \frac{|\beta_s|}{|\alpha_s|} \cdot L\)</span> gilt.</p>
+</section>
+</div><section id="konsistenz-von-mehrschrittverfahren">
+<span id="ss-mehrschrittverfahren-konsistenz"></span><h2><span class="section-number">2.3.1. </span>Konsistenz von Mehrschrittverfahren<a class="headerlink" href="#konsistenz-von-mehrschrittverfahren" title="Permalink to this heading">#</a></h2>
+<p>Während wir die Konvergenzordnung analog zu Einschrittverfahren
+definieren können, benötigen wir noch eine passende Definition von
+Konsistenz für Mehrschrittverfahren. Wir führen dazu zunächst den
+lokalen Konsistenzfehler eines Mehrschrittverfahrens ein</p>
+<div class="math notranslate nohighlight" id="equation-eq-mehrschrittverfahren-lok-konsistenz">
+<span class="eqno">(2.14)<a class="headerlink" href="#equation-eq-mehrschrittverfahren-lok-konsistenz" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
+g_\tau(t_k) \ &amp;\coloneqq \ \frac{1}\tau \sum_{i=0}^s \alpha_i u(t_{k+i}) - \sum_{i=0}^s \beta_i F(t_{k+i},u(t_{k+i})) \\
+&amp;= \ \frac{1}\tau \sum_{i=0}^s \alpha_i u(t_{k+i}) - \sum_{i=0}^s \beta_i u'(t_{k+i}) \qquad k=0,\ldots,N-s.
+\end{split}\end{split}\]</div>
+<p>Hierbei haben wir analog zum Einschrittverfahren wieder die echte Lösung
+<span class="math notranslate nohighlight">\(u \colon [0,T] \rightarrow \R^n\)</span> in das Mehrschrittverfahren
+eingesetzt. Basierend auf dem lokalen Konsistenzfehler
+<a class="reference internal" href="#equation-eq-mehrschrittverfahren-lok-konsistenz">(2.14)</a> können wir nun definieren
+wann ein Mehrschrittverfahren konsistent ist.</p>
+<div class="proof definition admonition" id="def:mehrschrittverfahren_konsistenz">
+<p class="admonition-title"><span class="caption-number">Definition 2.12 </span> (Konsistenz von linearen Mehrschrittverfahren)</p>
+<section class="definition-content" id="proof-content">
+<p>Ein lineares Mehrschrittverfahren heißt <strong>konsistent</strong>, falls der
+globale Konsistenzfehler</p>
+<div class="math notranslate nohighlight">
+\[K_\tau \coloneqq \max_{k=0,\ldots,N-s} || g_\tau(t_k) ||\]</div>
+<p>gegen Null konvergiert für <span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span>.</p>
+<p>Das Verfahren heißt konsistent von der Ordnung <span class="math notranslate nohighlight">\(p\)</span>, falls
+<span class="math notranslate nohighlight">\(K_\tau = {\cal O}(\tau^p)\)</span> für <span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span>.</p>
+</section>
+</div><p>Wir können zunächst ein schönes Resultat zur Charakterisierung der
+Konsistenz eines linearen Mehrschrittverfahren herleiten.</p>
+<div class="proof lemma admonition" id="lem:mehrschrittverfahren_konsistenz">
+<p class="admonition-title"><span class="caption-number">Lemma 2.6 </span> (Konsistenzbedingung für Mehrschrittverfahren)</p>
+<section class="lemma-content" id="proof-content">
+<p>Ein lineares Mehrschrittverfahren der Stufe <span class="math notranslate nohighlight">\(s \in \N^+\)</span> ist konsistent
+von der Ordnung <span class="math notranslate nohighlight">\(p\in \N^+\)</span>, wenn die folgenden Gleichungen gelten</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=0}^s \alpha_i i^m \ = \  m \cdot \sum_{i=0}^s \beta_i i^{m-1} , \qquad m=0,1,\ldots,p.\]</div>
+<p>Hierbei verwenden wir die Konvention <span class="math notranslate nohighlight">\(0^0 \coloneqq 1\)</span>.</p>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. Es sei <span class="math notranslate nohighlight">\(s \in \N^+\)</span> die Stufe des Mehrschrittverfahrens und
+<span class="math notranslate nohighlight">\(u \colon [0, T] \rightarrow \R^n\)</span> die echte Lösung des
+Anfangswertproblems <a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a>. Um zu zeigen, dass das Verfahren
+konsistent von der Ordnung <span class="math notranslate nohighlight">\(p \in \N^+\)</span> ist, müssen wir gemäß
+<a class="reference internal" href="#def:mehrschrittverfahren_konsistenz">Definition 2.12</a> zeigen, dass für den
+global Konsistenzfehler gilt:</p>
+<div class="math notranslate nohighlight">
+\[K_\tau \ \coloneqq \ \max_{k=0,\ldots,N-s} \left\Vert \frac{1}\tau \sum_{i=0}^s \alpha_i u(t_{k+i}) - \sum_{i=0}^s \beta_i u'(t_{k+i}) \right\Vert \in \mathcal{O}(\tau^p).\]</div>
+<p>Sei im weiteren <span class="math notranslate nohighlight">\(k \in \lbrace 0,\ldots,N-s\rbrace\)</span> der Index des
+Zeitschritts für den die Norm des lokalen Konsistenzfehlers
+<span class="math notranslate nohighlight">\(g_\tau(t_k)\)</span> maximal wird. Wir betrachten zunächst die
+Taylorentwicklung des linken Terms im Zeitschritt <span class="math notranslate nohighlight">\(t_k \in \Omega_\tau\)</span>
+wie folgt:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+\frac{1}{\tau} \sum_{i=0}^s \alpha_i u(t_{k+i}) \ = \ \frac{1}{\tau} \Bigl( \alpha_0 u(t_k) &amp;+ \alpha_1 (u(t_k) + \tau u'(t_k) + \frac{\tau^2}{2} u''(t_k) + \, \ldots) \\
+&amp;+ \alpha_2 (u(t_k) + 2\tau u'(t_k) + \frac{(2\tau)^2}{2} u''(t_k) + \, \ldots) \\
+&amp;\vdots\\
+&amp;+ \alpha_s (u(t_k) + s\tau u'(t_k) + \frac{(s\tau)^2}{2} u''(t_k) + \, \ldots) \Bigr)
+\end{split}\end{split}\]</div>
+<p>Dies können wir zusammenfassen zu</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+\frac{1}{\tau} \sum_{i=0}^s \alpha_i u(t_{k+i}) \ &amp;= \ \frac{1}{\tau} \sum_{m=0}^p \sum_{i=0}^s \alpha_i \frac{i^m \tau^m}{m!} u^{(m)}(t_{k}) + \mathcal{O}(\tau^{p}) \\
+&amp;= \ \sum_{m=0}^p \sum_{i=0}^s \alpha_i i^m \frac{\tau^{m-1}}{m!} u^{(m)}(t_{k}) + \mathcal{O}(\tau^{p})
+\end{split}\end{split}\]</div>
+<p>Betrachten wir nun die Taylorentwicklung des rechten Terms im
+Zeitschritt <span class="math notranslate nohighlight">\(t_k \in \Omega_\tau\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+\sum_{i=0}^s \beta_i u'(t_{k+i}) \ = \ \beta_0 u'(t_k) &amp;+ \beta_1 (u'(t_k) + \tau u''(t_k) + \frac{\tau^2}{2} u'''(t_k) + \, \ldots )\\
+&amp;+ \beta_2 (u'(t_k) + 2\tau u''(t_k) + \frac{(2\tau)^2}{2} u'''(t_k) + \, \ldots )\\
+&amp;\vdots\\
+&amp;+ \beta_s (u'(t_k) + s\tau u''(t_k) + \frac{(s\tau)^2}{2} u'''(t_k) + \, \ldots )\\
+\end{split}\end{split}\]</div>
+<p>Dies können wir wiederum zusammenfassen zu</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+\sum_{i=0}^s \beta_i u'(t_{k+i}) \ &amp;= \ \sum_{m=0}^p \sum_{i=0}^s \beta_i \frac{i^m \tau^m}{m!} u^{(m+1)}(t_{k}) + \mathcal{O}(\tau^{p}) \\
+&amp;= \ \underbrace{0\cdot \sum_{i=0}^s \beta_i i^{-1} \frac{\tau^0}{(0+1)!} u^{0}(t_{k})}_{=\:0} \\
+&amp;\hspace{2cm} +  \sum_{m=0}^p (m+1) \cdot \sum_{i=0}^s \beta_i i^m \frac{\tau^m}{(m+1)!} u^{(m+1)}(t_{k}) + \mathcal{O}(\tau^{p})\\
+&amp;= \ 0\cdot \sum_{i=0}^s \beta_i i^{-1} \frac{\tau^0}{(0+1)!} u^{0}(t_{k}) \\
+&amp;\hspace{2cm} +  \sum_{m=1}^p m \cdot \sum_{i=0}^s \beta_i i^{m-1} \frac{\tau^{m-1}}{m!} u^{(m)}(t_{k}) + \mathcal{O}(\tau^{p})\\
+&amp;= \ \sum_{m=0}^p m \cdot \sum_{i=0}^s \beta_i i^{m-1} \frac{\tau^{m-1}}{m!} u^{(m)}(t_{k}) + \mathcal{O}(\tau^{p})
+\end{split}\end{split}\]</div>
+<p>Insgesamt gilt also für den globalen Konsistenzfehler</p>
+<div class="math notranslate nohighlight">
+\[K_\tau \ = \ \left\Vert \sum_{m=0}^p \sum_{i=0}^s \alpha_i i^m \frac{\tau^{m-1}}{m!} u^{(m)}(t_{k}) - \sum_{m=0}^p m \cdot \sum_{i=0}^s \beta_i i^{m-1} \frac{\tau^{m-1}}{m!} u^{(m)}(t_{k}) + \mathcal{O}(\tau^{p}) \right\Vert\]</div>
+<p>Ein Koeffizientenvergleich der beiden Terme zeigt uns, dass
+<span class="math notranslate nohighlight">\(K_\tau \in \mathcal{O}(\tau^p)\)</span> gilt wenn folgende Bedingungen erfüllt
+sind:</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=0}^s \alpha_i i^m \ = \ m \cdot \sum_{i=0}^s \beta_i i^{m-1}, \qquad m=0,\ldots,p.\]</div>
+<p>◻</p>
+</div>
+<p>Um eine möglichst hohe Konsistenzordnung für ein <span class="math notranslate nohighlight">\(s\)</span>-stufiges
+Mehrschrittverfahren zu erhalten müssen wir wir analog zu den
+Einschrittverfahren in <a class="reference internal" href="02_04_Anfangswertprobleme.html#s-einschrittverfahren"><span class="std std-ref">Einschrittverfahren für Anfangswertprobleme</span></a> Gleichungssysteme
+für die Koeffizienten lösen, wie wir im folgenden Beispiel sehen werden.</p>
+<div class="proof example admonition" id="ex:mehrschrittverfahren_konsistenz">
+<p class="admonition-title"><span class="caption-number">Example 2.10 </span> (Konsistenzordnung von Mehrschrittverfahren)</p>
+<section class="example-content" id="proof-content">
+<p>In diesem Beispiel wollen wir Mehrschrittverfahren der Stufen <span class="math notranslate nohighlight">\(s = 1\)</span>
+und <span class="math notranslate nohighlight">\(s=2\)</span> bezüglich ihrer Konsistenzordnung <span class="math notranslate nohighlight">\(p \in \N^+\)</span> untersuchen.
+Hierzu verwenden wir die Konsistenzbedingung aus
+<a class="reference internal" href="#lem:mehrschrittverfahren_konsistenz">Lemma 2.6</a> mit</p>
+<div class="math notranslate nohighlight">
+\[\sum_{i=0}^s \alpha_i i^m \ = \ m \cdot \sum_{i=0}^s \beta_i i^{m-1}, \qquad m=0,\ldots,p.\]</div>
+<ol class="arabic">
+<li><p>Im Fall eines Mehrschrittverfahrens der Stufe <span class="math notranslate nohighlight">\(\mathbf{s=1}\)</span> gilt
+für die erste Bedingung mit <span class="math notranslate nohighlight">\(m=0\)</span> und der Konvention
+<span class="math notranslate nohighlight">\(0^0 \coloneqq 1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\alpha_0 \cdot 0^0 + \alpha_1 \cdot 1^0 \ = \ \alpha_0 + \alpha_1 \ \overset{!}{=} \ 0.\]</div>
+<p>Hieraus lässt sich also ableiten, dass <span class="math notranslate nohighlight">\(\alpha_0 = - \alpha_1\)</span>
+gelten muss. Ohne Beschränkung der Allgemeinheit können wir
+<span class="math notranslate nohighlight">\(\alpha_1=1\)</span> und <span class="math notranslate nohighlight">\(\alpha_0=-1\)</span> normieren. Betrachten wir nun die
+zweite Bedingung für <span class="math notranslate nohighlight">\(m=1\)</span>, so erhalten wir:</p>
+<div class="math notranslate nohighlight">
+\[\alpha_0 \cdot 0^1 + \alpha_1 \cdot 1^1\ = \ \alpha_1 \ \overset{!}{=} \ 1 \cdot ( \beta_0 \cdot 0^0 + \beta_1 \cdot 1^0 ) \ = \ \beta_0 + \beta_1.\]</div>
+<p>Durch die Normierung von <span class="math notranslate nohighlight">\(\alpha_1 = 1\)</span> sehen wir also, dass
+<span class="math notranslate nohighlight">\(\beta_0 + \beta_1 = 1\)</span> gelten muss, um Konsistenzordnung <span class="math notranslate nohighlight">\(p=s=1\)</span> zu
+erreichen. Diese Bedingungen werden unter anderem durch das
+<em>Vorwärts-Euler Verfahren</em> (<span class="math notranslate nohighlight">\(\beta_0=1, \beta_1=0\)</span>), das
+<em>Rückwärts-Euler Verfahren</em> (<span class="math notranslate nohighlight">\(\beta_0=0, \beta_1=1\)</span>) und das
+<em>Crank-Nicholson Verfahren</em> (<span class="math notranslate nohighlight">\(\beta_0 = \beta_1=\frac{1}2\)</span>) aus
+<a class="reference internal" href="02_04_Anfangswertprobleme.html#s-einschrittverfahren"><span class="std std-ref">Einschrittverfahren für Anfangswertprobleme</span></a> erfüllt.</p>
+</li>
+<li><p>Im Fall eines Mehrschrittverfahrens der Stufe <span class="math notranslate nohighlight">\(\mathbf{s=2}\)</span> gilt
+für die erste Bedingung mit <span class="math notranslate nohighlight">\(m=0\)</span> und der Konvention
+<span class="math notranslate nohighlight">\(0^0 \coloneqq 1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\alpha_0 \cdot 0^0 + \alpha_1 \cdot 1^0 + \alpha \cdot 2^0 \ = \ \alpha_0 + \alpha_1 + \alpha_2 \ \overset{!}{=} \ 0.\]</div>
+<p>Für die zweite Bedingung mit <span class="math notranslate nohighlight">\(m=1\)</span> erhalten wir</p>
+<div class="math notranslate nohighlight">
+\[\alpha_0 \cdot 0^1 + \alpha_1 \cdot 1^1 + \alpha \cdot 2^1 \ = \ \alpha_1 + 2 \alpha_2 \ \overset{!}{=} \ 1 \cdot (\beta_0 \cdot 0^0 + \beta_1 \cdot 1^0 + \beta_2 \cdot 2^0) \ = \ \beta_0 + \beta_1 + \beta_2.\]</div>
+<p>Und für die dritte Bedingung mit <span class="math notranslate nohighlight">\(m=2\)</span> erhalten wir</p>
+<div class="math notranslate nohighlight">
+\[\alpha_0 \cdot 0^2 + \alpha_1 \cdot 1^2 + \alpha \cdot 2^2\ = \ \alpha_1 + 4 \alpha_2 \ \overset{!}{=} \ 2 \cdot (\beta_0 \cdot 0^1 + \beta_1 \cdot 1^1 + \beta_2 \cdot 2^1) \ = \  2\beta_1 + 4\beta_2.\]</div>
+<p>Insgesamt müssen wir also für ein Mehrschrittverfahren der Stufe
+<span class="math notranslate nohighlight">\(s=2\)</span> und Konsistenzordnung <span class="math notranslate nohighlight">\(p=2\)</span> folgendes unterbestimmtes
+Gleichungssystem lösen:</p>
+<div class="math notranslate nohighlight">
+\[\alpha_0+\alpha_1+\alpha_2 \: = \: 0, \qquad \alpha_1+2 \alpha_2 \: = \: \beta_0+\beta_1+\beta_2 , \qquad \alpha_1+4\alpha_2 \: = \: 2\beta_1+4\beta_2.\]</div>
+<p>Wir sehen, dass die <em>Mittelpunktsregel</em> mit
+<span class="math notranslate nohighlight">\(\alpha_0=-1,\alpha_1=0,\alpha_2=1\)</span> sowie
+<span class="math notranslate nohighlight">\(\beta_0 =\beta_2=0, \beta_1=2\)</span> eine mögliche Lösung dieses Systems
+liefert.</p>
+</li>
+</ol>
+</section>
+</div></section>
+<section id="stabilitat-von-mehrschrittverfahren">
+<span id="id2"></span><h2><span class="section-number">2.3.2. </span>Stabilität von Mehrschrittverfahren<a class="headerlink" href="#stabilitat-von-mehrschrittverfahren" title="Permalink to this heading">#</a></h2>
+<p>Nachdem wir die Konsistenzordnung von Mehrschrittverfahren untersucht
+haben stellt sich die Frage, ob wir die gleiche Konvergenzordnung
+erreichen können. Im Fall von Einschrittverfahren hatten wir
+festgestellt, dass für Lipschitz-stetige Funktionen <span class="math notranslate nohighlight">\(F\)</span> auf der rechten
+Seite des Anfangswertproblems <a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a> aus Konsistenz bereits
+Konvergenz folgt. Leider ist die Situation für Mehrschrittverfahren
+deutlich komplizierter, wie das folgende Beispiel zeigt.</p>
+<div class="proof example admonition" id="ex:instabiles_mehrschrittverfahren">
+<p class="admonition-title"><span class="caption-number">Example 2.11 </span> (Instabilität eines Mehrschrittverfahrens)</p>
+<section class="example-content" id="proof-content">
+<p>Es werde ein Verfahren möglichst hoher Ordnung der Form</p>
+<div class="math notranslate nohighlight">
+\[u_\tau(t_{k+2}) - (1 + \alpha) u_\tau(t_{k+1}) + \alpha u_\tau(t_k) \ = \ \tau \cdot \left( \frac{3-\alpha}{2}F_{k+1} - \frac{1+\alpha}{2}F_k \right)\]</div>
+<p>gesucht für eine Funktion <span class="math notranslate nohighlight">\(F \in C^3([0,T] \times \R^n; \R^n)\)</span>.</p>
+<p>Wir bestimmen den Koeffizienten <span class="math notranslate nohighlight">\(\alpha \in \R\)</span> mittels
+Taylorentwicklung so, dass eine möglichst hohe Konsistenzordnung
+erreicht wird indem wir wieder den lokalen Konsistenzfehler in
+<span class="math notranslate nohighlight">\(t_k \in \Omega_\tau\)</span> betrachten:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{split}
+g_\tau(t_k) \ &amp;= \ \frac{1}{\tau} \cdot \left( u(t_{k+2}) - (1 + \alpha) u(t_{k+1}) + \alpha u(t_k) \right) - \frac{3-a}{2}u'(t_{k+1}) - \frac{1+\alpha}{2}u'(t_k)\\
+&amp;= \ u'(t_k) \cdot \underbrace{\left( 2 - (1+\alpha) + \alpha - \frac{3-\alpha}{2} + \frac{1+\alpha}{2}\right)}_{= \: 0}\\
+&amp;+ \ u''(t_k) \cdot \underbrace{\left( \frac{4\tau}{2} -(1+\alpha) \frac{\tau}{2} - \frac{3-\alpha}{2}\tau\right)}_{= \: 0}\\
+&amp;+ \ u'''(t_k) \cdot \underbrace{\left( \frac{8}{6}\tau^2 -(1+\alpha) \frac{\tau^2}{6} - \frac{3-\alpha}{2}\cdot\frac{\tau^2}{2}\right)}_{= \: \frac{\tau^2}{12}(5+\alpha)} \ + \ \mathcal{O}(\tau^3).
+\end{split}\end{split}\]</div>
+<p>Also erhalten wir eine Konsistenzordnung von <span class="math notranslate nohighlight">\(p=3\)</span> für <span class="math notranslate nohighlight">\(\alpha = -5\)</span> und
+<span class="math notranslate nohighlight">\(p=2\)</span> in allen anderen Fällen. Wir erwarten eine entsprechende
+Konvergenzordnung für das Verfahren. Ein numerisches Experiment zeigt
+uns jedoch ein völlig anderes Ergebnis.</p>
+<p>Wie man an den beiden Illustrationen in <a class="reference internal" href="#fig-stabilitaet"><span class="std std-numref">Abb. 2.1</span></a>
+erkennen kann ist das Verhalten des numerischen Algorithmus für
+unterschiedliche Wahlen von <span class="math notranslate nohighlight">\(\alpha \in \R\)</span> vollkommen unterschiedlich.
+Bei näherer Betrachtung stellt sich heraus, dass das
+Mehrschrittverfahren für <span class="math notranslate nohighlight">\(\alpha &gt; 1\)</span> und <span class="math notranslate nohighlight">\(\alpha &lt; -1.5\)</span> divergiert
+trotz einer Konsistenzordnung von mindestens Zwei. Dies liegt daran,
+dass das lineare Mehrschrittverfahren in diesen Fällen nicht stabil ist.</p>
+</section>
+</div><figure class="align-default" id="fig-stabilitaet">
+<img alt="../../_images/mehrschrittverfahren_stabil.png" src="../../_images/mehrschrittverfahren_stabil.png" />
+<figcaption>
+<p><span class="caption-number">Abb. 2.1 </span><span class="caption-text">Visualisierung der numerischen Approximation einer Lösung eines
+Anfangswertproblems mit dem linearen Mehrschrittverfahren aus
+<a class="reference internal" href="#ex:instabiles_mehrschrittverfahren">Example 2.11</a> für die Wahl des
+Parameters <span class="math notranslate nohighlight">\(\alpha=1\)</span> (oben) und <span class="math notranslate nohighlight">\(\alpha = -1.5\)</span> (unten). Entnommen aus
+<span id="id3">[<a class="reference internal" href="../../references.html#id4" title="Frank Wübbeling. Vorlesungsskript zur numerischen analysis (ss 19) an der wwu münster. URL: https://www.uni-muenster.de/AMM/num/Vorlesungen/wuebbeling/NumAna2019.pdf (visited on 2023-06-28).">Wubb</a>]</span></span><a class="headerlink" href="#fig-stabilitaet" title="Link zu diesem Bild">#</a></p>
+</figcaption>
+</figure>
+<p>Motiviert durch das obige Beispiel wollen wir uns also im Folgenden mit
+der Stabilitätsanalyse von Mehrschrittverfahren beschäftigten. Wir
+folgen dabei grob der Struktur in <span id="id4">[<a class="reference internal" href="../../references.html#id5" title="Frank Wübbeling. Vorlesungsskript zur analysis und numerik von gewöhnlichen differentialgleichungen (ss 22) an der wwu münster. URL: https://www.uni-muenster.de/AMM/num/Vorlesungen/wuebbeling/AnaNumDglSS22.pdf (visited on 2023-06-28).">Wuba</a>]</span>.</p>
+<p>Die grundlegende Idee ist es nun die Stabilität eines linearen
+Mehrschrittverfahrens für eine möglichst einfache Differentialgleichung
+zu untersuchen. Wenn ein konsistentes Verfahren konvergent ist, dann
+muss es insbesondere konvergent sein für die einfachste aller
+Anfangswertaufgaben. Daher betrachten wir das sogenannte
+<strong>Modellproblem</strong></p>
+<div class="math notranslate nohighlight" id="equation-eq-modellproblem">
+<span class="eqno">(2.15)<a class="headerlink" href="#equation-eq-modellproblem" title="Permalink to this equation">#</a></span>\[u'(t) \, = \, 0, \qquad u(0) \, = \, 0,\]</div>
+<p>mit der Lösung <span class="math notranslate nohighlight">\(u(t) \equiv 0\)</span>. Die durch das numerische Verfahren
+gelieferte Lösung muss also für <span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span> gleichmäßig gegen
+die Nullfunktion konvergieren. Das folgende Lemma besagt, dass diese
+Bedingung schon ausreicht, damit das numerische Verfahren für alle
+Anfangswertaufgaben konvergent ist.</p>
+<div class="proof lemma admonition" id="lem:reduktion_modellproblem">
+<p class="admonition-title"><span class="caption-number">Lemma 2.7 </span> (Reduktion auf das Modellproblem)</p>
+<section class="lemma-content" id="proof-content">
+<p>Gegeben sei ein lineares Mehrschrittverfahren der Stufe <span class="math notranslate nohighlight">\(s\in \N^+\)</span>. Sei
+<span class="math notranslate nohighlight">\((\Omega_{\tau_k})_{k\in\N}\)</span> eine Folge von äquidistanten
+Zeitdiskretisierungen mit Zeitschrittweiten <span class="math notranslate nohighlight">\(\tau_k &gt; 0, k\in\N\)</span>. Falls
+für jede Wahl der Startwerte <span class="math notranslate nohighlight">\(u_\tau(t_i) \in \R^n\)</span> mit</p>
+<div class="math notranslate nohighlight">
+\[u_{\tau_k}(t_i) \ \overset{\tau_k \rightarrow 0}{\longrightarrow} \ 0, \qquad i = 0,\ldots,s-1\]</div>
+<p>die Folge <span class="math notranslate nohighlight">\((u_{\tau_k})_{k\in\N}\)</span> der numerischen Approximationen für
+das Modellproblem gegen die Nullfunktion konvergiert, so ist das
+Mehrschrittverfahren stabil für alle Anfangswertaufgaben.</p>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. Siehe <span id="id5">[<a class="reference internal" href="../../references.html#id4" title="Frank Wübbeling. Vorlesungsskript zur numerischen analysis (ss 19) an der wwu münster. URL: https://www.uni-muenster.de/AMM/num/Vorlesungen/wuebbeling/NumAna2019.pdf (visited on 2023-06-28).">Wubb</a>]</span>. ◻</p>
+</div>
+<p>Wenn wir also nun ein lineares Mehrschrittverfahren für das
+Modellproblem <a class="reference internal" href="#equation-eq-modellproblem">(2.15)</a> betrachten, so stellen wir fest,
+dass für die rechte Seite der gewöhnlichen Differentialgleichung
+<span class="math notranslate nohighlight">\(F(t, u(t)) \equiv 0\)</span> gilt und somit für das Mehrschrittverfahren
+<span class="math notranslate nohighlight">\(\sum_{i=0}^s \beta_i F_{k+i} = 0\)</span> ist für alle <span class="math notranslate nohighlight">\(k=0,\ldots,N-s\)</span>. Somit
+reduziert sich das lineare Mehrschrittverfahren mit gegebenen
+Koeffizienten <span class="math notranslate nohighlight">\(\alpha_i \in \R, i=0,\ldots,s\)</span> auf die Lösung des
+folgenden Gleichungssystems:</p>
+<div class="math notranslate nohighlight" id="equation-eq-lineare-differenzengleichung-homogen">
+<span class="eqno">(2.16)<a class="headerlink" href="#equation-eq-lineare-differenzengleichung-homogen" title="Permalink to this equation">#</a></span>\[\sum_{i=0}^s \alpha_i u_\tau(t_{k+i}) \ = \ 0, \qquad k = 0,\ldots, N-s.\]</div>
+<p>Ein Problem dieser Form ist bekannt als <strong>lineare, homogene
+Differenzengleichung</strong> mit konstanten Koeffizienten
+<span class="math notranslate nohighlight">\(\alpha_i \in \R, i=0,\ldots,s\)</span>.</p>
+<p>Aus diesem Grund werden wir uns im Folgenden auf einige mathematische
+Resultate aus der <em>Theorie der linearen Differenzengleichungen</em> stützen,
+die wir in dieser Vorlesung jedoch nur im Ansatz diskutieren können. Wir
+wollen deswegen mit einer grundlegenden Definition beginnen.</p>
+<div class="proof definition admonition" id="definition-8">
+<p class="admonition-title"><span class="caption-number">Definition 2.13 </span> (Lineare Differenzengleichung)</p>
+<section class="definition-content" id="proof-content">
+<p>Eine <strong>lineare Differenzengleichung <span class="math notranslate nohighlight">\(s\)</span>-ter Ordnung</strong> über einem Körper
+<span class="math notranslate nohighlight">\(\mathbb{K}\)</span> ist von der Form</p>
+<div class="math notranslate nohighlight" id="equation-eq-lineare-differenzengleichung">
+<span class="eqno">(2.17)<a class="headerlink" href="#equation-eq-lineare-differenzengleichung" title="Permalink to this equation">#</a></span>\[\sum_{i=0}^s \alpha_i(k) f_{k+i} \ = \ \beta_k, \qquad k\in\N,\]</div>
+<p>wobei die Koeffizienten
+<span class="math notranslate nohighlight">\(\alpha_i \colon \N \rightarrow \mathbb{K}, i=0,\ldots,s\)</span> Folgen sind,
+für die <span class="math notranslate nohighlight">\(\alpha_s(k) \neq 0\)</span> gilt für alle <span class="math notranslate nohighlight">\(k \in \N\)</span>. Ist
+<span class="math notranslate nohighlight">\((\beta_k)_{k\in\N} \subset \mathbb{K}\)</span> die konstante Nullfolge, so
+nennen wir die Differenzengleichung <strong>homogen</strong> und ansonsten
+<strong>inhomogen</strong>.</p>
+<p>Eine unendliche Zahlenfolge <span class="math notranslate nohighlight">\(F = f_0, f_1, f_2, \ldots\)</span>, die für alle
+<span class="math notranslate nohighlight">\(k\in\N\)</span> die lineare Differenzengleichung
+<a class="reference internal" href="#equation-eq-lineare-differenzengleichung">(2.17)</a> erfüllt, heißt <strong>Lösung der
+Differenzengleichung</strong>.</p>
+</section>
+</div><p>Die folgende Bemerkung erlaubt es uns eine lineare Differenzenfolge in
+eine explizite Form zu überführen, so dass Folgeglieder der Lösung aus
+gegebenen Anfangswert berechnet werden können.</p>
+<div class="proof remark admonition" id="remark-9">
+<p class="admonition-title"><span class="caption-number">Remark 2.2 </span> (Explizite Form von Differenzengleichungen)</p>
+<section class="remark-content" id="proof-content">
+<p>Es ist klar, dass man eine lineare Differenzengleichung mit einem
+beliebigen Faktor aus <span class="math notranslate nohighlight">\(\mathbb{K}\)</span> multiplizieren kann ohne dessen
+Lösung zu verändern. Wenn man also die Koeffizientenfolgen
+<span class="math notranslate nohighlight">\((\alpha_i(k))_{k\in\N}\)</span> normiert, so dass <span class="math notranslate nohighlight">\(\alpha_s(k) = -1\)</span> für alle
+<span class="math notranslate nohighlight">\(k \in \N\)</span> gilt, so lässt sich eine Rechenvorschrift für das Folgenglied
+<span class="math notranslate nohighlight">\(f_{k+s}\)</span> explizit angeben als</p>
+<div class="math notranslate nohighlight">
+\[f_{k+s} \ = \ \sum_{i=0}^{s-1} \alpha_i(k) f_{k+i} - \beta(k).\]</div>
+<p>Für gegebene Startwerte <span class="math notranslate nohighlight">\(f_0, \ldots, f_{s-1} \in \mathbb{K}^n\)</span> und
+Koeffizientenfolgen <span class="math notranslate nohighlight">\((\alpha_i)_{k\in\N}, (\beta_k)_{k\in\N}\)</span> lässt sich
+so eine Lösung <span class="math notranslate nohighlight">\(F\)</span> der Differenzengleichung bestimmen..</p>
+</section>
+</div><p>Die explizite Form einer linearen Differenzengleichung wird zur
+Konstruktion von bestimmten Folgen in der Mathematik genutzt, wie unter
+anderem im folgenden Beispiel erklärt ist.</p>
+<div class="proof example admonition" id="example-10">
+<p class="admonition-title"><span class="caption-number">Example 2.12 </span> (Fibonnaci Zahlen)</p>
+<section class="example-content" id="proof-content">
+<p>Ein berühmtes Beispiel einer linearen Differenzengleichung 2. Ordnung
+wird durch die <em>Fibonacci-Folge</em> gelöst, deren Folgenglieder sich
+berechnen lassen durch die Differenzengleichung</p>
+<div class="math notranslate nohighlight" id="equation-eq-fibonacci-gleichung">
+<span class="eqno">(2.18)<a class="headerlink" href="#equation-eq-fibonacci-gleichung" title="Permalink to this equation">#</a></span>\[f_{k+2} \ = \ f_{k} + f_{k+1} \qquad \Leftrightarrow \qquad  f_{k+2} - f_{k+1} - f_{k} \ = \ 0.\]</div>
+<p>Für die typischerweise gewählten Startwerte <span class="math notranslate nohighlight">\(f_0 = f_1 \coloneqq 1\)</span>
+ergibt sich hieraus die bekannte Fibonacci-Folge als Lösung der linearen
+Differenzengleichung mit:</p>
+<div class="math notranslate nohighlight">
+\[F \ = \ 1, 1, 2, 3, 5, 8, 13, 21, 34, \ldots\]</div>
+<p>Wir erkennen, dass die Differenzengleichung <a class="reference internal" href="#equation-eq-fibonacci-gleichung">(2.18)</a>
+homogen ist und konstante Koeffizientenfolgen
+<span class="math notranslate nohighlight">\(\alpha_0 = \alpha_1 \equiv -1\)</span> und <span class="math notranslate nohighlight">\(\alpha_2 \equiv 1\)</span> besitzt.</p>
+</section>
+</div><p>Wenn wir zeigen können, dass Lösungen der linearen Differenzengleichung
+<a class="reference internal" href="#equation-eq-lineare-differenzengleichung-homogen">(2.16)</a> für alle Startwerte
+<span class="math notranslate nohighlight">\(f_0,\ldots,f_{s-1} \in \mathbb{K}^n\)</span> beschränkt sind, so lässt sich
+zeigen, dass der globale Konsistenzfehler <span class="math notranslate nohighlight">\(K_\tau\)</span> für das Modellproblem
+<a class="reference internal" href="#equation-eq-modellproblem">(2.15)</a> gegen Null konvergiert und das lineare
+Mehrschrittverfahren nach <a class="reference internal" href="#lem:reduktion_modellproblem">Lemma 2.7</a> stabil
+ist für alle Anfangswertaufgaben. Um die Beschränktheit von Lösungen der
+linearen Differenzengleichung
+<a class="reference internal" href="#equation-eq-lineare-differenzengleichung-homogen">(2.16)</a> zu untersuchen führen wir
+zunächst ein weiteres Hilfsmittel ein.</p>
+<div class="proof definition admonition" id="definition-11">
+<p class="admonition-title"><span class="caption-number">Definition 2.14 </span> (Charakteristisches Polynom)</p>
+<section class="definition-content" id="proof-content">
+<p>Für eine homogene, lineare Differenzengleichung der Ordnung <span class="math notranslate nohighlight">\(s \in \N^+\)</span>
+mit konstanten Koeffizienten <span class="math notranslate nohighlight">\(\alpha_i \in \mathbb{K}, i=0,\ldots,s\)</span> der
+Form <a class="reference internal" href="#equation-eq-lineare-differenzengleichung-homogen">(2.16)</a> definieren wir das
+zugehörige <strong>charakteristische Polynom der Differenzengleichung</strong>
+<span class="math notranslate nohighlight">\(\rho \colon \mathbb{K} \rightarrow \mathbb{K}\)</span> als:</p>
+<div class="math notranslate nohighlight">
+\[\rho(x) \ \coloneqq \ \sum_{i=0}^s \alpha_i x^i.\]</div>
+</section>
+</div><p>Das charakteristische Polynom einer Differenzengleichung sagt viel über
+das Verhalten von zugehörigen Lösungen aus und dient unter Anderem dazu
+ihre Beschränktheit zu zeigen, wie folgendes bekanntes Theorem aussagt.</p>
+<div class="proof theorem admonition" id="thm:dahlquist">
+<p class="admonition-title"><span class="caption-number">Theorem 2.4 </span> (Wurzelbedingung von Dahlquist)</p>
+<section class="theorem-content" id="proof-content">
+<p>Alle Lösungen einer homogenen linearen Differenzengleichung mit
+charakteristi- schem Polynom <span class="math notranslate nohighlight">\(\rho\)</span> sind beschränkt genau dann, wenn für
+die Nullstellen <span class="math notranslate nohighlight">\(\lambda_i \in \mathbb{K}, i=0,\ldots,s-1\)</span> von <span class="math notranslate nohighlight">\(\rho\)</span>
+folgende zwei Bedingungen erfüllt sind:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(|\lambda_i| \, \leq \, 1\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(|\lambda_i| \, = \, 1 \qquad \Rightarrow \qquad \sigma_i \, = \, 1\)</span>,</p></li>
+</ol>
+<p>wobei <span class="math notranslate nohighlight">\(\sigma_i \in \N^+\)</span> die Vielfachheit der Nullstelle
+<span class="math notranslate nohighlight">\(\lambda_i \in \mathbb{K}\)</span> ist.</p>
+</section>
+</div><div class="proof admonition" id="proof">
+<p>Proof. Siehe <span id="id6">[<a class="reference internal" href="../../references.html#id4" title="Frank Wübbeling. Vorlesungsskript zur numerischen analysis (ss 19) an der wwu münster. URL: https://www.uni-muenster.de/AMM/num/Vorlesungen/wuebbeling/NumAna2019.pdf (visited on 2023-06-28).">Wubb</a>]</span>. ◻</p>
+</div>
+<p>Mit Hilfe der Wurzelbedingung von Dahlquist haben wir nun ein
+überprüfbares Kriterium um die Stabilität von linearen
+Mehrschrittverfahren zu überprüfen.</p>
+<div class="proof corollary admonition" id="corollary-13">
+<p class="admonition-title"><span class="caption-number">Corollary 2.2 </span> (Konvergenz von linearen Mehrschrittverfahren)</p>
+<section class="corollary-content" id="proof-content">
+<p>Falls ein lineares Mehrschrittverfahren konsistent ist von der Ordnung
+<span class="math notranslate nohighlight">\(p \in \N^+\)</span> und die zugehörige lineare Differenzengleichung die
+Wurzelbedingung von Dahlquist in <a class="reference internal" href="#thm:dahlquist">Theorem 2.4</a> erfüllt, so
+ist das Mehrschrittverfahren konvergent von der Ordnung <span class="math notranslate nohighlight">\(p\in \N^+\)</span>.</p>
+</section>
+</div><p>Es bleibt immer noch die Frage offen welche Konvergenzordnung wir
+wirklich erreichen können, d.h. welche Konsistenzordnung ein stabiles
+Verfahren maximal erreichen kann. Es gibt hierbei tatsächlich eine
+Einschränkung, wie folgende Bemerkung festhält.</p>
+<div class="proof remark admonition" id="remark-14">
+<p class="admonition-title"><span class="caption-number">Remark 2.3 </span></p>
+<section class="remark-content" id="proof-content">
+<p>Ein lineares Mehrschrittverfahren der Stufe <span class="math notranslate nohighlight">\(s\in \N^+\)</span> sei konsistent
+von der Ordnung <span class="math notranslate nohighlight">\(p \in \N^+\)</span> und stabil. Dann gelten die folgenden
+Beschränkungen an die Konsistenzordnung des Verfahrens:</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(p\leq s+2\)</span>, wenn <span class="math notranslate nohighlight">\(s\)</span> gerade ist,</p></li>
+<li><p><span class="math notranslate nohighlight">\(p \leq s+1\)</span>, wenn <span class="math notranslate nohighlight">\(s\)</span> ungerade.</p></li>
+</ol>
+<p>Ist <span class="math notranslate nohighlight">\(\frac{\beta_s}{\alpha_s} \leq 0\)</span> (also insbesondere bei impliziten
+Verfahren) dann gilt sogar nur <span class="math notranslate nohighlight">\(p\leq s\)</span>.</p>
+</section>
+</div><p>Wir wollen abschließend das Wurzelkriterium von Dahlquist anwenden, um
+die Stabiliät einiger Mehrschrittverfahren im Folgenden zu untersuchen.</p>
+<div class="proof example admonition" id="example-15">
+<p class="admonition-title"><span class="caption-number">Example 2.13 </span> (Stabilität von linearen Mehrschrittverfahren)</p>
+<section class="example-content" id="proof-content">
+<p>Wir werden im Folgenden die Stabilität von linearen Mehrschrittverfahren
+durch Betrachtung der Nullstellen der assoziierten charakteristischen
+Polynome analysieren.</p>
+<ol class="arabic">
+<li><p>Wir können Einschrittverfahren als Mehrschrittverfahren mit <span class="math notranslate nohighlight">\(s = 1\)</span>
+interpretieren. Sie sind von der Form</p>
+<div class="math notranslate nohighlight">
+\[u_\tau(t_{k+1}) - u_\tau(t_k) \ = \ f_\tau(t_k, u_\tau(t_k)),\]</div>
+<p>und damit ist das charakteristische Polynom der zugehörigen
+homogenen, linearen Differenzengleichung gegeben durch</p>
+<div class="math notranslate nohighlight">
+\[\rho(x) \ = \ x - 1.\]</div>
+<p>Die einzige (einfache) Nullstelle von <span class="math notranslate nohighlight">\(\rho\)</span> ist offensichtlich
+<span class="math notranslate nohighlight">\(\lambda_0 = 1\)</span>. Also sind Einschrittverfahren stabil, was zu
+unseren Beobachtungen aus <a class="reference internal" href="02_04_Anfangswertprobleme.html#s-einschrittverfahren"><span class="std std-ref">Einschrittverfahren für Anfangswertprobleme</span></a> passt.</p>
+</li>
+<li><p>Wir betrachten als Nächstes ein lineares Mehrschrittverfahren das
+gegeben ist durch:</p>
+<div class="math notranslate nohighlight">
+\[u_\tau(t_{k+2}) - 2 u_\tau(t_{k+1}) + u_\tau(t_{k}) \ = \ 0.\]</div>
+<p>Unabhängig von der rechten Seite <span class="math notranslate nohighlight">\(F(t,u(t))\)</span> der Anfangswertaufgabe,
+die es zu lösen gilt, sehen wir ein, dass das Mehrschrittverfahren
+konsistent ist nach <a class="reference internal" href="#ex:mehrschrittverfahren_konsistenz">Example 2.10</a>
+oben. Betrachten wir also das charakteristische Polynom der
+zugehörigen Differenzengleichung, das gegeben ist durch</p>
+<div class="math notranslate nohighlight">
+\[\rho(x) \ = \ x^2 -2x + 1.\]</div>
+<p>Dieses Polynom besitzt eine doppelte Nullstelle
+<span class="math notranslate nohighlight">\(\lambda_0 = \lambda_1 =1\)</span> und somit ist die Wurzelbedingung von
+Dahlquist in <a class="reference internal" href="#thm:dahlquist">Theorem 2.4</a> verletzt. Dies bedeutet, dass
+wir unabhängig von der Wahl der <span class="math notranslate nohighlight">\(\beta_i \in \R, i=0,1,2\)</span> des
+linearen Mehrschrittverfahrens keine Stabilität erwarten können.</p>
+</li>
+<li><p>Alle aus der numerischen Integration gewonnenen linearen
+Mehrschrittverfahren haben für <span class="math notranslate nohighlight">\(s\in \N^+\)</span> und <span class="math notranslate nohighlight">\(k,r \in \N\)</span> mit
+<span class="math notranslate nohighlight">\(0 \leq r \leq s\)</span> die Form</p>
+<div class="math notranslate nohighlight">
+\[u_\tau(t_{k+s}) - u_\tau(t_{k+s-r}) \ = \ \int_{k+s-r}^{k+s} F(t, u(t)) \, \mathrm{d}t \ \approx \ \tau \sum_{i=0}^{r} \beta_i F_{k+s-r+i}.\]</div>
+<p>Daher ist das charakteristische Polynom der zugeordneten linearen
+Differenzengleichung gegeben durch</p>
+<div class="math notranslate nohighlight">
+\[\rho(x) \ = \ x^s - x^{s-r} \ = \ x^{s-r}\cdot (x^r - 1).\]</div>
+<p>Dieses Polynom hat <span class="math notranslate nohighlight">\((s-r)\)</span>-fache Nullstelle <span class="math notranslate nohighlight">\(\lambda=0\)</span> und
+zusätzlich die <span class="math notranslate nohighlight">\(r\)</span>-ten Einheitswurzeln in <span class="math notranslate nohighlight">\(\C\)</span>, die alle die
+Vielfachheit <span class="math notranslate nohighlight">\(1\)</span> haben. Darum sind alle linearen
+Mehrschrittverfahren die durch numerische Integration gewonnen
+werden stabil.</p>
+</li>
+<li><p>Für das lineare Mehrschrittverfahren in
+<a class="reference internal" href="#ex:instabiles_mehrschrittverfahren">Example 2.11</a> lässt sich das
+charakteristische Polynom der zugeordneten linearen
+Differenzengleichung angegeben als</p>
+<div class="math notranslate nohighlight">
+\[\rho(x) \ = \ x^2 - (1+\alpha)x + \alpha.\]</div>
+<p>Dieses Polynom besitzt die beiden Nullstellen <span class="math notranslate nohighlight">\(\lambda_0=1\)</span> und
+<span class="math notranslate nohighlight">\(\lambda_1=\alpha\)</span>. Nach der Wurzelbedingung von Dahlquist müssen
+wir also für die Stabilität des linearen Mehrschrittverfahrens
+fordern, dass gilt</p>
+<div class="math notranslate nohighlight">
+\[-1 \, \leq \, \alpha \, &lt; \, 1.\]</div>
+<p>Wir haben hierbei den Fall <span class="math notranslate nohighlight">\(\alpha = 1\)</span> herausgenommen, da wir sonst
+eine doppelte Nullstelle erhalten würden, was zu einer Verletzung
+der Stabilitätsbedingungen führt.</p>
+</li>
+</ol>
+</section>
+</div></section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./ode\04_Anfangswertprobleme"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02_04_Anfangswertprobleme.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">zurück</p>
+        <p class="prev-next-title"><span class="section-number">2.2. </span>Einschrittverfahren für Anfangswertprobleme</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="04_04_Anfangswertprobleme.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">weiter</p>
+        <p class="prev-next-title"><span class="section-number">2.4. </span>Weiterführende Themen</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Inhalt
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsistenz-von-mehrschrittverfahren">2.3.1. Konsistenz von Mehrschrittverfahren</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stabilitat-von-mehrschrittverfahren">2.3.2. Stabilität von Mehrschrittverfahren</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+Durch J. Laubmann, T. Roith, D. Tenbrinck
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <script type="application/json" class="js-hypothesis-config">{"assetRoot": "http://hypothesis.fau-mads.eu:3001/hypothesis/1.0.0-dummy-version/", "sidebarAppUrl":"http://hypothesis.fau-mads.eu:5000/app.html"}</script>
+<script async="async" kind="hypothesis" src="http://hypothesis.fau-mads.eu:5000/embed.js"></script>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
