@@ -259,4 +259,3 @@ jeder Häufungspunkt ist ein stationärer Punkt von $F$.
 In den Übungsaufgaben zu zeigen. ◻
 
 ````
-

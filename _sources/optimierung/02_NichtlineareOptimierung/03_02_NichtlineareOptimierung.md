@@ -173,7 +173,7 @@ festhalten:
     dient zur besseren Analyse des Verfahrens der konjugierten
     Gradienten. Explizit werden wir diesen Vektor jedoch nie bestimmen
     können innerhalb des Iterationsverfahrens, da wir dann schon fertig
-    wären mit einem einfach Update der Form $x^* = x_k - e_k$.
+    wären mit einem einfachen Update der Form $x^* = x_k - e_k$.
 
 2.  Wie wir bereits im Beweis von {prf:ref}`thm:LGS_equivalent` gesehen
     haben, lässt sich das Residuum $r_k \in \mathbb{R}^n$ außerdem wie
@@ -249,9 +249,9 @@ für das totale Differential, um folgenden Zusammenhang herzustellen:
 Das Ergebnis ist durchaus interessant. Die optimale Schrittweite
 $\alpha > 0$ muss so gewählt werden, dass der nächste Punkt
 $x_{k+1} \in \mathbb{R}^n$ der Iterationsfolge an der Stelle liegt an
-der unsere Abstiegsrichtung orthognal auf den Gradienten der Funktion
+der unsere Abstiegsrichtung orthogonal auf den Gradienten der Funktion
 $\nabla F(x_{k+1})$ trifft. Das bedeutet, dass die optimale Abfolge der
-Abstiegsrichtungen im quadratischen Fall eine Menge von $90$ Grad
+Abstiegsrichtungen im quadratischen Fall eine Menge von $90$-Grad
 Zickzack-Linien ergibt, was zu unseren Beobachtungen in
 {numref}`fig:gradient_descent_adaptive` passt. Da jedoch der Punkt
 $x_{k+1} \in \mathbb{R}^n$ bislang noch unbekannt ist, können wir das
@@ -322,11 +322,12 @@ Teilschritte zusammengefasst sind.
 
 Leider können wir nicht alle Schrittweiten aufaddieren, da wir zur
 Berechnung der optimalen Schrittlänge $\alpha_k > 0$ bereits alle
-vorangegangen Schritte $k=0,\ldots,k-1$ kennen müssten. Außerdem würde
+vorangegangen Punkte $x_k k=0,\ldots,k-1$ kennen müssten. Außerdem würde
 ein großer, zusammengefasster Schritt in die erste der Richtungen
 eventuell dazu führen, dass man keinen Abstieg der Funktionswerte von
-$F$ mehr realisiert, sondern einen Aufstieg. Diese Beobachtung ist in
-{numref}`fig:two-step` illustriert.
+$F$ entlang der Abstiegsrichtung bis zum Minimum mehr realisiert,
+sondern im Allgemeinen dieses Minimum überschreitet. Diese Beobachtung
+ist in {numref}`fig:two-step` illustriert.
 
 ```{figure} ../atelier/img/two-step.png
 ---
@@ -485,7 +486,7 @@ x_{k+1} \ = \ x_k + \alpha_k d_k, \quad \alpha_k > 0, \ k=0,\ldots,n-1
 ```
 wobei für die Abstiegsrichtungen $d_k \in \mathbb{R}^n$ gelten soll:
 ```{math}
-\langle d_i, Ad_j \rangle = 0 \qquad \text{ für alle } i\neq j.
+\langle d_i, Ad_j \rangle = 0 \qquad \text{ für } \ 0 \leq i,j \leq n-1 \ \text{ mit } i\neq j.
 ```
 
 Wir nehmen für den Moment an, dass wir einen numerischen Algorithmus
@@ -626,7 +627,7 @@ jeden Index eine Gleichung
 ```{math}
 \langle d_i^T A, e_0 \rangle \ = \ \langle d_i^T A, \sum_{k=0}^{n-1} \delta_k d_k \rangle \ = \ \sum_{k=0}^{n-1} \delta_k \langle d_i^T A, d_k \rangle \ = \ \delta_i \langle d_i^T A, d_i \rangle.
 ```
-Hierbei haben wir die Linearität des Skalarproduktes in $\mathbb{R}^n$
+Hierbei haben wir die Bilinearität des Skalarproduktes in $\mathbb{R}^n$
 ausgenutzt und verwendet, dass die Vektoren
 $\lbrace d_k \rbrace_{k=0,\ldots,n-1}$ konjugiert bezüglich der Matrix
 $A$ sind. Damit können wir nach den unbekannten Koeffizienten
@@ -674,10 +675,11 @@ x^* \ = \ x_0 - e_0 \ = \ x_0 - \sum_{k=0}^{n-1} \delta_k d_k \ = \ x_0 + \sum_{
 :label: rem:error_cg
  \
 Anstatt im Beweis von {prf:ref}`thm:cg_convergence` zu zeigen, dass sich
-das lokale Minimum $x^* \in \mathbb{R}^n$ durch das Iterationsverfahren
-zerlegen lässt, hätte man auch zeigen können, dass der Fehlervektor
-$e_i \in \mathbb{R}^n$ in jedem Schritt des Iterationsverfahren kleiner
-wird. Es gilt nämlich nach {eq}`eq:error_recursive`:
+das eindeutige Minimum $x^* \in \mathbb{R}^n$ durch das
+Iterationsverfahren zerlegen lässt, hätte man auch zeigen können, dass
+der Fehlervektor $e_i \in \mathbb{R}^n$ in jedem Schritt des
+Iterationsverfahren kleiner wird. Es gilt nämlich nach
+{eq}`eq:error_recursive`:
 ```{math}
 e_i \ = \ e_0 + \sum_{k=0}^{i-1} \alpha_k d_k \ = \ \sum_{k=0}^{n-1}\delta_k d_k + \sum_{k=0}^{i-1}-\delta_k d_k \ = \ \sum_{k=i}^{n-1} \delta_k d_k.
 ```
@@ -688,7 +690,7 @@ Terme hat, bis er schlussendlich ganz verschwindet.
 Außerdem sagt es uns, dass der Abstieg mit konjugierten Richtungen in
 dem Sinne optimal ist, als dass der Fehlerterm
 $e_i = \sum_{k=i}^{n-1} \delta_k d_k$ keine Anteile der Richtungen
-$\lbrace d_j \rbrace_{j=0,\ldots,k-1}$ mehr besitzt. Wir müssen also
+$\lbrace d_j \rbrace_{j=0,\ldots,i-1}$ mehr besitzt. Wir müssen also
 nicht mehr entlang dieser Richtungen gehen, um zum lokalen Minimum
 $x^* \in \mathbb{R}^n$ von $F$ zu gelangen. Aus Sicht der Numerik ist
 das eine sehr schöne Eigenschaft, da wir nicht gezwungenermaßen $n$
@@ -700,7 +702,7 @@ bei sehr großen Dimensionen $n >\!\!> 1$ eine wichtige Rolle.
 
 ````
 
-````{prf:example} 
+````{prf:example} Konjugierte Abstiegsrichtungen
 Wir wollen im Folgenden ein Beispiel zur Durchführung eines
 Abstiegsverfahrens mit gegebenen konjugierten Richtungen angeben. Seien
 folgende Werte für das lineare Gleichungssystem $Ax = b$ gegeben:
@@ -716,13 +718,15 @@ A \ = \
 -8
 \end{pmatrix}.
 ```
-Wir nehmen eine Menge von zwei $A$-orthogonalen Vektoren
-$d_0, d_1 \in \mathbb{R}^2 / \lbrace 0 \rbrace$ als gegeben an mit:
+Als Startwert für unser Iterationsverfahren wählen wir
+$x_0 = (-2, 2)^T$. Wir nehmen eine Menge von zwei $A$-orthogonalen
+Vektoren $d_0, d_1 \in \mathbb{R}^2 / \lbrace 0 \rbrace$ als gegeben an
+mit:
 ```{math}
 d_0 \ = \
 \begin{pmatrix}
 0\\
-1
+-1
 \end{pmatrix},
 \quad d_1 \ = \ 
 \begin{pmatrix}
@@ -733,7 +737,7 @@ d_0 \ = \
 Wir sehen ein, dass die Vektoren $d_0$ und $d_1$ konjugiert bezüglich
 der Matrix $A$ sind, denn es gilt:
 ```{math}
-\langle d_0, Ad_1 \rangle \ = \ (0,1)\cdot
+\langle d_0, Ad_1 \rangle \ = \ (0,-1)\cdot
 \begin{pmatrix}
 3 & 2\\
 2 & 6
@@ -741,16 +745,14 @@ der Matrix $A$ sind, denn es gilt:
 \begin{pmatrix}
 3\\
 -1
-\end{pmatrix} \ = \ (0,1) \cdot
+\end{pmatrix} \ = \ (0,-1) \cdot
 \begin{pmatrix}
 7\\
 0
 \end{pmatrix} \ = \ 0.
 ```
-
-Als Startwert für unser Iterationsverfahren wählen wir
-$x_0 = (-2, 2)^T$. Für den ersten Schritt des Iterationsverfahren
-berechnen wir zuerst das aktuelle Residuum
+Für den ersten Schritt des Iterationsverfahren berechnen wir zuerst das
+aktuelle Residuum
 ```{math}
 r_0 \ = \ b - Ax_0 \ = \ 
 \begin{pmatrix}
@@ -785,7 +787,7 @@ Schritt durch den Ausdruck {eq}`eq:optimal_step-size_conjugated`
 bestimmen mit:
 ```{math}
 \alpha_0 \ = \ \frac{\langle d_0, r_0\rangle}{\langle d_0, A d_0 \rangle} \ = \
-\frac{4}{3}.
+\frac{8}{3}.
 ```
 Hiermit können wir den ersten Abstieg durchführen und erhalten so den
 nächsten Iterationspunkt
@@ -847,8 +849,8 @@ nach $i$ Iterationen des Abstiegsverfahrens angeben können als
 e_{i+1} \ = \ \sum_{k=i+1}^{n-1} \delta_k d_k.
 ```
 Wir können beide Seiten der Gleichung mit einem Zeilenvektor
-$-d_j^TA \in \R^n$ für einen Index $0 \leq j \leq i$ multiplizieren und
-erhalten damit:
+$-d_j^TA \in \R^n$ für einen Index $0 \leq j \leq i$ von links
+multiplizieren und erhalten damit:
 ```{math}
 -\langle d_j, Ae_{i+1} \rangle \ = \ - \sum_{k=i+1}^{n-1} \delta_k \underbrace{d_j Ad_k}_{=~0} \quad 
 \Rightarrow \ \langle d_j, r_{i+1} \rangle \ = \ 0 \quad \text{ für alle } \ 0 \leq j \leq i.
@@ -1127,6 +1129,7 @@ Lösen eines Gleichungssystems $Ax = b$ angeben.
 ````{prf:algorithm} Lineares konjugierte Gradientenverfahren
 :label: alg:conjugated_gradient
 
+			   
 **function** $x^*=$`conjugateGradient`$(A, b, x_0)$  
 
 \# Initialisierung  
@@ -1189,7 +1192,18 @@ nichtlineare Optimierung.
 ````{prf:algorithm} Nichtlineares konjugierte Gradientenverfahren
 :label: alg:nonlinear_conjugated_gradient
 
+			   
+			
 **function** $x^*=$`nonlinearConjugateGradient`$(F, \nabla F, x_0, \alpha_0, \sigma)$  
+																 
+																		
+																	   
+			 
+																																
+													
+																	 
+							   
+   
 
 \# Initialisierung  
 $d_0 = - \nabla F(x_0)$  

@@ -104,7 +104,7 @@ u(x) \ = \ \left( 1- \frac{A(x)}{A(1)} \right) \cdot g_0 +  \frac{A(x)}{A(1)} \c
 Aus dieser Darstellung der analytischen Lösung können wir sofort
 folgendes Resultat ableiten.
 
-````{prf:theorem} Existenz und Eindeutigkeitssatz für $c \equiv 0$
+````{prf:theorem} Existenz und Eindeutigkeitssatz für c \\equiv 0
 Sei $c(x) \equiv 0$ und $a \in C^1([0,1])$ mit $a(x) \geq a_0 > 0$ für
 alle $x \in [0,1]$. Sei außerdem $f \in C([0,1])$.
 
@@ -229,14 +229,12 @@ $f(x) \equiv 0$ gelten muss. ◻
 Aus dem obigen Spezialfall mit konstanter Funktion $c(x) \equiv c$ sehen
 wir, dass ein nichttrivialer Nullraum bei negativem $c$ auftreten kann.
 Diese Beobachtung lässt sich nun mit Hilfe der Eigenschaft des
-Integraloperators aus
-[\[lem:integraloperator_eigenschaften\]](#lem:integraloperator_eigenschaften){reference-type="ref+label"
-reference="lem:integraloperator_eigenschaften"} auf den allgemeinen Fall
-von $c(x) \not \equiv 0$ übertragen, so dass wir im folgenden ein
-allgemeines Resultat zur Existenz und Eindeutigkeit von Lösungen des
-Randwertproblems erhalten.
+Integraloperators aus {prf:ref}`lem:integraloperator_eigenschaften` auf
+den allgemeinen Fall von $c(x) \not \equiv 0$ übertragen, so dass wir im
+folgenden ein allgemeines Resultat zur Existenz und Eindeutigkeit von
+Lösungen des Randwertproblems erhalten.
 
-````{prf:theorem} Existenz und Eindeutigkeitssatz für $c \geq 0$
+````{prf:theorem} Existenz und Eindeutigkeitssatz für c \\geq 0
 :label: thm:randwertproblem_existenz-eindeutigkeit
 Sei $a \in C^1([0,1])$ eine stetig differenzierbare Funktion mit
 $a(x) \geq a_0 > 0$ für alle $x \in [0,1]$. Seien außerdem
@@ -263,17 +261,15 @@ Multiplikation beider Seiten mit $c(x) \cdot u(x)$:
 c(x) \cdot u^2(x) \ = \ -c(x) \cdot u(x) \cdot K(c \cdot u)(x).
 ```
 Integrieren wir beide Seiten der Gleichung und wenden nun
-[\[lem:integraloperator_eigenschaften\]](#lem:integraloperator_eigenschaften){reference-type="ref+label"
-reference="lem:integraloperator_eigenschaften"} für die speziell
-gewählte stetige Funktion $f(x) \coloneqq c(x) \cdot u(x) \in C([0,1])$
-an, so können wir abschätzen:
+{prf:ref}`lem:integraloperator_eigenschaften` für die speziell gewählte
+stetige Funktion $f(x) \coloneqq c(x) \cdot u(x) \in C([0,1])$ an, so
+können wir abschätzen:
 ```{math}
 \int_0^1 c(x) \cdot u^2(x) \, \mathrm{d}x \ = \ - \int_0^1 c(x) \cdot u(x) \cdot K(c\cdot u)(x) \, \mathrm{d}x \ \leq \ 0.
 ```
 Da auf der linken Seite ein nichtnegativer Integrand steht muss hier
 schon die Gleichheit mit Null vorliegen. Ebenfalls mit
-[\[lem:integraloperator_eigenschaften\]](#lem:integraloperator_eigenschaften){reference-type="ref+label"
-reference="lem:integraloperator_eigenschaften"} wissen wir, dass das
+{prf:ref}`lem:integraloperator_eigenschaften` wissen wir, dass das
 Integral genau dann Null wird, wenn $f(x) = c(x)\cdot u(x) \equiv 0$
 ist. Wenn jedoch $c(x) \cdot u(x) \equiv 0$, so folgt aus der Linearität
 von $K$, dass $K(c \cdot u)(x) \equiv 0$ gelten muss. Da wir
@@ -308,8 +304,7 @@ u(x) \ \geq \ \min \lbrace g_0, g_1 \rbrace \qquad \forall x \in [0,1].
 ````{prf:proof} 
 Die Existenz und Eindeutigkeit einer Lösung $u \in C^2([0,1])$ des
 Randwertproblems ist durch
-[\[thm:randwertproblem_existenz-eindeutigkeit\]](#thm:randwertproblem_existenz-eindeutigkeit){reference-type="ref+label"
-reference="thm:randwertproblem_existenz-eindeutigkeit"} gegeben. Für das
+{prf:ref}`thm:randwertproblem_existenz-eindeutigkeit` gegeben. Für das
 zu zeigende Maximumsprinzip führen wir einen einfachen
 Widerspruchsbeweis.
 
@@ -335,8 +330,7 @@ Minimum am Rand an und somit haben wir das Maximumsprinzip gezeigt. ◻
 ````
 
 Wegen der Linearität des Problems kann man aus dem Maximumsprinzip in
-[\[cor:maximumsprinzip\]](#cor:maximumsprinzip){reference-type="ref+label"
-reference="cor:maximumsprinzip"} auch Stabilitätsaussagen herleiten.
+{prf:ref}`cor:maximumsprinzip` auch Stabilitätsaussagen herleiten.
 Nehmen wir an $\tilde u \in C^2([0,1])$ sei eine bekannte Lösung für das
 Problem
 ```{math}

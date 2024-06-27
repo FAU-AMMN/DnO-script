@@ -48,8 +48,9 @@ stärksten Anstiegs der Funktion $F$ im Punkt $x$ und dementsprechend
 zeigt der negative Gradient $-\nabla F(x)$ in die Richtung des stärksten
 Abstiegs. Das lässt sich auch formal zeigen indem wir uns die
 Taylorapproximation erster Ordnung der Funktion $F$ in allgemeine
-Richtung $p$ mit Schrittweite $\alpha > 0$ für den $k$-ten Schritt des
-Abstiegsverfahren näher anschauen. Hier gilt nämlich
+Richtung $p \in \R^n / \lbrace 0 \rbrace$ mit Schrittweite $\alpha > 0$
+für den $k$-ten Schritt des Abstiegsverfahren näher anschauen. Hier gilt
+nämlich
 ```{math}
 F(x_k + \alpha p) \ = \ F(x_k) + \alpha \langle \nabla F(x_k), p \rangle + \mathcal{O}( \nabla^2 F(x_k)),
 ```
@@ -113,11 +114,13 @@ folgenden Algorithmus implementieren.
 ````{prf:algorithm} Simples Gradientenabstiegsverfahren
 :label: alg:gradient_descent_simple
 
+			   
 **function** $[x^*, F(x^*)]=$`gradientDescentSimple`$(F,\nabla F, x_0)$  
 
 \# Initialisierung  
 $x_k = x_0$  
 $F(x_{k+1}) = -\infty$  
+   
 
 **while** $F(x_{k+1})-F(x_k) < 0$ **do**  
     \# Update in Richtung des größten Gradientenabstiegs  
@@ -128,6 +131,7 @@ $F(x_{k+1}) = -\infty$
 $x^* = x_k$  
 $F(x^*) = F(x_k)$
 ````
+
 
 Unglücklicherweise ist Algorithmus
 {prf:ref}`alg:gradient_descent_simple` in dieser Form praktisch nicht
@@ -183,7 +187,7 @@ Eine weiterführende Idee ist es die Schrittweiten **adaptiv** zu wählen,
 dass heißt man passt sie innerhalb des Iterationsschemas an die
 Funktionswerte von $F$ geeignet an. Ein Iterationsschema, dass eine
 immer kleiner werdende Schrittweite $\alpha_k > 0$ verwendet, lässt sich
-für einen fest gewählten Reduktionsfaktor $0 < \sigma < 1$ wie folgt
+für einen fest gewählten Reduktionsfaktor $0 < \mu < 1$ wie folgt
 angeben:
 ```{math}
 :label: eq:gradient_descent_adaptive
@@ -191,7 +195,7 @@ angeben:
 \alpha_{k+1} \ &= \
 \begin{cases}
 \ \alpha_k, \quad &\text{ falls } F\left(x_k - \alpha_k \frac{\nabla F(x_k)}{||\nabla F(x_k)||}\right) < F(x_k) , \\
-\ \sigma \alpha_k, \quad &\text{ sonst}.
+\ \mu \alpha_k, \quad &\text{ sonst}.
 \end{cases},\\
 x_{k+1} \ &= \ x_k - \alpha_{k+1} \frac{\nabla F(x_k)}{||\nabla F(x_k)||}.
 \end{split}
@@ -205,7 +209,16 @@ umsetzen.
 ````{prf:algorithm} Adaptives Gradientenabstiegsverfahren
 :label: alg:gradient_descent_adaptive
 
+			   
+			
 **function** $[x^*, F(x^*)]=$`gradientDescentAdaptive`$(F,\nabla F, x_0, \alpha_0, \sigma, \epsilon$)  
+													   
+																		 
+																	   
+													  
+																	   
+												 
+   
 
 \# Initialisierung  
 $\alpha_k = \alpha_0$  
@@ -307,9 +320,22 @@ sich mit folgendem Algorithmus umsetzen.
  \
 
 ````{prf:algorithm} Koordinatenabstiegsverfahren
+									 
 label="alg:coordinate_descent_stochastic"}
 
+			   
+			
 **function** $[x^*, F(x^*)]=$`coordinateDescentStochastic`$(F,\nabla F, x_0, \alpha_0, \sigma, \epsilon$)  
+													   
+																		 
+											   
+															
+				   
+																		
+																	 
+																		   
+															
+   
 
 \# Initialisierung  
 $\alpha_k = \alpha_0$  
@@ -578,7 +604,7 @@ positiv definit in einem Punkt $x_k$ der Iterationsfolge sein, so muss
 zumindest eine Abnahme der Funktionswerte vorliegen, d.h., es muss für
 die Newton-Abstiegsrichtung gelten:
 ```{math}
-\langle (\nabla^2F(x_k))^{-1} \nabla F(x_k), \nabla F(x_k) \rangle \ > \ 0.
+-\langle (\nabla^2F(x_k))^{-1} \nabla F(x_k), \nabla F(x_k) \rangle \ > \ 0.
 ```
 Sollte dies nicht der Fall sein, so existieren Methoden um dennoch einen
 Abstieg zu erzwingen, siehe zum Beispiel {cite:p}`nocedal_1999`. Auf
@@ -860,7 +886,7 @@ H_{k+1} \ = \ H_k - \frac{H_k y_k y_k^T H_k}{\langle y_k, H_k y_k\rangle} + \fra
 Wie man einssieht liegt der numerische Rechenaufwand für das Update von
 $H_{k+1}$ in {eq}`eq:smw-formel` in $\mathcal{O}(n^2)$. Es fällt
 außerdem auf, dass $H_k$ nur durch die Addition zweier Matrizen mit Rang
-$1$ verändert wird, also insgesamt eine Änderung von höchstes Rang $2$
+$1$ verändert wird, also insgesamt eine Änderung von höchstens Rang $2$
 erfährt. Das passt gut zu der Forderung, dass wir erwarten, dass sich
 die Approximation der Hessematrix $\nabla^2 F$ in einer lokalen Umgebung
 nur wenig ändert.

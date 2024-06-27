@@ -37,6 +37,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -58,14 +60,15 @@
     <script src="../../_static/translations.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/katex.min.js"></script>
+    <script src="../../_static/auto-render.min.js"></script>
+    <script src="../../_static/katex_autorenderer.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2';</script>
     <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
     <link rel="search" title="Suche" href="../../search.html" />
@@ -173,6 +176,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">1.5. Nicht-differenzierbare Optimierung</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../ode/04_Anfangswertprobleme/00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -351,9 +355,13 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximales-splitting">1.5.1. Proximales Splitting</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#primal-duale-verfahren">1.5.2. Primal-Duale Verfahren</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">1.5. Nicht-differenzierbare Optimierung</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#proximales-splitting">1.6. Proximales Splitting</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#primal-duale-verfahren">1.6.1. Primal-Duale Verfahren</a></li>
 </ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -376,30 +384,30 @@ betrachen wir zunächst das folgende motivierende Beispiel.</p>
 <p>Wir betrachten das sogenannte LASSO-Problem (engl. für <em>Least Absolute
 Shrinkage and Selection Operator</em>), das man als Variante eines linearen
 Ausgleichsproblem interpretieren kann (siehe <span id="id1">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>) mit</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[F(x) \ = \ \frac{1}2 \Vert b - A x\Vert^2 + \alpha \Vert x \Vert_{\ell^1}.\]</div>
-<p>Hierbei ist <span class="math notranslate nohighlight">\(A \in \R^{m \times n}, x \in \R^n\)</span> und <span class="math notranslate nohighlight">\(b \in \R^m\)</span>, wobei
-typischerweise <span class="math notranslate nohighlight">\(m &lt; n\)</span> gilt.</p>
-<p>Mit der Lösung dieses Problems für <span class="math notranslate nohighlight">\(\alpha \rightarrow 0\)</span> approximiert
-man eine Lösung des linearen Gleichungssystems <span class="math notranslate nohighlight">\(Ax=b\)</span> mit minimaler
-<span class="math notranslate nohighlight">\(\ell^1\)</span>-Norm.</p>
+<p>Hierbei ist <span class="math">\(A \in \R^{m \times n}, x \in \R^n\)</span> und <span class="math">\(b \in \R^m\)</span>, wobei
+typischerweise <span class="math">\(m &lt; n\)</span> gilt.</p>
+<p>Mit der Lösung dieses Problems für <span class="math">\(\alpha \rightarrow 0\)</span> approximiert
+man eine Lösung des linearen Gleichungssystems <span class="math">\(Ax=b\)</span> mit minimaler
+<span class="math">\(\ell^1\)</span>-Norm.</p>
 <p>Solche Lösungen besitzen in der Regel viele Nulleinträge und sind daher
 besonders interessant. Das Problem bei der Minimierung der Zielfunktion
-<span class="math notranslate nohighlight">\(F\)</span> ist, dass die <span class="math notranslate nohighlight">\(\ell^1\)</span>-Norm</p>
-<div class="math notranslate nohighlight">
+<span class="math">\(F\)</span> ist, dass die <span class="math">\(\ell^1\)</span>-Norm</p>
+<div class="math">
 \[\Vert  x \Vert_{\ell^1} \ = \ \sum_{j=1}^n \vert x_j \vert\]</div>
-<p>nicht differenzierbar in allen Punkten <span class="math notranslate nohighlight">\(x \in \R^n\)</span> ist, für die
-mindestens eine Koordinate Null ist, d.h., für die <span class="math notranslate nohighlight">\(x_j = 0\)</span> gilt für
-ein <span class="math notranslate nohighlight">\(1 \leq j \leq n\)</span>.</p>
+<p>nicht differenzierbar in allen Punkten <span class="math">\(x \in \R^n\)</span> ist, für die
+mindestens eine Koordinate Null ist, d.h., für die <span class="math">\(x_j = 0\)</span> gilt für
+ein <span class="math">\(1 \leq j \leq n\)</span>.</p>
 </section>
 </div><p>Eine interessante Klasse von Zielfunktion, die wir im Folgenden
 betrachten wollen, ist von der Form</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[F(x) = G(x) + H(x),\]</div>
 <p>mit einer stetig differenzierbaren Funktion
-<span class="math notranslate nohighlight">\(G \colon \R^n \rightarrow \R\)</span> und einer konvexen, nicht
+<span class="math">\(G \colon \R^n \rightarrow \R\)</span> und einer konvexen, nicht
 notwendigerweise differenzierbaren Funktion
-<span class="math notranslate nohighlight">\(H \colon \R^n \rightarrow \R\)</span>. In diesem Fall können wir keins der in
+<span class="math">\(H \colon \R^n \rightarrow \R\)</span>. In diesem Fall können wir keins der in
 den vorangegangenen Kapiteln vorgestellten Gradienten-basierten
 Optimierungsverfahren verwenden, sondern benötigen einen anderen
 methodischen Ansatz.</p>
@@ -408,16 +416,16 @@ analytisch besser beschreiben zu können.</p>
 <div class="proof definition admonition" id="def:subdifferential">
 <p class="admonition-title"><span class="caption-number">Definition 1.11 </span> (Subdifferential und Subgradient)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(H: \R^n \rightarrow \R\)</span> eine konvexe Funktion. Dann ist das
-<strong>Subdifferential</strong> an der Stelle <span class="math notranslate nohighlight">\(x \in \R^n\)</span> definiert durch</p>
-<div class="math notranslate nohighlight">
+<p>Sei <span class="math">\(H: \R^n \rightarrow \R\)</span> eine konvexe Funktion. Dann ist das
+<strong>Subdifferential</strong> an der Stelle <span class="math">\(x \in \R^n\)</span> definiert durch</p>
+<div class="math">
 \[\partial H(x) \ \coloneqq \{ p \in \R^n ~|~ H(x) + \langle p, y-x \rangle \leq H(y) \quad \forall~y \in \R^n \}.\]</div>
 <p>Ein Element des Subdifferentials nennen wir <strong>Subgradient</strong>.</p>
 </section>
-</div><p>Man sieht ein, dass ein globales Minimum der konvexen Funktion <span class="math notranslate nohighlight">\(H\)</span> durch
-die Bedingung <span class="math notranslate nohighlight">\(\vec{0}  \in \partial H(x^*)\)</span> charakterisiert wird, denn
+</div><p>Man sieht ein, dass ein globales Minimum der konvexen Funktion <span class="math">\(H\)</span> durch
+die Bedingung <span class="math">\(\vec{0}  \in \partial H(x^*)\)</span> charakterisiert wird, denn
 mit <a class="reference internal" href="#def:subdifferential">Definition 1.11</a> erhalten wir in diesem Fall:</p>
-<div class="math notranslate nohighlight" id="equation-eq-optimalitaetsbedingung-h">
+<div class="math" id="equation-eq-optimalitaetsbedingung-h">
 <span class="eqno">(1.50)<a class="headerlink" href="#equation-eq-optimalitaetsbedingung-h" title="Permalink to this equation">#</a></span>\[\vec{0} \in \partial H(x^*) \ \Leftrightarrow \ H(x^*) + \underbrace{\langle \vec{0} , y-x^* \rangle}_{=\, 0} \leq H(y) \quad \forall y \in \R^n.\]</div>
 <p>Folgendes Beispiel illustriert das Subdifferential einer nicht
 differenzierbaren, eindimensionalen Funktion.</p>
@@ -425,192 +433,193 @@ differenzierbaren, eindimensionalen Funktion.</p>
 <p class="admonition-title"><span class="caption-number">Example 1.5 </span> (Subdifferential der Betragsfunktion)</p>
 <section class="example-content" id="proof-content">
 <p>Wir betrachten die eindimensionale Betragsfunktion
-<span class="math notranslate nohighlight">\(H(x) \coloneqq \vert x \vert\)</span>. In diesem Fall ist das Subdifferential
-von <span class="math notranslate nohighlight">\(H\)</span> für alle Punkte <span class="math notranslate nohighlight">\(x \neq 0\)</span> gegeben als</p>
-<div class="math notranslate nohighlight">
+<span class="math">\(H(x) \coloneqq \vert x \vert\)</span>. In diesem Fall ist das Subdifferential
+von <span class="math">\(H\)</span> für alle Punkte <span class="math">\(x \neq 0\)</span> gegeben als</p>
+<div class="math">
 \[\partial H(x) \ = \ \{\operatorname{sgn}(x)\}.\]</div>
-<p>Im Punkt <span class="math notranslate nohighlight">\(x=0\)</span>, in dem die Betragsfunktion bekanntlich nicht
+<p>Im Punkt <span class="math">\(x=0\)</span>, in dem die Betragsfunktion bekanntlich nicht
 differenzierbar ist, gilt für das Subdifferential hingegen</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\partial H(0) \ = \ [-1,1].\]</div>
 </section>
 </div><p>Basierend auf dieser Beobachtung im Eindimensionalen können wir auch das
-Subdifferential der <span class="math notranslate nohighlight">\(\ell^1\)</span>-Norm im <span class="math notranslate nohighlight">\(\R^n\)</span> im folgenden Beispiel
+Subdifferential der <span class="math">\(\ell^1\)</span>-Norm im <span class="math">\(\R^n\)</span> im folgenden Beispiel
 ausrechnen.</p>
 <div class="proof example admonition" id="example-3">
-<p class="admonition-title"><span class="caption-number">Example 1.6 </span> (Subdifferential der <span class="math notranslate nohighlight">\(\ell^1\)</span>-Norm)</p>
+<p class="admonition-title"><span class="caption-number">Example 1.6 </span> (Subdifferential der \ell^1-Norm)</p>
 <section class="example-content" id="proof-content">
-<p>Wir betrachten die <span class="math notranslate nohighlight">\(\ell^1\)</span>-Norm, die durch die konvexe Funktion
-<span class="math notranslate nohighlight">\(H(x) = \Vert x \Vert_{\ell^1}\)</span> gegeben ist. Dann können wir das
-Subdifferential der <span class="math notranslate nohighlight">\(\ell^1\)</span>-Norm für alle Punkte <span class="math notranslate nohighlight">\(x \in \R^n\)</span> angeben
+<p>Wir betrachten die <span class="math">\(\ell^1\)</span>-Norm, die durch die konvexe Funktion
+<span class="math">\(H(x) = \Vert x \Vert_{\ell^1}\)</span> gegeben ist. Dann können wir das
+Subdifferential der <span class="math">\(\ell^1\)</span>-Norm für alle Punkte <span class="math">\(x \in \R^n\)</span> angeben
 als</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\partial H(x) \ = \ \{ p \in [-1,1]^n ~|~ p_i = \operatorname{sgn}(x_i) \text{ für } x_i \neq 0\}.\]</div>
 </section>
-</div><p>Basierend auf der Optimalitätsbedingung für die konvexe Funktion <span class="math notranslate nohighlight">\(H\)</span> in
+</div><p>Basierend auf der Optimalitätsbedingung für die konvexe Funktion <span class="math">\(H\)</span> in
 <a class="reference internal" href="#equation-eq-optimalitaetsbedingung-h">(1.50)</a> können wir eine entsprechende
 notwendige Bedingung für ein lokales Minimum für die Summe einer
-differenzierbaren Funktion <span class="math notranslate nohighlight">\(G\)</span> und einer konvexen Funktion <span class="math notranslate nohighlight">\(H\)</span>
+differenzierbaren Funktion <span class="math">\(G\)</span> und einer konvexen Funktion <span class="math">\(H\)</span>
 herleiten, wie das folgende Lemma besagt.</p>
 <div class="proof lemma admonition" id="lem:subdifferential_notwendige_bedingung">
 <p class="admonition-title"><span class="caption-number">Lemma 1.4 </span> (Optimalitätsbedingung)</p>
 <section class="lemma-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(F \colon \R^n \rightarrow \R\)</span> eine Zielfunktion, die sich schreiben
-lässt als <span class="math notranslate nohighlight">\(F=G+H\)</span>, wobei <span class="math notranslate nohighlight">\(G\)</span> stetig differenzierbar und <span class="math notranslate nohighlight">\(H\)</span> konvex ist.
-Sei außerdem <span class="math notranslate nohighlight">\(x^* \in \R^n\)</span> ein lokaler Minimierer von <span class="math notranslate nohighlight">\(F\)</span>.</p>
-<p>Dann gilt <span class="math notranslate nohighlight">\(\vec{0} \in \nabla G(x^*) + \partial H(x^*)\)</span>, d.h., es
-existiert ein Subgradient <span class="math notranslate nohighlight">\(p \in \partial H(x^*)\)</span> mit
-<span class="math notranslate nohighlight">\(\nabla G(x^*) + p = \vec{0}\)</span>.</p>
+<p>Sei <span class="math">\(F \colon \R^n \rightarrow \R\)</span> eine Zielfunktion, die sich schreiben
+lässt als <span class="math">\(F=G+H\)</span>, wobei <span class="math">\(G\)</span> stetig differenzierbar und <span class="math">\(H\)</span> konvex ist.
+Sei außerdem <span class="math">\(x^* \in \R^n\)</span> ein lokaler Minimierer von <span class="math">\(F\)</span>.</p>
+<p>Dann gilt <span class="math">\(\vec{0} \in \nabla G(x^*) + \partial H(x^*)\)</span>, d.h., es
+existiert ein Subgradient <span class="math">\(p \in \partial H(x^*)\)</span> mit
+<span class="math">\(\nabla G(x^*) + p = \vec{0}\)</span>.</p>
 </section>
 </div><div class="proof admonition" id="proof">
-<p>Proof. Sei <span class="math notranslate nohighlight">\(x^* \in \R^n\)</span> ein lokaler Minimierer von <span class="math notranslate nohighlight">\(F\)</span>. Dann gilt für jeden
-Punkt <span class="math notranslate nohighlight">\(x \in \R^n\)</span> in einer lokalen Umgebung des Minimierers <span class="math notranslate nohighlight">\(x^*\)</span> mit
-einer Taylor-Entwicklung erster Ordnung der Funktion <span class="math notranslate nohighlight">\(G\)</span> schon</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-G(x^*)  + H(x^*) \ &amp;= \ F(x^*) \ \leq \ F(x) \ = \ G(x) + H(x)\\
-&amp;= \ G(x^*) + \langle \nabla G(x^*),x-x^* \rangle + r(x)\Vert x-x^*\Vert + H(x)
-\end{split}\end{split}\]</div>
-<p>mit einem Fehlerterm <span class="math notranslate nohighlight">\(r \colon \R^n \rightarrow \R\)</span> für den gilt
-<span class="math notranslate nohighlight">\(r(x) \rightarrow 0\)</span> wenn <span class="math notranslate nohighlight">\(x \rightarrow x^*\)</span>. Wählen wir nun den
-speziellen Vektor <span class="math notranslate nohighlight">\(p = -\nabla G(x^*)\)</span> und stellen die Gleichung um, so
+<p>Proof. Sei <span class="math">\(x^* \in \R^n\)</span> ein lokaler Minimierer von <span class="math">\(F\)</span>. Dann gilt für jeden
+Punkt <span class="math">\(x \in \R^n\)</span> in einer lokalen Umgebung des Minimierers <span class="math">\(x^*\)</span> mit
+einer Taylor-Entwicklung erster Ordnung der Funktion <span class="math">\(G\)</span> schon</p>
+<div class="math">
+\[\begin{split}
+G(x^*)  + H(x^*) \ &= \ F(x^*) \ \leq \ F(x) \ = \ G(x) + H(x)\\
+&= \ G(x^*) + \langle \nabla G(x^*),x-x^* \rangle + r(x)\Vert x-x^*\Vert + H(x)
+\end{split}\]</div>
+<p>mit einem Fehlerterm <span class="math">\(r \colon \R^n \rightarrow \R\)</span> für den gilt
+<span class="math">\(r(x) \rightarrow 0\)</span> wenn <span class="math">\(x \rightarrow x^*\)</span>. Wählen wir nun den
+speziellen Vektor <span class="math">\(p = -\nabla G(x^*)\)</span> und stellen die Gleichung um, so
 gilt also</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\frac{H(x^*) + \langle p, x - x^* \rangle - H(x)}{\Vert x-x^* \Vert} \ = \ r(x).\]</div>
-<p>Dann können wir unter Ausnutzung der Konvexität von <span class="math notranslate nohighlight">\(H\)</span> folgende
+<p>Dann können wir unter Ausnutzung der Konvexität von <span class="math">\(H\)</span> folgende
 Abschätzung treffen</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-0 \ = \ \limsup_{x \rightarrow x^*} r(x) \ &amp;\geq \ \limsup_{x \rightarrow x^*} \frac{H(x^*) + \langle p, x - x^* \rangle - H(x)}{\Vert x-x^* \Vert} \\
-&amp;\geq \ \lim_{\lambda \rightarrow 0} \frac{H(x^*) + \langle p, \lambda(x - x^*) \rangle - H((1-\lambda)x^* + \lambda x)}{\lambda \Vert x-x^* \Vert}\\
-&amp;\geq \ \lim_{\lambda \rightarrow 0} \frac{H(x^*) + \lambda \langle p, x - x^* \rangle - (1-\lambda)H(x^*) - \lambda H(x)}{\lambda \Vert x-x^* \Vert}\\
-&amp;= \ \lim_{\lambda \rightarrow 0} \frac{\langle p, x - x^* \rangle + H(x^*) - H(x)}{\Vert x-x^* \Vert} \ = \ \frac{\langle p, x - x^* \rangle + H(x^*) - H(x)}{\Vert x-x^* \Vert}.
-\end{split}\end{split}\]</div>
+<div class="math">
+\[\begin{split}
+0 \ = \ \limsup_{x \rightarrow x^*} r(x) \ &\geq \ \limsup_{x \rightarrow x^*} \frac{H(x^*) + \langle p, x - x^* \rangle - H(x)}{\Vert x-x^* \Vert} \\
+&\geq \ \lim_{\lambda \rightarrow 0} \frac{H(x^*) + \langle p, \lambda(x - x^*) \rangle - H((1-\lambda)x^* + \lambda x)}{\lambda \Vert x-x^* \Vert}\\
+&\geq \ \lim_{\lambda \rightarrow 0} \frac{H(x^*) + \lambda \langle p, x - x^* \rangle - (1-\lambda)H(x^*) - \lambda H(x)}{\lambda \Vert x-x^* \Vert}\\
+&= \ \lim_{\lambda \rightarrow 0} \frac{\langle p, x - x^* \rangle + H(x^*) - H(x)}{\Vert x-x^* \Vert} \ = \ \frac{\langle p, x - x^* \rangle + H(x^*) - H(x)}{\Vert x-x^* \Vert}.
+\end{split}\]</div>
 <p>Durch Umstellen erhalten wir schließlich</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[H(x^*) + \langle p, x - x^* \rangle \ \leq \ H(x).\]</div>
 <p>Dies bedeutet aber schon nach <a class="reference internal" href="#def:subdifferential">Definition 1.11</a>, dass
-<span class="math notranslate nohighlight">\(p \in \partial H(x^*)\)</span> gilt. ◻</p>
+<span class="math">\(p \in \partial H(x^*)\)</span> gilt. ◻</p>
 </div>
 <p>Basierend auf <a class="reference internal" href="#lem:subdifferential_notwendige_bedingung">Lemma 1.4</a>
 könnten wir also von der notwendigen Optimalitätsbedingung
-<span class="math notranslate nohighlight">\(\nabla G(x^*) + p = 0\)</span> ausgehen und damit ein Analogon zum
+<span class="math">\(\nabla G(x^*) + p = 0\)</span> ausgehen und damit ein Analogon zum
 Gradientenabstiegsverfahren aus <a class="reference internal" href="../02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html#ss-gradient-descent"><span class="std std-ref">Gradientenabstiegsverfahren</span></a> aufstellen
 mit</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[x_{k+1} = x_k - \alpha_k( \nabla G(x_k) + p_k), \qquad p_k \in \partial H(x_k).\]</div>
 <p>Allerdings ist nicht klar welchen Subgradienten
-<span class="math notranslate nohighlight">\(p_k \in \partial H(x_k)\)</span> wir in jeder Iteration auswählen sollen (falls
+<span class="math">\(p_k \in \partial H(x_k)\)</span> wir in jeder Iteration auswählen sollen (falls
 mehr als einer existiert) oder ob überhaupt ein Subgradient existiert.
 Deshalb werden wir im Folgenden eine Variante betrachten bei der
-automatisch Iterationsschritte <span class="math notranslate nohighlight">\(x_{k+1} \in \R^n\)</span> mit nichtleerem
-Subdifferential und ebenso ein <span class="math notranslate nohighlight">\(p_{k+1} \in \partial H(x_{k+1})\)</span>
+automatisch Iterationsschritte <span class="math">\(x_{k+1} \in \R^n\)</span> mit nichtleerem
+Subdifferential und ebenso ein <span class="math">\(p_{k+1} \in \partial H(x_{k+1})\)</span>
 ausgewählt werden.</p>
-<section id="proximales-splitting">
-<span id="ss-proximal-splitting"></span><h2><span class="section-number">1.5.1. </span>Proximales Splitting<a class="headerlink" href="#proximales-splitting" title="Permalink to this heading">#</a></h2>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="proximales-splitting">
+<span id="ss-proximal-splitting"></span><h1><span class="section-number">1.6. </span>Proximales Splitting<a class="headerlink" href="#proximales-splitting" title="Permalink to this heading">#</a></h1>
 <p>Die Idee des sogenannten proximalen Splitting, auch <em>Forward-Backward
 Splitting</em> genannt, ist es den differenzierbaren Teil genauso wie beim
 Gradientenabstiegsverfahren auszuwerten, d.h., vorwärts ausgehend vom
-Punkt <span class="math notranslate nohighlight">\(x_k \in \R^n\)</span>, während der Subgradient hingegen bezüglich der
+Punkt <span class="math">\(x_k \in \R^n\)</span>, während der Subgradient hingegen bezüglich der
 nächsten Iterierten ausgewertet wird, d.h., rückwärts ausgehend vom
-Punkt <span class="math notranslate nohighlight">\(x_{k+1} \in \R^n\)</span>.</p>
+Punkt <span class="math">\(x_{k+1} \in \R^n\)</span>.</p>
 <p>Somit lässt sich die Iterationsvorschrift für das proximale Splitting
 schreiben als</p>
-<div class="math notranslate nohighlight" id="equation-eq-iteration-proximal-splitting">
+<div class="math" id="equation-eq-iteration-proximal-splitting">
 <span class="eqno">(1.51)<a class="headerlink" href="#equation-eq-iteration-proximal-splitting" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \alpha_k( \nabla G(x_k) + p_{k+1}), \qquad p_{k+1} \in \partial H(x_{k+1}).\]</div>
 <p>Diese Gleichung können wir nun selbstverständlich nicht mehr explizit
-auswerten, da der Subgradient <span class="math notranslate nohighlight">\(p_{k+1} \in \partial H(x_{k+1})\)</span> vom
-bisher unbestimmten Iterationsschritt <span class="math notranslate nohighlight">\(x_{k+1} \in \R^n\)</span> abhängt.</p>
+auswerten, da der Subgradient <span class="math">\(p_{k+1} \in \partial H(x_{k+1})\)</span> vom
+bisher unbestimmten Iterationsschritt <span class="math">\(x_{k+1} \in \R^n\)</span> abhängt.</p>
 <p>Dennoch können wir die Iterationsvorschrift
 <a class="reference internal" href="#equation-eq-iteration-proximal-splitting">(1.51)</a> weiter umschreiben zu</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\frac{1}{\alpha_k} (x_{k+1} - x_k) + \nabla G(x_k) + p_{k+1} \ = \ 0.\]</div>
 <p>Die zentrale Idee ist es nun eine Funktion zu finden, deren Ableitung
 den Ausdruck auf linken Seite der obigen Gleichung liefert. Man sieht
 ein, dass die obige Gleichung die hinreichende Optimalitätsbedingung für
 die Minimierung der folgenden strikt konvexen Funktion darstellt</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[F_k(x) \ = \ \frac{1}{2 \alpha_k} \Vert x - x_k + \alpha_k \nabla G(x_k) \Vert^2 + H(x).\]</div>
-<p>Hierbei stellt die Iterierte <span class="math notranslate nohighlight">\(x_{k+1} \in \R^n\)</span> also einen stationären
-Punkt der Zielfunktion <span class="math notranslate nohighlight">\(F_k(x)\)</span> dar, während <span class="math notranslate nohighlight">\(p_{k+1} \in \R^n\)</span> aus dem
-Subdifferential <span class="math notranslate nohighlight">\(\partial H(x)\)</span> stammt.</p>
+<p>Hierbei stellt die Iterierte <span class="math">\(x_{k+1} \in \R^n\)</span> also einen stationären
+Punkt der Zielfunktion <span class="math">\(F_k(x)\)</span> dar, während <span class="math">\(p_{k+1} \in \R^n\)</span> aus dem
+Subdifferential <span class="math">\(\partial H(x)\)</span> stammt.</p>
 <p>Wir können das Iterationsverfahren in
 <a class="reference internal" href="#equation-eq-iteration-proximal-splitting">(1.51)</a> also durchführen, wenn wir strikt
 konvexe Funktionen der Form</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\Phi(x) \ \coloneqq \ \frac{1}{2\alpha} \Vert x - y \Vert^2 + H(x)\]</div>
 <p>effizient minimieren können.</p>
-<p>Bei der Optimierung der Funktion <span class="math notranslate nohighlight">\(\Phi\)</span> versucht man anschaulich einen
-Kompromiss einzugehen zwischen dem Ziel die Funktion <span class="math notranslate nohighlight">\(H\)</span> zu minimieren
-und gleichzeitig nahe dem Punkt <span class="math notranslate nohighlight">\(y \in \R^n\)</span> bezüglich der Euklidischen
-Norm zu sein. Der Parameter <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span> steuert hierbei die Gewichtung
+<p>Bei der Optimierung der Funktion <span class="math">\(\Phi\)</span> versucht man anschaulich einen
+Kompromiss einzugehen zwischen dem Ziel die Funktion <span class="math">\(H\)</span> zu minimieren
+und gleichzeitig nahe dem Punkt <span class="math">\(y \in \R^n\)</span> bezüglich der Euklidischen
+Norm zu sein. Der Parameter <span class="math">\(\alpha &gt; 0\)</span> steuert hierbei die Gewichtung
 zwischen diesen beiden Kriterien.</p>
-<p>Da es sich bei <span class="math notranslate nohighlight">\(\Phi\)</span> um eine strikt konvexe Funktion handelt existiert
+<p>Da es sich bei <span class="math">\(\Phi\)</span> um eine strikt konvexe Funktion handelt existiert
 ein eindeutiges Minimum. Dieses lässt sich durch den sogenannten
 Proximaloperator beschreiben, den wir im Folgenden definieren wollen.</p>
 <div class="proof definition admonition" id="definition-5">
 <p class="admonition-title"><span class="caption-number">Definition 1.12 </span> (Proximaloperator)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(H \colon \R^n \rightarrow \R\)</span> eine konvexe, unterhalbstetige
-Funktion und sei <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span> ein positiver Parameter. Dann definieren
-wir den <strong>Proximaloperator</strong> bezüglich der Funktion <span class="math notranslate nohighlight">\(H\)</span> im Punkt
-<span class="math notranslate nohighlight">\(y\in \R^n\)</span> als</p>
-<div class="math notranslate nohighlight">
+<p>Sei <span class="math">\(H \colon \R^n \rightarrow \R\)</span> eine konvexe, unterhalbstetige
+Funktion und sei <span class="math">\(\alpha &gt; 0\)</span> ein positiver Parameter. Dann definieren
+wir den <strong>Proximaloperator</strong> bezüglich der Funktion <span class="math">\(H\)</span> im Punkt
+<span class="math">\(y\in \R^n\)</span> als</p>
+<div class="math">
 \[\operatorname{prox}_{\alpha H}(y) \ \coloneqq \ \underset{x \in \R^n}{\operatorname{arg\,min}} \left \lbrace \frac{1}{2\alpha} ||x - y||^2 + H(x) \right\rbrace.\]</div>
 </section>
 </div><p>Wir wollen zunächst das Konzept des Proximaloperators im folgenden
-Beispiel für die Betragsfunktion bzw. die <span class="math notranslate nohighlight">\(\ell^1\)</span>-Norm genauer
+Beispiel für die Betragsfunktion bzw. die <span class="math">\(\ell^1\)</span>-Norm genauer
 verstehen.</p>
 <div class="proof example admonition" id="ex:shrinkage-operator">
 <p class="admonition-title"><span class="caption-number">Example 1.7 </span> (Shrinkage-Operator)</p>
 <section class="example-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(H(x) = \vert x \vert\)</span> in diesem Beispiel zunächst die
+<p>Sei <span class="math">\(H(x) = \vert x \vert\)</span> in diesem Beispiel zunächst die
 Betragsfunktion. Dann ist der Proximaloperator
-<span class="math notranslate nohighlight">\(z =\operatorname{prox}_{\alpha H}(y)\)</span> der eindeutige Minimierer der
+<span class="math">\(z =\operatorname{prox}_{\alpha H}(y)\)</span> der eindeutige Minimierer der
 strikt konvexen Funktion</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\Phi(x) \ = \ \frac{1}{2\alpha} (x - y)^2 + \vert x \vert\]</div>
 <p>mit der notwendigen Optimalitätsbedingung 1. Ordnung</p>
-<div class="math notranslate nohighlight" id="equation-eq-shrinkage-bedingung">
+<div class="math" id="equation-eq-shrinkage-bedingung">
 <span class="eqno">(1.52)<a class="headerlink" href="#equation-eq-shrinkage-bedingung" title="Permalink to this equation">#</a></span>\[\frac{1}\alpha (y-z) \in \partial \vert z\vert.\]</div>
 <p>Aus <a class="reference internal" href="#ex:subdifferential_betrag">Example 1.5</a> wissen wir bereits, dass
-<span class="math notranslate nohighlight">\(\partial |z| = \lbrace{ \operatorname{sgn}(z)}\rbrace = \lbrace -1, 1 \rbrace\)</span>
-für <span class="math notranslate nohighlight">\(z \neq 0\)</span> gilt und <span class="math notranslate nohighlight">\(\partial |0| = [-1, 1]\)</span> in der Null.</p>
-<p>Betrachten wir zunächst den Fall <span class="math notranslate nohighlight">\(z &gt; 0\)</span>. Dann ist klar, dass
-<span class="math notranslate nohighlight">\(\partial |z| = 1\)</span> gilt und somit wird aus der notwendigen
+<span class="math">\(\partial |z| = \lbrace{ \operatorname{sgn}(z)}\rbrace = \lbrace -1, 1 \rbrace\)</span>
+für <span class="math">\(z \neq 0\)</span> gilt und <span class="math">\(\partial |0| = [-1, 1]\)</span> in der Null.</p>
+<p>Betrachten wir zunächst den Fall <span class="math">\(z &gt; 0\)</span>. Dann ist klar, dass
+<span class="math">\(\partial |z| = 1\)</span> gilt und somit wird aus der notwendigen
 Optimalitätsbedingung <a class="reference internal" href="#equation-eq-shrinkage-bedingung">(1.52)</a></p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\frac{1}\alpha (y-z) \: = \: 1 \quad \Leftrightarrow \quad  z \: = \: y - \alpha.\]</div>
-<p>Da wir <span class="math notranslate nohighlight">\(z &gt; 0\)</span> angenommen haben, ist dies nur möglich für
-<span class="math notranslate nohighlight">\(y &gt; \alpha &gt; 0\)</span>.</p>
-<p>Analog gilt für den Fall <span class="math notranslate nohighlight">\(z &lt; 0\)</span>, dass <span class="math notranslate nohighlight">\(\partial |z| = -1\)</span> ist und somit
+<p>Da wir <span class="math">\(z &gt; 0\)</span> angenommen haben, ist dies nur möglich für
+<span class="math">\(y &gt; \alpha &gt; 0\)</span>.</p>
+<p>Analog gilt für den Fall <span class="math">\(z &lt; 0\)</span>, dass <span class="math">\(\partial |z| = -1\)</span> ist und somit
 erhalten wir aus der notwendigen Optimalitätsbedingung
 <a class="reference internal" href="#equation-eq-shrinkage-bedingung">(1.52)</a></p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\frac{1}\alpha (y-z) \: = \: -1 \quad \Leftrightarrow \quad  z \: = \: \alpha + y.\]</div>
-<p>Dies ist aber für <span class="math notranslate nohighlight">\(z &lt; 0\)</span> nur möglich, wenn <span class="math notranslate nohighlight">\(y &lt; -\alpha &lt; 0\)</span> gilt.</p>
-<p>Für den letzten Fall mit <span class="math notranslate nohighlight">\(z=0\)</span> lauten die notwendigen
+<p>Dies ist aber für <span class="math">\(z &lt; 0\)</span> nur möglich, wenn <span class="math">\(y &lt; -\alpha &lt; 0\)</span> gilt.</p>
+<p>Für den letzten Fall mit <span class="math">\(z=0\)</span> lauten die notwendigen
 Optimalitätsbedingung <a class="reference internal" href="#equation-eq-shrinkage-bedingung">(1.52)</a></p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\frac{1}\alpha (y-z) \: = \: \frac{y}{\alpha} \: \in \: [-1, 1]  = \partial |0|.\]</div>
-<p>Dies ist äquivalent zu der Bedingung <span class="math notranslate nohighlight">\(-1 \leq \frac{y}{\alpha} \leq 1\)</span>,
-die nur dann erfüllt ist wenn <span class="math notranslate nohighlight">\(-\alpha \leq y \leq \alpha\)</span> gilt.</p>
+<p>Dies ist äquivalent zu der Bedingung <span class="math">\(-1 \leq \frac{y}{\alpha} \leq 1\)</span>,
+die nur dann erfüllt ist wenn <span class="math">\(-\alpha \leq y \leq \alpha\)</span> gilt.</p>
 <p>Somit lässt sich der Proximaloperator
-<span class="math notranslate nohighlight">\(z =\operatorname{prox}_{\alpha H}(y)\)</span> für die Betragsfunktion
-<span class="math notranslate nohighlight">\(H(x) \coloneqq \vert x \vert\)</span>, der auch <strong>Shrinkage-Operator</strong> genannt
+<span class="math">\(z =\operatorname{prox}_{\alpha H}(y)\)</span> für die Betragsfunktion
+<span class="math">\(H(x) \coloneqq \vert x \vert\)</span>, der auch <strong>Shrinkage-Operator</strong> genannt
 wird, wie folgt angeben:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\operatorname{prox}_{\alpha \vert \cdot \vert}(y) \ = \ \text{shrink}_\alpha(y) \ \coloneqq \ \left\{ \begin{array}{ll} y - \alpha \quad &amp; \text{falls } y &gt; \alpha \\  0 \quad &amp; \text{falls } y \in [-\alpha, \alpha]  \\ y + \alpha \quad &amp; \text{falls } y &lt; - \alpha. \end{array}\right.\end{split}\]</div>
+<div class="math">
+\[\operatorname{prox}_{\alpha \vert \cdot \vert}(y) \ = \ \text{shrink}_\alpha(y) \ \coloneqq \ \left\{ \begin{array}{ll} y - \alpha \quad & \text{falls } y > \alpha \\  0 \quad & \text{falls } y \in [-\alpha, \alpha]  \\ y + \alpha \quad & \text{falls } y < - \alpha. \end{array}\right.\]</div>
 <p>Die kontrahierende Wirkung des Shrinkage-Operators wird in
 <code class="xref std std-numref docutils literal notranslate"><span class="pre">fig:shrinkage</span></code> illustriert.</p>
-<p>Analog können wir auch den Proximaloperator für die <span class="math notranslate nohighlight">\(\ell^1\)</span>-Norm
-<span class="math notranslate nohighlight">\(H(x) = \Vert x \Vert_{\ell^1}\)</span> im <span class="math notranslate nohighlight">\(\R^n\)</span> angeben als</p>
-<div class="math notranslate nohighlight">
+<p>Analog können wir auch den Proximaloperator für die <span class="math">\(\ell^1\)</span>-Norm
+<span class="math">\(H(x) = \Vert x \Vert_{\ell^1}\)</span> im <span class="math">\(\R^n\)</span> angeben als</p>
+<div class="math">
 \[\text{prox}_{\alpha H}(y) = ( \operatorname{shrink}_\alpha(y_i))_{i=1,\ldots,n}.\]</div>
 </section>
 </div><p>Mit Hilfe des Proximaloperators können wir das proximale Splitting in
 <a class="reference internal" href="#equation-eq-iteration-proximal-splitting">(1.51)</a> schreiben als</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[x_{k+1} \ = \ \operatorname{prox}_{\alpha_k H}(x_k - \alpha_k  \nabla G(x_k)).\]</div>
 <p>Wie wir in <a class="reference internal" href="#ex:shrinkage-operator">Example 1.7</a> gesehen haben ist der
 Shrinkage-Operator in gewisser Weise kontraktiv. Diese Beobachtung gilt
@@ -618,38 +627,39 @@ im Allgemeinen für Proximaloperatoren wie folgendes Lemma feststellt.</p>
 <div class="proof lemma admonition" id="lemma-7">
 <p class="admonition-title"><span class="caption-number">Lemma 1.5 </span> (Kontraktivität des Proximaloperators)</p>
 <section class="lemma-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(H\)</span> eine konvexe, unterhalbstetige Funktion. Dann ist der
-Proximaloperator <span class="math notranslate nohighlight">\(\operatorname{prox}_H\)</span> Lipschitz stetig mit
-Lipschitz-Konstante <span class="math notranslate nohighlight">\(1\)</span>.</p>
+<p>Sei <span class="math">\(H\)</span> eine konvexe, unterhalbstetige Funktion. Dann ist der
+Proximaloperator <span class="math">\(\operatorname{prox}_H\)</span> Lipschitz stetig mit
+Lipschitz-Konstante <span class="math">\(1\)</span>.</p>
 </section>
 </div><div class="proof admonition" id="proof">
-<p>Proof. Wir betrachten zunächst die beiden Punkte, die für <span class="math notranslate nohighlight">\(i = 1,2\)</span> gegeben
-sind durch <span class="math notranslate nohighlight">\(x_i= \operatorname{prox}_H(y_i)\)</span>. Dann gilt wegen der
-Optimalitätsbedingung des Proximaloperators <span class="math notranslate nohighlight">\(x_i + p_i =  y_i,\)</span> für
-einen Subgradienten <span class="math notranslate nohighlight">\(p_i \in \partial H(x_i)\)</span>. Subtrahieren wir die
-beiden Identitäten für <span class="math notranslate nohighlight">\(i=1,2\)</span>, so erhalten wir</p>
-<div class="math notranslate nohighlight">
+<p>Proof. Wir betrachten zunächst die beiden Punkte, die für <span class="math">\(i = 1,2\)</span> gegeben
+sind durch <span class="math">\(x_i= \operatorname{prox}_H(y_i)\)</span>. Dann gilt wegen der
+Optimalitätsbedingung des Proximaloperators <span class="math">\(x_i + p_i =  y_i,\)</span> für
+einen Subgradienten <span class="math">\(p_i \in \partial H(x_i)\)</span>. Subtrahieren wir die
+beiden Identitäten für <span class="math">\(i=1,2\)</span>, so erhalten wir</p>
+<div class="math">
 \[x_1 - x_2 + p_1 - p_2 \ = \ y_1 - y_2.\]</div>
 <p>Multiplizieren wir diese Gleichung von links mit dem Zeilenvektor
-<span class="math notranslate nohighlight">\((x_1-x_2)^T \in \R^n\)</span> so gilt mit Hilfe der <em>Cauchy-Schwarz
+<span class="math">\((x_1-x_2)^T \in \R^n\)</span> so gilt mit Hilfe der <em>Cauchy-Schwarz
 Ungleichung</em>:</p>
-<div class="math notranslate nohighlight" id="equation-eq-lipschitz-cs-ungleichung">
+<div class="math" id="equation-eq-lipschitz-cs-ungleichung">
 <span class="eqno">(1.53)<a class="headerlink" href="#equation-eq-lipschitz-cs-ungleichung" title="Permalink to this equation">#</a></span>\[\Vert x_1 - x_2 \Vert^2 + \langle x_1-x_2, p_1 - p_2 \rangle = \langle x_1-x_2, y_1 -y_2 \rangle \ \leq \ \Vert y_1-y_2 \Vert \cdot \Vert x_1-x_2 \Vert.\]</div>
 <p>Wegen <a class="reference internal" href="#def:subdifferential">Definition 1.11</a> des Subgradienten können wir
 festhalten, dass gilt</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\langle p_1, x_1- x_2 \rangle \ &amp;\geq \ H(x_1) - H(x_2) \\
-\langle p_2, x_2- x_1 \rangle \ &amp;\geq \ H(x_2) - H(x_1).
-\end{split}\]</div>
+<div class="math">
+\[\begin{aligned}
+\langle p_1, x_1- x_2 \rangle \ &\geq \ H(x_1) - H(x_2) \\
+\langle p_2, x_2- x_1 \rangle \ &\geq \ H(x_2) - H(x_1).
+\end{aligned}\]</div>
 <p>Addieren wir diese beiden Ungleichungen, so erhalten wir insgesamt
-<span class="math notranslate nohighlight">\(\langle p_1 - p_2, x_1-x_2 \rangle \geq 0\)</span>. Damit können wir die linke
+<span class="math">\(\langle p_1 - p_2, x_1-x_2 \rangle \geq 0\)</span>. Damit können wir die linke
 Seite der Ungleichung <a class="reference internal" href="#equation-eq-lipschitz-cs-ungleichung">(1.53)</a> weiter
-abschätzen und erhalten durch Teilen mit dem Wert <span class="math notranslate nohighlight">\(||x_1 - x_2||\)</span> auf
+abschätzen und erhalten durch Teilen mit dem Wert <span class="math">\(||x_1 - x_2||\)</span> auf
 beiden Seiten schließlich</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\Vert x_1 - x_2 \Vert \ \leq \ \Vert  y_1 - y_2 \Vert ,\]</div>
 <p>was genau die gewünschte Lipschitz-Stetigkeit des Proximaloperators mit
-Lipschitz-Konstante <span class="math notranslate nohighlight">\(L=1\)</span> bedeutet. ◻</p>
+Lipschitz-Konstante <span class="math">\(L=1\)</span> bedeutet. ◻</p>
 </div>
 <p>Analog zum Beweis von <a class="reference internal" href="00_03_NichtlineareOptimierung2.html#thm:konvergenz_abstieg">Theorem 1.10</a> können wir auch
 vorgehen um die Konvergenz des proximalen Splitting Verfahrens im
@@ -657,187 +667,187 @@ folgenden Theorem zu zeigen.</p>
 <div class="proof theorem admonition" id="thm:konvergenz_splitting">
 <p class="admonition-title"><span class="caption-number">Theorem 1.11 </span> (Konvergenz des proximalen Splitting-Verfahrens)</p>
 <section class="theorem-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(F \coloneqq \R^n \rightarrow \R\)</span> eine nach unten beschränkte
+<p>Sei <span class="math">\(F \coloneqq \R^n \rightarrow \R\)</span> eine nach unten beschränkte
 Zielfunktion, das heißt, dass die Niveaumenge
-<span class="math notranslate nohighlight">\(K \coloneqq \lbrace x \in \R^n : F(x) \leq F(x_0) \rbrace\)</span> beschränkt
-ist. Außerdem lasse sich <span class="math notranslate nohighlight">\(F\)</span> als Summe zweier Funktionen schreiben mit
-<span class="math notranslate nohighlight">\(F(x) = G(x) + H(x)\)</span> für eine zweimal stetig differenzierbare Funktion
-<span class="math notranslate nohighlight">\(G \colon \R^n \rightarrow \R\)</span> und eine konvexe, unterhalbstetige
-Funktion <span class="math notranslate nohighlight">\(H \colon \R^n \rightarrow \R\)</span>.</p>
+<span class="math">\(K \coloneqq \lbrace x \in \R^n : F(x) \leq F(x_0) \rbrace\)</span> beschränkt
+ist. Außerdem lasse sich <span class="math">\(F\)</span> als Summe zweier Funktionen schreiben mit
+<span class="math">\(F(x) = G(x) + H(x)\)</span> für eine zweimal stetig differenzierbare Funktion
+<span class="math">\(G \colon \R^n \rightarrow \R\)</span> und eine konvexe, unterhalbstetige
+Funktion <span class="math">\(H \colon \R^n \rightarrow \R\)</span>.</p>
 <p>Dann konvergiert das proximale Splitting-Verfahren der Form</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[x_{k+1} \ = \ \operatorname{prox}_{\alpha_k H}(x_k - \alpha_k \nabla G(x_k)).\]</div>
 </section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. Wir nutzen zunächst für einen Subgradienten
-<span class="math notranslate nohighlight">\(p_{k+1} \in \partial H(x_{k+1})\)</span> die explizite Iterationsvorschrift
+<span class="math">\(p_{k+1} \in \partial H(x_{k+1})\)</span> die explizite Iterationsvorschrift
 <a class="reference internal" href="#equation-eq-iteration-proximal-splitting">(1.51)</a> für das proximale Splitting</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\frac{1}{\alpha_k} (x_{k+1} - x_k) + \nabla G(x_k) + p_{k+1} \ = \ 0.\]</div>
 <p>Multiplizieren wir diese Gleichung von links mit dem Zeilenvektor
-<span class="math notranslate nohighlight">\((x_{k+1} - x_k)^T \in \R^n\)</span>, dann folgt</p>
-<div class="math notranslate nohighlight" id="equation-eq-splitting-skalarprodukt">
+<span class="math">\((x_{k+1} - x_k)^T \in \R^n\)</span>, dann folgt</p>
+<div class="math" id="equation-eq-splitting-skalarprodukt">
 <span class="eqno">(1.54)<a class="headerlink" href="#equation-eq-splitting-skalarprodukt" title="Permalink to this equation">#</a></span>\[\frac{1}{\alpha_k} \Vert x_{k+1} - x_k \Vert^2 + \langle x_{k+1} - x_k, \nabla G (x_k) \rangle + \langle x_{k+1} - x_k, p_{k+1} \rangle \ = \ 0.\]</div>
-<p>Da die Funktion <span class="math notranslate nohighlight">\(G\)</span> nach Voraussetzung zweimal stetig differenzierbar
+<p>Da die Funktion <span class="math">\(G\)</span> nach Voraussetzung zweimal stetig differenzierbar
 ist folgt mit einer Taylorapproximation erster Ordnung</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\langle x_{k+1} - x_k, \nabla G (x_k) \rangle \ = \  G(x_{k+1}) - G(x_k) -r_k.\]</div>
-<p>Hierbei lässt sich der Fehlerterm <span class="math notranslate nohighlight">\(r_k\)</span> abschätzen durch</p>
-<div class="math notranslate nohighlight">
+<p>Hierbei lässt sich der Fehlerterm <span class="math">\(r_k\)</span> abschätzen durch</p>
+<div class="math">
 \[r_k \ \leq \ \frac{C_k}2 \Vert x_{k+1} - x_k \Vert^2,\]</div>
-<p>wobei <span class="math notranslate nohighlight">\(C_k\)</span> eine obere Schranke für die Norm der Hesse-Matrix von <span class="math notranslate nohighlight">\(G\)</span> in
-einer Umgebung von <span class="math notranslate nohighlight">\(x_k\)</span> mit Radius <span class="math notranslate nohighlight">\(\Vert x_{k+1} - x_k \Vert\)</span> ist.</p>
+<p>wobei <span class="math">\(C_k\)</span> eine obere Schranke für die Norm der Hesse-Matrix von <span class="math">\(G\)</span> in
+einer Umgebung von <span class="math">\(x_k\)</span> mit Radius <span class="math">\(\Vert x_{k+1} - x_k \Vert\)</span> ist.</p>
 <p>Aus <a class="reference internal" href="#def:subdifferential">Definition 1.11</a> folgt für den Subgradienten
-<span class="math notranslate nohighlight">\(p_{k+1} \in \partial H(x_{k+1})\)</span> außerdem</p>
-<div class="math notranslate nohighlight">
+<span class="math">\(p_{k+1} \in \partial H(x_{k+1})\)</span> außerdem</p>
+<div class="math">
 \[\langle p_{k+1}, x_{k+1} - x_k \rangle \ \geq \ H(x_{k+1}) - H(x_k).\]</div>
 <p>Nutzen wir diese Abschätzungen nun für die Identität
 <a class="reference internal" href="#equation-eq-splitting-skalarprodukt">(1.54)</a>, so erhalten wir insgesamt</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-0 \ &amp;= \ \frac{1}{\alpha_k} \Vert x_{k+1} - x_k \Vert^2 + \langle x_{k+1} - x_k, \nabla G (x_k) \rangle + \langle x_{k+1} - x_k, p_{k+1} \rangle \\
-&amp;\geq \ \frac{1}{\alpha_k} \Vert x_{k+1} - x_k \Vert^2 + G(x_{k+1}) - G(x_k) - \frac{C_k}2 \Vert x_{k+1} - x_k \Vert^2 + H(x_{k+1}) - H(x_k) \\
-&amp;= \ \left(\frac{1}{\alpha_k}-\frac{C_k}{2}\right) \Vert x_{k+1} - x_k \Vert^2 + F(x_{k+1}) - F(x_k)
-\end{split}\end{split}\]</div>
-<p>Theoretisch können wir die Schrittweiten <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> so klein wählen,
-dass <span class="math notranslate nohighlight">\(\frac{1}{\alpha_k}-\frac{C_k}{2} &gt; \epsilon\)</span> für ein beliebiges
-<span class="math notranslate nohighlight">\(\epsilon &gt; 0\)</span> gilt. Durch Umstellen sehen wir also, dass gilt</p>
-<div class="math notranslate nohighlight">
-\[F(x_k) \ \geq \ \left(\frac{1}{\alpha_k}-\frac{C_k}{2}\right) \Vert x_{k+1} - x_k \Vert^2 + F(x_{k+1})  \ &gt; \ \epsilon \cdot \Vert x_{k+1} - x_k \Vert^2 + F(x_{k+1}).\]</div>
-<p>Damit ist offensichtlich, dass <span class="math notranslate nohighlight">\(F(x_{k+1}) &lt; F(x_k)\)</span> für alle <span class="math notranslate nohighlight">\(k \in \N\)</span>
+<div class="math">
+\[\begin{split}
+0 \ &= \ \frac{1}{\alpha_k} \Vert x_{k+1} - x_k \Vert^2 + \langle x_{k+1} - x_k, \nabla G (x_k) \rangle + \langle x_{k+1} - x_k, p_{k+1} \rangle \\
+&\geq \ \frac{1}{\alpha_k} \Vert x_{k+1} - x_k \Vert^2 + G(x_{k+1}) - G(x_k) - \frac{C_k}2 \Vert x_{k+1} - x_k \Vert^2 + H(x_{k+1}) - H(x_k) \\
+&= \ \left(\frac{1}{\alpha_k}-\frac{C_k}{2}\right) \Vert x_{k+1} - x_k \Vert^2 + F(x_{k+1}) - F(x_k)
+\end{split}\]</div>
+<p>Theoretisch können wir die Schrittweiten <span class="math">\(\alpha_k &gt; 0\)</span> so klein wählen,
+dass <span class="math">\(\frac{1}{\alpha_k}-\frac{C_k}{2} &gt; \epsilon\)</span> für ein beliebiges
+<span class="math">\(\epsilon &gt; 0\)</span> gilt. Durch Umstellen sehen wir also, dass gilt</p>
+<div class="math">
+\[F(x_k) \ \geq \ \left(\frac{1}{\alpha_k}-\frac{C_k}{2}\right) \Vert x_{k+1} - x_k \Vert^2 + F(x_{k+1})  \ > \ \epsilon \cdot \Vert x_{k+1} - x_k \Vert^2 + F(x_{k+1}).\]</div>
+<p>Damit ist offensichtlich, dass <span class="math">\(F(x_{k+1}) &lt; F(x_k)\)</span> für alle <span class="math">\(k \in \N\)</span>
 gilt. Damit haben wir gezeigt, dass das proximale Splitting-Verfahren
-die Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> in jedem Schritt verkleinert.</p>
+die Zielfunktion <span class="math">\(F\)</span> in jedem Schritt verkleinert.</p>
 <p>Analog zum Beweis von <a class="reference internal" href="00_03_NichtlineareOptimierung2.html#thm:konvergenz_abstieg">Theorem 1.10</a> sehen wir ein,
-dass für die Folge der Iterationsschritte <span class="math notranslate nohighlight">\((x_k)_{k \in \N} \subset K\)</span>
+dass für die Folge der Iterationsschritte <span class="math">\((x_k)_{k \in \N} \subset K\)</span>
 gilt und nach dem <em>Satz von Bolzano-Weierstrass</em> eine konvergente
-Teilfolge besitzt, deren Grenzwert in der kompakten Menge <span class="math notranslate nohighlight">\(K\)</span> liegen
+Teilfolge besitzt, deren Grenzwert in der kompakten Menge <span class="math">\(K\)</span> liegen
 muss.</p>
 <p>Es gilt ebenfalls</p>
-<div class="math notranslate nohighlight">
-\[\sum_{k=0}^\infty  \Vert x_{k+1} - x_k \Vert^2 \: &lt; \: \infty.\]</div>
-<p>Da die Iterierten auf einer beschränkten Menge bleiben und <span class="math notranslate nohighlight">\(G\)</span> zweimal
-stetig differenzierbar ist, ist die Norm der Hesse-Matrix von <span class="math notranslate nohighlight">\(G\)</span>
-ebenfalls uniform für alle <span class="math notranslate nohighlight">\(k \in \N\)</span> beschränkt für eine Konstante
-<span class="math notranslate nohighlight">\(C &gt; 0\)</span> mit <span class="math notranslate nohighlight">\(0 &lt; C_k &lt; C\)</span> und somit kann die Folge der Schrittweiten
-<span class="math notranslate nohighlight">\((\alpha_k)_{k\in\N}\)</span> ebenfalls uniform nach unten beschränkt werden.</p>
+<div class="math">
+\[\sum_{k=0}^\infty  \Vert x_{k+1} - x_k \Vert^2 \: < \: \infty.\]</div>
+<p>Da die Iterierten auf einer beschränkten Menge bleiben und <span class="math">\(G\)</span> zweimal
+stetig differenzierbar ist, ist die Norm der Hesse-Matrix von <span class="math">\(G\)</span>
+ebenfalls uniform für alle <span class="math">\(k \in \N\)</span> beschränkt für eine Konstante
+<span class="math">\(C &gt; 0\)</span> mit <span class="math">\(0 &lt; C_k &lt; C\)</span> und somit kann die Folge der Schrittweiten
+<span class="math">\((\alpha_k)_{k\in\N}\)</span> ebenfalls uniform nach unten beschränkt werden.</p>
 <p>Aus der Konvergenz</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[0 \ = \ \lim_{k\rightarrow \infty} \frac{1}{\alpha_k}( x_{k+1} - x_k) \ = \ \lim_{k\rightarrow \infty} \nabla G(x_k) + p_{k+1}, \qquad p_{k+1} \in \partial H(x_{k+1})\]</div>
 <p>können wir schließlich folgern, dass jeder Häufungspunkt die
 Optimalitätsbedingung aus
 <a class="reference internal" href="#lem:subdifferential_notwendige_bedingung">Lemma 1.4</a> erfüllt. ◻</p>
 </div>
-</section>
 <section id="primal-duale-verfahren">
-<span id="id2"></span><h2><span class="section-number">1.5.2. </span>Primal-Duale Verfahren<a class="headerlink" href="#primal-duale-verfahren" title="Permalink to this heading">#</a></h2>
+<span id="id2"></span><h2><span class="section-number">1.6.1. </span>Primal-Duale Verfahren<a class="headerlink" href="#primal-duale-verfahren" title="Permalink to this heading">#</a></h2>
 <p>In vielen Fällen lässt sich der Proximaloperator einer beliebigen
-konvexen, unterhalbstetigen Funktion <span class="math notranslate nohighlight">\(H\)</span> analytisch nicht gut berechnen
+konvexen, unterhalbstetigen Funktion <span class="math">\(H\)</span> analytisch nicht gut berechnen
 und muss gegebenenfalls numerisch approximiert werden. In solchen Fällen
 ist das proximale Splitting-Verfahren aus <a class="reference internal" href="#ss-proximal-splitting"><span class="std std-ref">Proximales Splitting</span></a>
 häufig weniger effizient anzuwenden.</p>
-<p>In vielen interessanten Fällen hat die Funktion <span class="math notranslate nohighlight">\(H\)</span> die Form
-<span class="math notranslate nohighlight">\(H(x) = J(Bx)\)</span>, mit einer Matrix <span class="math notranslate nohighlight">\(B \in \R^{n\times n}\)</span>, die nicht
-diagonal ist, und einer konvexen, unterhalbstetigen Funktion <span class="math notranslate nohighlight">\(J\)</span>, deren
+<p>In vielen interessanten Fällen hat die Funktion <span class="math">\(H\)</span> die Form
+<span class="math">\(H(x) = J(Bx)\)</span>, mit einer Matrix <span class="math">\(B \in \R^{n\times n}\)</span>, die nicht
+diagonal ist, und einer konvexen, unterhalbstetigen Funktion <span class="math">\(J\)</span>, deren
 Proximaloperator man analytisch gut berechnen kann. Ein typisches
 Beispiel für solch ein Problem ist eine Variante des Lasso-Problems aus
 <a class="reference internal" href="#ex:lasso">Example 1.4</a>, in dem man folgende Optimierung durchführen will</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\min_{x \in \R^n} \left\lbrace F(x) \: = \: \frac{1}2 \Vert A x - b\Vert^2 + \alpha \Vert B x \Vert_{\ell^1} \right\rbrace.\]</div>
-<p>Obwohl für den Spezialfall der Identität <span class="math notranslate nohighlight">\(B = I\)</span> bereits in
+<p>Obwohl für den Spezialfall der Identität <span class="math">\(B = I\)</span> bereits in
 <a class="reference internal" href="#ex:shrinkage-operator">Example 1.7</a> den Proximaloperator analytisch angeben
-konnten, lässt sich dieser für <span class="math notranslate nohighlight">\(H(x) = \Vert B x \Vert_{\ell^1}\)</span> im Fall
-beliebiger Matrizen <span class="math notranslate nohighlight">\(B\)</span> im Allgemeinen nicht explizit angeben.</p>
+konnten, lässt sich dieser für <span class="math">\(H(x) = \Vert B x \Vert_{\ell^1}\)</span> im Fall
+beliebiger Matrizen <span class="math">\(B\)</span> im Allgemeinen nicht explizit angeben.</p>
 <p>Um dieses Problem zu umgehen, ist eine Idee, eine Nebenbedingung mit
 einer zusätzlichen Variable einzuführen, die wir im Folgenden mit
-<span class="math notranslate nohighlight">\(y \in \R^n\)</span> bezeichnen. Setzen wir nämlich <span class="math notranslate nohighlight">\(y=Bx\)</span>, so können wir eine
+<span class="math">\(y \in \R^n\)</span> bezeichnen. Setzen wir nämlich <span class="math">\(y=Bx\)</span>, so können wir eine
 modifizierte Zielfunktion</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\tilde F(x,y) \ = \ G(x) + J(y)\]</div>
-<p>unter der Nebenbedingung <span class="math notranslate nohighlight">\(y=Bx\)</span> minimieren. Um eine Nebenbedingung
-dieser Form bei der Minimierung von <span class="math notranslate nohighlight">\(\tilde F\)</span> einfach zu
+<p>unter der Nebenbedingung <span class="math">\(y=Bx\)</span> minimieren. Um eine Nebenbedingung
+dieser Form bei der Minimierung von <span class="math">\(\tilde F\)</span> einfach zu
 berücksichtigen, können wir die Idee der <strong>Lagrange Multiplikatoren</strong>
 verwenden (siehe <span id="id3">[<a class="reference internal" href="../../references.html#id6" title="Daniel Tenbrinck. Vorlesungsskript zur mathematik für data science 2 (ss 21) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_MfDS2.pdf (visited on 2023-05-23).">Ten</a>]</span>). Hierzu definieren wir
 zunächst das folgende Lagrange-Funktional</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[L(x,y,z) \ \coloneqq \ \tilde F(x,y) + \langle z, Bx-y \rangle,\]</div>
-<p>wobei der Vektor <span class="math notranslate nohighlight">\(z \in \R^n\)</span> die Lagrange Multiplikatoren für die
-Nebenbedingung <span class="math notranslate nohighlight">\(Bx = y\)</span> darstellt.</p>
+<p>wobei der Vektor <span class="math">\(z \in \R^n\)</span> die Lagrange Multiplikatoren für die
+Nebenbedingung <span class="math">\(Bx = y\)</span> darstellt.</p>
 <p>Man sieht nun ein, dass gilt</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\inf_{\substack{x,y \in \R^n\\Bx=y}} \tilde F(x,y) \ = \ \inf_{x,y \in \R^n} \sup_{z \in \R^n} L(x,y,z).\end{split}\]</div>
-<p>Dies liegt daran, dass das Supremum über <span class="math notranslate nohighlight">\(L(x,y,z)\)</span> unendlich wird,
-sobald <span class="math notranslate nohighlight">\(Bx \neq y\)</span> ist, das heißt, dass das Infimum von <span class="math notranslate nohighlight">\(\tilde F\)</span> in
+<div class="math">
+\[\inf_{\substack{x,y \in \R^n\\Bx=y}} \tilde F(x,y) \ = \ \inf_{x,y \in \R^n} \sup_{z \in \R^n} L(x,y,z).\]</div>
+<p>Dies liegt daran, dass das Supremum über <span class="math">\(L(x,y,z)\)</span> unendlich wird,
+sobald <span class="math">\(Bx \neq y\)</span> ist, das heißt, dass das Infimum von <span class="math">\(\tilde F\)</span> in
 solchen Fällen sicher nicht angenähert wird. Daher reicht es das
-Lagrange-Funktional <span class="math notranslate nohighlight">\(L\)</span> auf der Menge
-<span class="math notranslate nohighlight">\(\lbrace (x,y) \in \R^n \times \R^n : Bx=y \rbrace\)</span> zu betrachten. Auf
-dieser Menge wird der zweite Term von <span class="math notranslate nohighlight">\(L\)</span> jedoch Null und somit stimmt
+Lagrange-Funktional <span class="math">\(L\)</span> auf der Menge
+<span class="math">\(\lbrace (x,y) \in \R^n \times \R^n : Bx=y \rbrace\)</span> zu betrachten. Auf
+dieser Menge wird der zweite Term von <span class="math">\(L\)</span> jedoch Null und somit stimmt
 das Lagrange-Funktional schon mit der modifizierten Zielfunktion
-überein, d.h. es gilt <span class="math notranslate nohighlight">\(L(x,y,z) = \tilde F(x,y)\)</span>.</p>
+überein, d.h. es gilt <span class="math">\(L(x,y,z) = \tilde F(x,y)\)</span>.</p>
 <p>Wir sehen also, dass wir im Fall der Optimierung mit Nebenbedingungen
 eigentlich ein <strong>Sattelpunktproblem</strong> der folgenden Form lösen wollen</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\inf_{x,y \in \R^n} \sup_{z \in \R^n} (G(x) + J(y) + \langle z, Bx - y\rangle ).\]</div>
 <p>Nehmen wir zunächst an, dass wir das Infimum und das Supremum
 vertauschen können (was möglich ist, falls ein Sattelpunkt existiert)
-und nutzen die Relationen <span class="math notranslate nohighlight">\(\inf_{x,y} - E(x,y) = - \sup_{x,y} E(x,y)\)</span>
-und <span class="math notranslate nohighlight">\(\sup_{z} -F(z) = - \inf_{z} F(z)\)</span> dann lösen wir</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}&amp;\quad \ \sup_{z \in \R^n} \inf_{x,y \in \R^n} (G(x) + J(y) + \langle z, Bx - y\rangle) \\
-&amp;= \ \sup_{z \in \R^n} \inf_{x,y \in \R^n} -(\langle z,y \rangle - J(y) + \langle -B^Tz, x \rangle - G(x) )\\
-&amp;= \ - \inf_{z \in \R^n}  \sup_{x,y \in \R^n} \ (\langle z,y \rangle - J(y) + \langle -B^Tz, x \rangle - G(x) ) \\
-&amp;= \ - \inf_{z \in \R^n} ( \sup_{y \in \R^n} (\langle z,y \rangle - J(y)) + \sup_{x \in \R^n} (\langle -B^Tz, x \rangle - G(x)) ) .
-\end{split}\]</div>
+und nutzen die Relationen <span class="math">\(\inf_{x,y} - E(x,y) = - \sup_{x,y} E(x,y)\)</span>
+und <span class="math">\(\sup_{z} -F(z) = - \inf_{z} F(z)\)</span> dann lösen wir</p>
+<div class="math">
+\[\begin{aligned}
+&\quad \ \sup_{z \in \R^n} \inf_{x,y \in \R^n} (G(x) + J(y) + \langle z, Bx - y\rangle) \\
+&= \ \sup_{z \in \R^n} \inf_{x,y \in \R^n} -(\langle z,y \rangle - J(y) + \langle -B^Tz, x \rangle - G(x) )\\
+&= \ - \inf_{z \in \R^n}  \sup_{x,y \in \R^n} \ (\langle z,y \rangle - J(y) + \langle -B^Tz, x \rangle - G(x) ) \\
+&= \ - \inf_{z \in \R^n} ( \sup_{y \in \R^n} (\langle z,y \rangle - J(y)) + \sup_{x \in \R^n} (\langle -B^Tz, x \rangle - G(x)) ) .
+\end{aligned}\]</div>
 <p>Bevor wir eine sogenannte primal-duale Formulierungen des ursprünglichen
 Problems herleiten, werden wir zunächst die Konvex-Konjugierte
 definieren.</p>
 <div class="proof definition admonition" id="def:legendre-transformation">
 <p class="admonition-title"><span class="caption-number">Definition 1.13 </span> (Legendre-Fenchel-Transformation)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(J \colon \R^n \rightarrow \R\)</span> eine strikt konvexe Funktion. Dann
-ist die <strong>Legendre-Fenchel-Transformation</strong> <span class="math notranslate nohighlight">\(J^*\)</span> von <span class="math notranslate nohighlight">\(J\)</span> (auch
+<p>Sei <span class="math">\(J \colon \R^n \rightarrow \R\)</span> eine strikt konvexe Funktion. Dann
+ist die <strong>Legendre-Fenchel-Transformation</strong> <span class="math">\(J^*\)</span> von <span class="math">\(J\)</span> (auch
 Konvex-Konjugierte genannt) definiert als</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[J^*(z) \ \coloneqq \ \sup_{y\in\R^n} (\langle z,y \rangle - J(y)).\]</div>
 </section>
 </div><p>Mit <a class="reference internal" href="#def:legendre-transformation">Definition 1.13</a> der Konvex-Konjugierten lässt
 sich das ursprünglichen Problem äquivalent umformulieren zu</p>
-<div class="math notranslate nohighlight" id="equation-eq-sattelpunkt-aequivalent">
+<div class="math" id="equation-eq-sattelpunkt-aequivalent">
 <span class="eqno">(1.55)<a class="headerlink" href="#equation-eq-sattelpunkt-aequivalent" title="Permalink to this equation">#</a></span>\[\inf_{z\in\R^n} \sup_{x\in\R^n} ( J^*(z) + \langle -B^Tz, x \rangle - G(x) ),\]</div>
 <p>wobei wir bemerken, dass wir in dieser Formulierung die explizite
-Abhängigkeit von der Hilfsvariable <span class="math notranslate nohighlight">\(y = Bx\)</span> vermeiden konnten.</p>
+Abhängigkeit von der Hilfsvariable <span class="math">\(y = Bx\)</span> vermeiden konnten.</p>
 <p>Die neue Formulierung des Sattelproblems in
 <a class="reference internal" href="#equation-eq-sattelpunkt-aequivalent">(1.55)</a> dient als Grundlage vieler
 primal-dualer Verfahren in der Numerik. Beispielsweise können wir zur
 Approximation eines Sattelpunkts abwechselnd einen Abstiegsschritt
-mittels Proximaloperator bezüglich der Variable <span class="math notranslate nohighlight">\(z\in\R^n\)</span> und einen
-Gradientenaufstiegsschritt bezüglich der Variable <span class="math notranslate nohighlight">\(x\in\R^n\)</span>
+mittels Proximaloperator bezüglich der Variable <span class="math">\(z\in\R^n\)</span> und einen
+Gradientenaufstiegsschritt bezüglich der Variable <span class="math">\(x\in\R^n\)</span>
 durchführen. Dies führt zu einer Variante des sogenannten
-<strong>Uzawa-Verfahrens</strong> mit Schrittweiten <span class="math notranslate nohighlight">\(\tau_k, \sigma_k \in \R^+\)</span>:</p>
-<div class="math notranslate nohighlight" id="equation-eq-uzawa">
-<span class="eqno">(1.56)<a class="headerlink" href="#equation-eq-uzawa" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
-z_{k+1} \ &amp;= \ \operatorname{prox}_{\tau_k J^*}(z_k + \tau_kB x_k),\\
-x_{k+1} \ &amp;= \ x_k - \sigma_k(\nabla G(x_k) + B^T z_k).
-\end{split}\end{split}\]</div>
-<p>In diesem Fall müssen wir die Matrix <span class="math notranslate nohighlight">\(B\)</span> und <span class="math notranslate nohighlight">\(B^T\)</span> nur einmal mit einem
+<strong>Uzawa-Verfahrens</strong> mit Schrittweiten <span class="math">\(\tau_k, \sigma_k \in \R^+\)</span>:</p>
+<div class="math" id="equation-eq-uzawa">
+<span class="eqno">(1.56)<a class="headerlink" href="#equation-eq-uzawa" title="Permalink to this equation">#</a></span>\[\begin{split}
+z_{k+1} \ &= \ \operatorname{prox}_{\tau_k J^*}(z_k + \tau_kB x_k),\\
+x_{k+1} \ &= \ x_k - \sigma_k(\nabla G(x_k) + B^T z_k).
+\end{split}\]</div>
+<p>In diesem Fall müssen wir die Matrix <span class="math">\(B\)</span> und <span class="math">\(B^T\)</span> nur einmal mit einem
 Vektor multiplizieren in jedem Schritt, sowie den Proximaloperator der
-Konvex-Konjugierten <span class="math notranslate nohighlight">\(J^*\)</span> ausrechnen. Letzteres ist genau dann einfach,
-wenn wir den Proximaloperator von <span class="math notranslate nohighlight">\(J\)</span> effizient ausrechnen können, wie
+Konvex-Konjugierten <span class="math">\(J^*\)</span> ausrechnen. Letzteres ist genau dann einfach,
+wenn wir den Proximaloperator von <span class="math">\(J\)</span> effizient ausrechnen können, wie
 folgende Bemerkung festhält.</p>
 <div class="proof remark admonition" id="remark-10">
 <p class="admonition-title"><span class="caption-number">Remark 1.16 </span> (Moreau-Zerlegung für Proximaloperatoren)</p>
 <section class="remark-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(J \colon \R^n \rightarrow \R\)</span> eine konvexe, unterhalbstetige
-Funktion und <span class="math notranslate nohighlight">\(J^* \colon \R^n \rightarrow \R\)</span> die zugehörige
-Konvex-Konjugierte von <span class="math notranslate nohighlight">\(J\)</span>. Sei außerdem <span class="math notranslate nohighlight">\(\tau &gt; 0\)</span> ein positiver
+<p>Sei <span class="math">\(J \colon \R^n \rightarrow \R\)</span> eine konvexe, unterhalbstetige
+Funktion und <span class="math">\(J^* \colon \R^n \rightarrow \R\)</span> die zugehörige
+Konvex-Konjugierte von <span class="math">\(J\)</span>. Sei außerdem <span class="math">\(\tau &gt; 0\)</span> ein positiver
 Parameter.</p>
 <p>Dann kann man die folgende Identität, genannt Moreau-Zerlegung, für die
-Proximaloperatoren von <span class="math notranslate nohighlight">\(J\)</span> und <span class="math notranslate nohighlight">\(J^*\)</span> zeigen:</p>
-<div class="math notranslate nohighlight">
+Proximaloperatoren von <span class="math">\(J\)</span> und <span class="math">\(J^*\)</span> zeigen:</p>
+<div class="math">
 \[x \ = \ \operatorname{prox}_{\tau J^*}(x) + \tau \operatorname{prox}_{J/\tau}(x/\tau).\]</div>
 </section>
-</div><p>Somit können wir den Proximaloperator <span class="math notranslate nohighlight">\(\operatorname{prox}_{\tau_k J^*}\)</span>
+</div><p>Somit können wir den Proximaloperator <span class="math">\(\operatorname{prox}_{\tau_k J^*}\)</span>
 der Konvex-Konjugierten in <a class="reference internal" href="#equation-eq-uzawa">(1.56)</a> berechnen als:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\operatorname{prox}_{\tau_k J^*}(z_k  + \tau_kBx_k) \ = \ z_k + \tau_kBx_k - \tau_k \operatorname{prox}_{\frac{1}{\tau_k}J}\left(\frac{z_k  + \tau_kBx_k}{\tau_k} \right)\]</div>
 </section>
 </section>
@@ -905,9 +915,13 @@ der Konvex-Konjugierten in <a class="reference internal" href="#equation-eq-uzaw
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proximales-splitting">1.5.1. Proximales Splitting</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#primal-duale-verfahren">1.5.2. Primal-Duale Verfahren</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">1.5. Nicht-differenzierbare Optimierung</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#proximales-splitting">1.6. Proximales Splitting</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#primal-duale-verfahren">1.6.1. Primal-Duale Verfahren</a></li>
 </ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>

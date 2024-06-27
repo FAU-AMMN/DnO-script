@@ -37,6 +37,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -58,14 +60,15 @@
     <script src="../../_static/translations.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/katex.min.js"></script>
+    <script src="../../_static/auto-render.min.js"></script>
+    <script src="../../_static/katex_autorenderer.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'ode/05_Randwertprobleme/01_05_Randwertprobleme';</script>
     <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
     <link rel="search" title="Suche" href="../../search.html" />
@@ -173,6 +176,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../04_Anfangswertprobleme/00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -370,238 +374,234 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="existenz-und-eindeutigkeit-von-losungen">
 <span id="s-randwertproblem-existenz-eindeutigkeit"></span><h1><span class="section-number">3.1. </span>Existenz und Eindeutigkeit von Lösungen<a class="headerlink" href="#existenz-und-eindeutigkeit-von-losungen" title="Permalink to this heading">#</a></h1>
 <p>Mit Hilfe der Divergenzform <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> können wir zunächst
-für den Spezialfall <span class="math notranslate nohighlight">\(c(x)\equiv 0\)</span> die sogenannte <em>Greensche Funktion</em>
+für den Spezialfall <span class="math">\(c(x)\equiv 0\)</span> die sogenannte <em>Greensche Funktion</em>
 zur analytischen Lösung der Differentialgleichung konstruieren. Es gilt
-nämlich in diesem Fall mit einer Integrationskonstante <span class="math notranslate nohighlight">\(c_1 \in \R\)</span></p>
-<div class="math notranslate nohighlight">
+nämlich in diesem Fall mit einer Integrationskonstante <span class="math">\(c_1 \in \R\)</span></p>
+<div class="math">
 \[a(x) \cdot u'(x) \ = \ c_1 - \int_0^x f(z) \, \mathrm{d}z.\]</div>
-<p>Da <span class="math notranslate nohighlight">\(a(x) = e^{P(x)} &gt; 0\)</span> für alle <span class="math notranslate nohighlight">\(x \in \R\)</span> ist, gilt damit auch für
-eine weitere Integrationskonstante <span class="math notranslate nohighlight">\(c_2 \in \R\)</span></p>
-<div class="math notranslate nohighlight">
+<p>Da <span class="math">\(a(x) = e^{P(x)} &gt; 0\)</span> für alle <span class="math">\(x \in \R\)</span> ist, gilt damit auch für
+eine weitere Integrationskonstante <span class="math">\(c_2 \in \R\)</span></p>
+<div class="math">
 \[u(x) \ = \ c_2 + c_1 \cdot \int_0^x \frac{1}{a(y)} \, \mathrm{d}y - \int_0^x \frac{1}{a(y)}   \int_0^y f(z) \, \mathrm{d}z \, \mathrm{d}y.\]</div>
 <p>Definieren wir nun zwei Stammfunktionen</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[A(x) \ \coloneqq \ \int_0^x \frac{1}{a(y)} \, \mathrm{d}y, \qquad F(y) \ \coloneqq \ \int_0^y f(z) \, \mathrm{d}z\]</div>
 <p>so erhalten wir durch partielle Integration</p>
-<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-loesung-c-0">
-<span class="eqno">(3.5)<a class="headerlink" href="#equation-eq-randwertproblem-loesung-c-0" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
-u(x) \ &amp;= \ c_2 + c_1 \cdot A(x) - \int_0^x \frac{1}{a(y)} \int_0^y f(z) \, \mathrm{d}z \, \mathrm{d}y \\
-&amp;= \  c_2 + c_1 \cdot A(x) - \int_0^x  \frac{1}{a(y)} \cdot F(y) \, \mathrm{d}y \\
-&amp;= \ c_2 + c_1 \cdot A(x) - \bigl[A(y) \cdot F(y)\bigr]^x_0 + \int^x_0 A(y) \cdot f(y) \, \mathrm{d}y\\
-&amp;= \ c_2 + c_1 \cdot A(x) - \int^x_0 A(x) \cdot f(y) \, \mathrm{d}y + \int^x_0 A(y) \cdot f(y)  \, \mathrm{d}y\\
-&amp;= \ c_2 + c_1 \cdot A(x) - \int_0^x (A(x) - A(y)) \cdot f(y)\, \mathrm{d}y.
-\end{split}\end{split}\]</div>
-<p>Die unbekannten Integrationskonstanten <span class="math notranslate nohighlight">\(c_1, c_2 \in \R\)</span> können wir aus
+<div class="math" id="equation-eq-randwertproblem-loesung-c-0">
+<span class="eqno">(3.5)<a class="headerlink" href="#equation-eq-randwertproblem-loesung-c-0" title="Permalink to this equation">#</a></span>\[\begin{split}
+u(x) \ &= \ c_2 + c_1 \cdot A(x) - \int_0^x \frac{1}{a(y)} \int_0^y f(z) \, \mathrm{d}z \, \mathrm{d}y \\
+&= \  c_2 + c_1 \cdot A(x) - \int_0^x  \frac{1}{a(y)} \cdot F(y) \, \mathrm{d}y \\
+&= \ c_2 + c_1 \cdot A(x) - \bigl[A(y) \cdot F(y)\bigr]^x_0 + \int^x_0 A(y) \cdot f(y) \, \mathrm{d}y\\
+&= \ c_2 + c_1 \cdot A(x) - \int^x_0 A(x) \cdot f(y) \, \mathrm{d}y + \int^x_0 A(y) \cdot f(y)  \, \mathrm{d}y\\
+&= \ c_2 + c_1 \cdot A(x) - \int_0^x (A(x) - A(y)) \cdot f(y)\, \mathrm{d}y.
+\end{split}\]</div>
+<p>Die unbekannten Integrationskonstanten <span class="math">\(c_1, c_2 \in \R\)</span> können wir aus
 den Randbedingungen bestimmen, die uns ein Gleichungssystem liefern,
 welches es zu lösen gilt. Hierzu betrachten wir im Folgenden die reinen
 Dirichlet- oder Neumann-Randbedingungen und vernachlässigen die
 gemischten Randbedingungen.</p>
 <section id="dirichlet-randbedingungen">
 <span id="id1"></span><h2><span class="section-number">3.1.1. </span>Dirichlet-Randbedingungen<a class="headerlink" href="#dirichlet-randbedingungen" title="Permalink to this heading">#</a></h2>
-<p>Im Fall von Dirichlet-Randbedingungen haben wir <span class="math notranslate nohighlight">\(\alpha_i=0\)</span> und
-<span class="math notranslate nohighlight">\(\beta_i=1\)</span> für <span class="math notranslate nohighlight">\(i=0,1\)</span> in <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb1">(3.2)</a> und
+<p>Im Fall von Dirichlet-Randbedingungen haben wir <span class="math">\(\alpha_i=0\)</span> und
+<span class="math">\(\beta_i=1\)</span> für <span class="math">\(i=0,1\)</span> in <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb1">(3.2)</a> und
 <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb2">(3.3)</a> und somit haben wir die Randwerte</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u(0) \ = \ g_0, \qquad u(1) \: = \: g_1.\]</div>
 <p>Dann ist das Gleichungssystem zur Bestimmung der unbestimmten
-Integrationskonstanten <span class="math notranslate nohighlight">\(c_1, c_2 \in \R\)</span> durch Einsetzen in
+Integrationskonstanten <span class="math">\(c_1, c_2 \in \R\)</span> durch Einsetzen in
 <a class="reference internal" href="#equation-eq-randwertproblem-loesung-c-0">(3.5)</a> gegeben durch</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u(0) \: = \: c_2 \: = \: g_0, \qquad u(1) \ = \, \underbrace{c_2}_{= \: g_0} + \: c_1 \cdot A(1) - \int_0^1 (A(1) - A(y)) \cdot f(y) \, \mathrm{d}y \ = \ g_1.\]</div>
-<p>Lösen wir die zweite Randbedingung auf zur Konstanten <span class="math notranslate nohighlight">\(c_1 \in \R\)</span> so
+<p>Lösen wir die zweite Randbedingung auf zur Konstanten <span class="math">\(c_1 \in \R\)</span> so
 erhalten wir:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[c_1 \ = \ \frac{1}{A(1)} \cdot \left( g_1 - g_0 + \int_0^1 (A(1) - A(y)) \cdot f(y) \, \mathrm{d}y \right).\]</div>
 <p>Hieraus können wir für die Lösung der Differentialgleichung in
 <a class="reference internal" href="#equation-eq-randwertproblem-loesung-c-0">(3.5)</a> folgern:</p>
-<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-loesung-integralform">
-<span class="eqno">(3.6)<a class="headerlink" href="#equation-eq-randwertproblem-loesung-integralform" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
-u(x) \ &amp;= \ g_0 + \frac{A(x)}{A(1)} \cdot \left( g_1 - g_0 + \int_0^1 (A(1) - A(y)) \cdot f(y) \, \mathrm{d}y\right) - \int_0^x (A(x) - A(y)) \cdot f(y) \, \mathrm{d}y\\
-&amp;= \ \left( 1- \frac{A(x)}{A(1)} \right) \cdot g_0 +  \frac{A(x)}{A(1)} \cdot g_1 \\
-&amp; \hspace{1.13cm} + \frac{A(x)}{A(1)}  \cdot \int_0^1 (A(1) - A(y)) \cdot f(y) \, \mathrm{d}y - \int_0^x (A(x) - A(y)) \cdot f(y) \, \mathrm{d}y.
-\end{split}\end{split}\]</div>
+<div class="math" id="equation-eq-randwertproblem-loesung-integralform">
+<span class="eqno">(3.6)<a class="headerlink" href="#equation-eq-randwertproblem-loesung-integralform" title="Permalink to this equation">#</a></span>\[\begin{split}
+u(x) \ &= \ g_0 + \frac{A(x)}{A(1)} \cdot \left( g_1 - g_0 + \int_0^1 (A(1) - A(y)) \cdot f(y) \, \mathrm{d}y\right) - \int_0^x (A(x) - A(y)) \cdot f(y) \, \mathrm{d}y\\
+&= \ \left( 1- \frac{A(x)}{A(1)} \right) \cdot g_0 +  \frac{A(x)}{A(1)} \cdot g_1 \\
+& \hspace{1.13cm} + \frac{A(x)}{A(1)}  \cdot \int_0^1 (A(1) - A(y)) \cdot f(y) \, \mathrm{d}y - \int_0^x (A(x) - A(y)) \cdot f(y) \, \mathrm{d}y.
+\end{split}\]</div>
 <p>Wir wollen nun die sogenannte <strong>Greensche Funktion</strong>
-<span class="math notranslate nohighlight">\(G \colon [0,1]^2 \rightarrow \R\)</span> einführen mit</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}G(x,y) \ \coloneqq \ \left\{ 
+<span class="math">\(G \colon [0,1]^2 \rightarrow \R\)</span> einführen mit</p>
+<div class="math">
+\[G(x,y) \ \coloneqq \ \left\{ 
 \begin{array}{ll}
-A(x) \cdot ( 1- \frac{A(y)}{A(1)}) \quad &amp; \text{falls} \ 0 \leq x \leq y \leq 1, \\
-A(y) \cdot ( 1-  \frac{A(x)}{A(1)}) \quad &amp; \text{falls} \ 0 \leq y &lt; x \leq 1.
-\end{array}\right.\end{split}\]</div>
-<p>Für jede Funktion <span class="math notranslate nohighlight">\(a(x) &gt; 0\)</span> gilt für die Stammfunktion
-<span class="math notranslate nohighlight">\(A(x) &gt; A(y) \geq 0\)</span> für <span class="math notranslate nohighlight">\(x &gt; y\)</span> und somit ist die Greensche Funktion
-nichtnegativ auf dem Intervall <span class="math notranslate nohighlight">\([0,1]\)</span>.</p>
+A(x) \cdot ( 1- \frac{A(y)}{A(1)}) \quad & \text{falls} \ 0 \leq x \leq y \leq 1, \\
+A(y) \cdot ( 1-  \frac{A(x)}{A(1)}) \quad & \text{falls} \ 0 \leq y < x \leq 1.
+\end{array}\right.\]</div>
+<p>Für jede Funktion <span class="math">\(a(x) &gt; 0\)</span> gilt für die Stammfunktion
+<span class="math">\(A(x) &gt; A(y) \geq 0\)</span> für <span class="math">\(x &gt; y\)</span> und somit ist die Greensche Funktion
+nichtnegativ auf dem Intervall <span class="math">\([0,1]\)</span>.</p>
 <p>Nun können wir die beiden Integrale in
 <a class="reference internal" href="#equation-eq-randwertproblem-loesung-integralform">(3.6)</a> geschickt vereinheitlichen
 durch</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-&amp;\hphantom{=} \ \frac{A(x)}{A(1)}  \cdot \int_0^1 (A(1) - A(y)) \cdot f(y) \, \mathrm{d}y - \int_0^x (A(x) - A(y)) \cdot f(y) \, \mathrm{d}y\\
-&amp;= \ \int_0^1 A(x) \cdot \left( 1- \frac{A(y)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y\\
-&amp;\hspace{1cm} - \int_0^x \left(A(x) - \frac{A(x)A(y)}{A(1)} - A(y) + \frac{A(y)A(x)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y\\
-&amp;= \ \int_0^1 A(x) \cdot \left( 1- \frac{A(y)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y - \int_0^x A(x) \cdot \left(1 - \frac{A(y)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y \\
-&amp;\hspace{1cm} + \int_0^x A(y) \cdot \left( 1 - \frac{A(x)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y\\
-&amp;= \ \int_0^x A(y) \cdot (1 - \frac{A(x)}{A(1)}) \cdot f(y) \, \mathrm{d}y + \int_x^1 A(x) \cdot (1-\frac{A(y)}{A(1)}) \cdot f(y) \, \mathrm{d}y\\
-&amp;= \ \int_0^x G(x,y) \cdot f(y) \, \mathrm{d}y + \int_x^1 G(x,y) \cdot f(y) \, \mathrm{d}y  \ = \ \int_0^1 G(x,y) \cdot f(y) \, \mathrm{d}y.
-\end{split}\end{split}\]</div>
-<p>Wir sehen also, dass wir mit Hilfe der Greenschen Funktion <span class="math notranslate nohighlight">\(G\)</span> die
-analytische Lösung <span class="math notranslate nohighlight">\(u\)</span> in <a class="reference internal" href="#equation-eq-randwertproblem-loesung-integralform">(3.6)</a>
-des Randwertproblems mit Dirichlet-Bedingungen und <span class="math notranslate nohighlight">\(c(x) \equiv 0\)</span>
+<div class="math">
+\[\begin{split}
+&\hphantom{=} \ \frac{A(x)}{A(1)}  \cdot \int_0^1 (A(1) - A(y)) \cdot f(y) \, \mathrm{d}y - \int_0^x (A(x) - A(y)) \cdot f(y) \, \mathrm{d}y\\
+&= \ \int_0^1 A(x) \cdot \left( 1- \frac{A(y)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y\\
+&\hspace{1cm} - \int_0^x \left(A(x) - \frac{A(x)A(y)}{A(1)} - A(y) + \frac{A(y)A(x)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y\\
+&= \ \int_0^1 A(x) \cdot \left( 1- \frac{A(y)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y - \int_0^x A(x) \cdot \left(1 - \frac{A(y)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y \\
+&\hspace{1cm} + \int_0^x A(y) \cdot \left( 1 - \frac{A(x)}{A(1)} \right) \cdot f(y) \, \mathrm{d}y\\
+&= \ \int_0^x A(y) \cdot (1 - \frac{A(x)}{A(1)}) \cdot f(y) \, \mathrm{d}y + \int_x^1 A(x) \cdot (1-\frac{A(y)}{A(1)}) \cdot f(y) \, \mathrm{d}y\\
+&= \ \int_0^x G(x,y) \cdot f(y) \, \mathrm{d}y + \int_x^1 G(x,y) \cdot f(y) \, \mathrm{d}y  \ = \ \int_0^1 G(x,y) \cdot f(y) \, \mathrm{d}y.
+\end{split}\]</div>
+<p>Wir sehen also, dass wir mit Hilfe der Greenschen Funktion <span class="math">\(G\)</span> die
+analytische Lösung <span class="math">\(u\)</span> in <a class="reference internal" href="#equation-eq-randwertproblem-loesung-integralform">(3.6)</a>
+des Randwertproblems mit Dirichlet-Bedingungen und <span class="math">\(c(x) \equiv 0\)</span>
 kompakt schreiben können als:</p>
-<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-dirichlet-loesung">
+<div class="math" id="equation-eq-randwertproblem-dirichlet-loesung">
 <span class="eqno">(3.7)<a class="headerlink" href="#equation-eq-randwertproblem-dirichlet-loesung" title="Permalink to this equation">#</a></span>\[u(x) \ = \ \left( 1- \frac{A(x)}{A(1)} \right) \cdot g_0 +  \frac{A(x)}{A(1)} \cdot g_1  + \int_0^1 G(x,y) \cdot f(y) \, \mathrm{d}y.\]</div>
 <p>Aus dieser Darstellung der analytischen Lösung können wir sofort
 folgendes Resultat ableiten.</p>
 <div class="proof theorem admonition" id="theorem-0">
-<p class="admonition-title"><span class="caption-number">Theorem 3.1 </span> (Existenz und Eindeutigkeitssatz für <span class="math notranslate nohighlight">\(c \equiv 0\)</span>)</p>
+<p class="admonition-title"><span class="caption-number">Theorem 3.1 </span> (Existenz und Eindeutigkeitssatz für c \equiv 0)</p>
 <section class="theorem-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(c(x) \equiv 0\)</span> und <span class="math notranslate nohighlight">\(a \in C^1([0,1])\)</span> mit <span class="math notranslate nohighlight">\(a(x) \geq a_0 &gt; 0\)</span> für
-alle <span class="math notranslate nohighlight">\(x \in [0,1]\)</span>. Sei außerdem <span class="math notranslate nohighlight">\(f \in C([0,1])\)</span>.</p>
-<p>Dann existiert eine eindeutige Lösung <span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> der
+<p>Sei <span class="math">\(c(x) \equiv 0\)</span> und <span class="math">\(a \in C^1([0,1])\)</span> mit <span class="math">\(a(x) \geq a_0 &gt; 0\)</span> für
+alle <span class="math">\(x \in [0,1]\)</span>. Sei außerdem <span class="math">\(f \in C([0,1])\)</span>.</p>
+<p>Dann existiert eine eindeutige Lösung <span class="math">\(u \in C^2([0,1])\)</span> der
 Differentialgleichung <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> unter den
 Dirichlet-Randwertbedingungen <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb1">(3.2)</a> und
-<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb2">(3.3)</a> mit <span class="math notranslate nohighlight">\(\alpha_i=0\)</span> und <span class="math notranslate nohighlight">\(\beta_i = 1\)</span> für <span class="math notranslate nohighlight">\(i=0,1\)</span>.
-Ist <span class="math notranslate nohighlight">\(f(x) \geq 0\)</span> für alle <span class="math notranslate nohighlight">\(x \in [0,1]\)</span>, so gilt darüber hinaus
+<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb2">(3.3)</a> mit <span class="math">\(\alpha_i=0\)</span> und <span class="math">\(\beta_i = 1\)</span> für <span class="math">\(i=0,1\)</span>.
+Ist <span class="math">\(f(x) \geq 0\)</span> für alle <span class="math">\(x \in [0,1]\)</span>, so gilt darüber hinaus
 folgendes Maximumsprinzip:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u(x) \ \geq \ \min\{g_0,g_1\} \qquad \forall x \in [0,1].\]</div>
 </section>
 </div><section id="allgemeiner-fall">
 <span id="id2"></span><h3><span class="section-number">3.1.1.1. </span>Allgemeiner Fall<a class="headerlink" href="#allgemeiner-fall" title="Permalink to this heading">#</a></h3>
 <p>Wir sehen, dass der <em>lineare Operator</em></p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-K \colon C([0,1]) \ &amp;\rightarrow \ C([0,1]),\\
-f  \ &amp;\mapsto \ \int_0^1 G(\cdot,y) \cdot f(y) \, \mathrm{d}y
-\end{split}\end{split}\]</div>
-<p>offensichtlich auf dem Raum der stetigen Funktionen <span class="math notranslate nohighlight">\(C([0,1])\)</span>
+<div class="math">
+\[\begin{split}
+K \colon C([0,1]) \ &\rightarrow \ C([0,1]),\\
+f  \ &\mapsto \ \int_0^1 G(\cdot,y) \cdot f(y) \, \mathrm{d}y
+\end{split}\]</div>
+<p>offensichtlich auf dem Raum der stetigen Funktionen <span class="math">\(C([0,1])\)</span>
 wohldefiniert und beschränkt (äquivalent zu stetig) ist. Mit Hilfe
 dieser Einsicht können wir auch den allgemeinen Fall
-<span class="math notranslate nohighlight">\(c(x) \not \equiv 0\)</span> behandeln, da in diesem Fall die Lösung <span class="math notranslate nohighlight">\(u\)</span> ein
+<span class="math">\(c(x) \not \equiv 0\)</span> behandeln, da in diesem Fall die Lösung <span class="math">\(u\)</span> ein
 Fixpunkt der folgenden Gleichung ist:</p>
-<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-loesung-fixpunktgleichung">
+<div class="math" id="equation-eq-randwertproblem-loesung-fixpunktgleichung">
 <span class="eqno">(3.8)<a class="headerlink" href="#equation-eq-randwertproblem-loesung-fixpunktgleichung" title="Permalink to this equation">#</a></span>\[u(x) \ =\  g_0 \cdot w(x) + g_1 \cdot (1-w(x)) + K (f-c\cdot u)(x),\]</div>
-<p>wobei wir die Notation <span class="math notranslate nohighlight">\(w(x) \coloneqq  1- \frac{A(x)}{A(1)}\)</span> verwendet
+<p>wobei wir die Notation <span class="math">\(w(x) \coloneqq  1- \frac{A(x)}{A(1)}\)</span> verwendet
 haben.</p>
-<p>Um die Charakterisierung der Lösung <span class="math notranslate nohighlight">\(u(x)\)</span> in Abhängigkeit der Funktion
-<span class="math notranslate nohighlight">\(c(x)\)</span> besser zu verstehen, betrachten wir erst den Spezialfall einer
-<strong>konstanten Funktion</strong> <span class="math notranslate nohighlight">\(c(x) \equiv c \in \R\)</span>. Da der Operator <span class="math notranslate nohighlight">\(K\)</span>
+<p>Um die Charakterisierung der Lösung <span class="math">\(u(x)\)</span> in Abhängigkeit der Funktion
+<span class="math">\(c(x)\)</span> besser zu verstehen, betrachten wir erst den Spezialfall einer
+<strong>konstanten Funktion</strong> <span class="math">\(c(x) \equiv c \in \R\)</span>. Da der Operator <span class="math">\(K\)</span>
 linear ist müssen wir die folgende Gleichung lösen:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[(I+c \cdot K)(u)(x) \ = \ g_0 \cdot w(x) + g_1 \cdot (1-w(x)) + K(f)(x).\]</div>
 <p>Bei einer genaueren Analyse lässt sich nun feststellen, dass für die
-spezielle Wahl der Konstanten <span class="math notranslate nohighlight">\(c = -k^2 \pi^2, k \in \N\)</span> eine
-nichttriviale Lösung <span class="math notranslate nohighlight">\(u(x) = \sin(k \pi \cdot x)\)</span> des homogenen Systems,
-d.h. für die Gleichung <span class="math notranslate nohighlight">\((I - (k \pi)^2 \cdot K)(u)(x) = 0\)</span> existiert. In
-diesem Fall ist der Operator <span class="math notranslate nohighlight">\(I+c\cdot K\)</span> nicht invertierbar, da dessen
+spezielle Wahl der Konstanten <span class="math">\(c = -k^2 \pi^2, k \in \N\)</span> eine
+nichttriviale Lösung <span class="math">\(u(x) = \sin(k \pi \cdot x)\)</span> des homogenen Systems,
+d.h. für die Gleichung <span class="math">\((I - (k \pi)^2 \cdot K)(u)(x) = 0\)</span> existiert. In
+diesem Fall ist der Operator <span class="math">\(I+c\cdot K\)</span> nicht invertierbar, da dessen
 Kern nicht nur die Nullfunktion enthält. Also können wir in diesen
 Fällen die inhomogene Gleichung nicht für beliebige rechten Seiten
 lösen.</p>
 <p>Mit Hilfe der <em>Spektraltheorie kompakter Operatoren</em> lässt sich jedoch
-zeigen, dass es nur abzählbar viele Werte von <span class="math notranslate nohighlight">\(c\)</span> gibt, für die
-<span class="math notranslate nohighlight">\(I+c \cdot K\)</span> nicht invertierbar ist. Mit dem <em>Satz von Arzela-Ascoli</em>
-kann man zunächst zeigen, dass <span class="math notranslate nohighlight">\(K: C([0,1]) \rightarrow C([0,1])\)</span>
+zeigen, dass es nur abzählbar viele Werte von <span class="math">\(c\)</span> gibt, für die
+<span class="math">\(I+c \cdot K\)</span> nicht invertierbar ist. Mit dem <em>Satz von Arzela-Ascoli</em>
+kann man zunächst zeigen, dass <span class="math">\(K: C([0,1]) \rightarrow C([0,1])\)</span>
 kompakt ist, d.h. für jede beschränkte Folge
-<span class="math notranslate nohighlight">\((u_n)_{n\in\N} \subset C([0,1])\)</span> hat <span class="math notranslate nohighlight">\(K (u_n)\)</span> eine konvergente
+<span class="math">\((u_n)_{n\in\N} \subset C([0,1])\)</span> hat <span class="math">\(K (u_n)\)</span> eine konvergente
 Teilfolge. Die Spektraltheorie kompakter Operatoren garantiert nun, dass
-es nur eine abzählbare Menge von Eigenwerten <span class="math notranslate nohighlight">\((\lambda_k)_{k\in\N}\)</span>
-geben kann, so dass der Operator <span class="math notranslate nohighlight">\(\lambda_k \cdot I - K\)</span> nicht
+es nur eine abzählbare Menge von Eigenwerten <span class="math">\((\lambda_k)_{k\in\N}\)</span>
+geben kann, so dass der Operator <span class="math">\(\lambda_k \cdot I - K\)</span> nicht
 invertierbar ist. Es lässt sich zeigen, dass in der Menge der Eigenwerte
 Null der einzige Häufungspunkt ist. Setzen wir in diesem Zusammenhang
-die Konstante <span class="math notranslate nohighlight">\(c \coloneqq - \frac{1}{\lambda_k}\)</span> für <span class="math notranslate nohighlight">\(k \in \N\)</span>, so
-sehen wir, dass es auch nur eine abzählbare Menge von Konstanten <span class="math notranslate nohighlight">\(c\)</span>
-geben kann, für die der Operator <span class="math notranslate nohighlight">\(I+c \cdot K\)</span> nicht invertierbar ist.
+die Konstante <span class="math">\(c \coloneqq - \frac{1}{\lambda_k}\)</span> für <span class="math">\(k \in \N\)</span>, so
+sehen wir, dass es auch nur eine abzählbare Menge von Konstanten <span class="math">\(c\)</span>
+geben kann, für die der Operator <span class="math">\(I+c \cdot K\)</span> nicht invertierbar ist.
 Diese Menge besitzt entsprechend die (uneigentlichen) Häufungspunkte
-<span class="math notranslate nohighlight">\(\pm \infty\)</span>.</p>
-<p>Wenn wir nun eine <strong>allgemeine Funktion</strong> <span class="math notranslate nohighlight">\(c(x)\)</span> betrachten, dann können
-wir immer noch zeigen, dass der Operator <span class="math notranslate nohighlight">\(u \mapsto u + K (c\cdot u)\)</span>
+<span class="math">\(\pm \infty\)</span>.</p>
+<p>Wenn wir nun eine <strong>allgemeine Funktion</strong> <span class="math">\(c(x)\)</span> betrachten, dann können
+wir immer noch zeigen, dass der Operator <span class="math">\(u \mapsto u + K (c\cdot u)\)</span>
 kompakt ist. Daraus können wir wieder folgern, dass der Operator genau
 dann invertierbar ist, wenn sein Nullraum trivial ist. Bevor wir uns
 hierfür eine hinreichende Bedingung erschließen, wollen wir zunächst im
-folgenden Lemma eine nützliche Eigenschaft des Integraloperators <span class="math notranslate nohighlight">\(K\)</span>
+folgenden Lemma eine nützliche Eigenschaft des Integraloperators <span class="math">\(K\)</span>
 nachweisen.</p>
 <div class="proof lemma admonition" id="lem:integraloperator_eigenschaften">
 <p class="admonition-title"><span class="caption-number">Lemma 3.1 </span> (Eigenschaften des Integraloperators)</p>
 <section class="lemma-content" id="proof-content">
-<p>Für alle stetigen Funktionen <span class="math notranslate nohighlight">\(f \in C([0,1])\)</span> gilt die folgende
+<p>Für alle stetigen Funktionen <span class="math">\(f \in C([0,1])\)</span> gilt die folgende
 Abschätzung</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\int_0^1 f(x) \cdot K(f)(x) \, \mathrm{d}x \ = \ \int_0^1 \int_0^1 f(x) \cdot G(x,y) \cdot f(y) \, \mathrm{d}x \, \mathrm{d}y \ \geq \ 0.\]</div>
-<p>Das Integral wird genau dann Null, wenn <span class="math notranslate nohighlight">\(f(x) \equiv 0\)</span> gilt.</p>
+<p>Das Integral wird genau dann Null, wenn <span class="math">\(f(x) \equiv 0\)</span> gilt.</p>
 </section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. Um die Eigenschaften des Integraloperators zu zeigen, wählen wir ein
 möglichst einfaches Randwertproblem der Form</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[-(a(x) \cdot u'(x))' \ = \ f(x),\]</div>
-<p>mit den Dirichlet-Randbedingungen <span class="math notranslate nohighlight">\(u(0) = u(1) = 0\)</span>. Wir können also die
-analytische Lösung <span class="math notranslate nohighlight">\(u\)</span> des Randwertproblems entsprechend
-<a class="reference internal" href="#equation-eq-randwertproblem-loesung-fixpunktgleichung">(3.8)</a> für <span class="math notranslate nohighlight">\(g_0 = g_1 = 0\)</span>
-und <span class="math notranslate nohighlight">\(c \equiv 0\)</span> für <span class="math notranslate nohighlight">\(x \in [0,1]\)</span> schreiben als</p>
-<div class="math notranslate nohighlight">
+<p>mit den Dirichlet-Randbedingungen <span class="math">\(u(0) = u(1) = 0\)</span>. Wir können also die
+analytische Lösung <span class="math">\(u\)</span> des Randwertproblems entsprechend
+<a class="reference internal" href="#equation-eq-randwertproblem-loesung-fixpunktgleichung">(3.8)</a> für <span class="math">\(g_0 = g_1 = 0\)</span>
+und <span class="math">\(c \equiv 0\)</span> für <span class="math">\(x \in [0,1]\)</span> schreiben als</p>
+<div class="math">
 \[u(x) \ = \ K(f)(x).\]</div>
 <p>Somit können wir mit Hilfe von partieller Integration folgern, dass
 gilt:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-\int_0^1 f(x) \cdot K(f)(x) \, \mathrm{d}x \ &amp;= \ - \int_0^1 (a(x)\cdot u'(x))' \cdot u(x) \, \mathrm{d}x \\
-&amp;= \ - \underbrace{\bigl[ a(x) \cdot u'(x) \cdot u(x) \bigr]^1_0}_{= \: 0} \: + \ \int_0^1 a(x) \cdot u'(x) \cdot u'(x) \, \mathrm{d}x\\
-&amp;= \ \int_0^1 a(x) \cdot (u'(x))^2 \, \mathrm{d}x \ \geq \ 0.
-\end{split}\end{split}\]</div>
+<div class="math">
+\[\begin{split}
+\int_0^1 f(x) \cdot K(f)(x) \, \mathrm{d}x \ &= \ - \int_0^1 (a(x)\cdot u'(x))' \cdot u(x) \, \mathrm{d}x \\
+&= \ - \underbrace{\bigl[ a(x) \cdot u'(x) \cdot u(x) \bigr]^1_0}_{= \: 0} \: + \ \int_0^1 a(x) \cdot u'(x) \cdot u'(x) \, \mathrm{d}x\\
+&= \ \int_0^1 a(x) \cdot (u'(x))^2 \, \mathrm{d}x \ \geq \ 0.
+\end{split}\]</div>
 <p>Die Nichtnegativität des letzten Integrals folgt aus dem quadratischen
-Term <span class="math notranslate nohighlight">\((u'(x))^2\)</span> und der Eigenschaft, dass <span class="math notranslate nohighlight">\(a(x) = e^{P(x)} &gt; 0\)</span> für
-alle <span class="math notranslate nohighlight">\(x \in [0,1]\)</span> gilt. Damit folgt sofort, dass das Integral genau
-dann Null wird, wenn <span class="math notranslate nohighlight">\(u'(x) \equiv 0\)</span> gilt. Aus
-<span class="math notranslate nohighlight">\(-(a(x) \cdot u'(x))' = f(x)\)</span> folgt dann aber auch schon, dass
-<span class="math notranslate nohighlight">\(f(x) \equiv 0\)</span> gelten muss. ◻</p>
+Term <span class="math">\((u'(x))^2\)</span> und der Eigenschaft, dass <span class="math">\(a(x) = e^{P(x)} &gt; 0\)</span> für
+alle <span class="math">\(x \in [0,1]\)</span> gilt. Damit folgt sofort, dass das Integral genau
+dann Null wird, wenn <span class="math">\(u'(x) \equiv 0\)</span> gilt. Aus
+<span class="math">\(-(a(x) \cdot u'(x))' = f(x)\)</span> folgt dann aber auch schon, dass
+<span class="math">\(f(x) \equiv 0\)</span> gelten muss. ◻</p>
 </div>
-<p>Aus dem obigen Spezialfall mit konstanter Funktion <span class="math notranslate nohighlight">\(c(x) \equiv c\)</span> sehen
-wir, dass ein nichttrivialer Nullraum bei negativem <span class="math notranslate nohighlight">\(c\)</span> auftreten kann.
+<p>Aus dem obigen Spezialfall mit konstanter Funktion <span class="math">\(c(x) \equiv c\)</span> sehen
+wir, dass ein nichttrivialer Nullraum bei negativem <span class="math">\(c\)</span> auftreten kann.
 Diese Beobachtung lässt sich nun mit Hilfe der Eigenschaft des
-Integraloperators aus
-<span class="xref myst">[lem:integraloperator_eigenschaften]</span>{reference-type=“ref+label“
-reference=“lem:integraloperator_eigenschaften“} auf den allgemeinen Fall
-von <span class="math notranslate nohighlight">\(c(x) \not \equiv 0\)</span> übertragen, so dass wir im folgenden ein
-allgemeines Resultat zur Existenz und Eindeutigkeit von Lösungen des
-Randwertproblems erhalten.</p>
+Integraloperators aus <a class="reference internal" href="#lem:integraloperator_eigenschaften">Lemma 3.1</a> auf
+den allgemeinen Fall von <span class="math">\(c(x) \not \equiv 0\)</span> übertragen, so dass wir im
+folgenden ein allgemeines Resultat zur Existenz und Eindeutigkeit von
+Lösungen des Randwertproblems erhalten.</p>
 <div class="proof theorem admonition" id="thm:randwertproblem_existenz-eindeutigkeit">
-<p class="admonition-title"><span class="caption-number">Theorem 3.2 </span> (Existenz und Eindeutigkeitssatz für <span class="math notranslate nohighlight">\(c \geq 0\)</span>)</p>
+<p class="admonition-title"><span class="caption-number">Theorem 3.2 </span> (Existenz und Eindeutigkeitssatz für c \geq 0)</p>
 <section class="theorem-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(a \in C^1([0,1])\)</span> eine stetig differenzierbare Funktion mit
-<span class="math notranslate nohighlight">\(a(x) \geq a_0 &gt; 0\)</span> für alle <span class="math notranslate nohighlight">\(x \in [0,1]\)</span>. Seien außerdem
-<span class="math notranslate nohighlight">\(c, f  \in C([0,1])\)</span> stetige Funktionen und es gelte <span class="math notranslate nohighlight">\(c(x) \geq 0\)</span> für
-alle <span class="math notranslate nohighlight">\(x\in [0,1]\)</span>.</p>
-<p>Dann existiert eine eindeutige Lösung <span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> des
+<p>Sei <span class="math">\(a \in C^1([0,1])\)</span> eine stetig differenzierbare Funktion mit
+<span class="math">\(a(x) \geq a_0 &gt; 0\)</span> für alle <span class="math">\(x \in [0,1]\)</span>. Seien außerdem
+<span class="math">\(c, f  \in C([0,1])\)</span> stetige Funktionen und es gelte <span class="math">\(c(x) \geq 0\)</span> für
+alle <span class="math">\(x\in [0,1]\)</span>.</p>
+<p>Dann existiert eine eindeutige Lösung <span class="math">\(u \in C^2([0,1])\)</span> des
 Randwertproblems <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> mit Dirichlet-Randbedingungen
-<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb1">(3.2)</a> und <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb1">(3.2)</a> mit <span class="math notranslate nohighlight">\(\alpha_i = 0\)</span> und
-<span class="math notranslate nohighlight">\(\beta_i = 1\)</span> für <span class="math notranslate nohighlight">\(i=0,1\)</span>.</p>
+<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb1">(3.2)</a> und <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb1">(3.2)</a> mit <span class="math">\(\alpha_i = 0\)</span> und
+<span class="math">\(\beta_i = 1\)</span> für <span class="math">\(i=0,1\)</span>.</p>
 </section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. Basierend auf den oben genannten Argumenten aus der Funktionalanalysis
 genügt es zu zeigen, dass der lineare Operator
-<span class="math notranslate nohighlight">\(u\mapsto u+ K(c \cdot u)\)</span> invertierbar ist, was äquivalent dazu ist,
+<span class="math">\(u\mapsto u+ K(c \cdot u)\)</span> invertierbar ist, was äquivalent dazu ist,
 dass er injektiv ist und somit sein Kern nur die Nullfunktion
-<span class="math notranslate nohighlight">\(u(x) \equiv 0\)</span> enthält.</p>
-<p>Sei also <span class="math notranslate nohighlight">\(u(x) + K(c \cdot u)(x) = 0\)</span>, dann gilt ebenfalls nach
-Multiplikation beider Seiten mit <span class="math notranslate nohighlight">\(c(x) \cdot u(x)\)</span>:</p>
-<div class="math notranslate nohighlight">
+<span class="math">\(u(x) \equiv 0\)</span> enthält.</p>
+<p>Sei also <span class="math">\(u(x) + K(c \cdot u)(x) = 0\)</span>, dann gilt ebenfalls nach
+Multiplikation beider Seiten mit <span class="math">\(c(x) \cdot u(x)\)</span>:</p>
+<div class="math">
 \[c(x) \cdot u^2(x) \ = \ -c(x) \cdot u(x) \cdot K(c \cdot u)(x).\]</div>
 <p>Integrieren wir beide Seiten der Gleichung und wenden nun
-<span class="xref myst">[lem:integraloperator_eigenschaften]</span>{reference-type=“ref+label“
-reference=“lem:integraloperator_eigenschaften“} für die speziell
-gewählte stetige Funktion <span class="math notranslate nohighlight">\(f(x) \coloneqq c(x) \cdot u(x) \in C([0,1])\)</span>
-an, so können wir abschätzen:</p>
-<div class="math notranslate nohighlight">
+<a class="reference internal" href="#lem:integraloperator_eigenschaften">Lemma 3.1</a> für die speziell gewählte
+stetige Funktion <span class="math">\(f(x) \coloneqq c(x) \cdot u(x) \in C([0,1])\)</span> an, so
+können wir abschätzen:</p>
+<div class="math">
 \[\int_0^1 c(x) \cdot u^2(x) \, \mathrm{d}x \ = \ - \int_0^1 c(x) \cdot u(x) \cdot K(c\cdot u)(x) \, \mathrm{d}x \ \leq \ 0.\]</div>
 <p>Da auf der linken Seite ein nichtnegativer Integrand steht muss hier
 schon die Gleichheit mit Null vorliegen. Ebenfalls mit
-<span class="xref myst">[lem:integraloperator_eigenschaften]</span>{reference-type=“ref+label“
-reference=“lem:integraloperator_eigenschaften“} wissen wir, dass das
-Integral genau dann Null wird, wenn <span class="math notranslate nohighlight">\(f(x) = c(x)\cdot u(x) \equiv 0\)</span>
-ist. Wenn jedoch <span class="math notranslate nohighlight">\(c(x) \cdot u(x) \equiv 0\)</span>, so folgt aus der Linearität
-von <span class="math notranslate nohighlight">\(K\)</span>, dass <span class="math notranslate nohighlight">\(K(c \cdot u)(x) \equiv 0\)</span> gelten muss. Da wir
-<span class="math notranslate nohighlight">\(u(x) + K(c \cdot u)(x) = 0\)</span> angenommen haben, muss damit auch
-<span class="math notranslate nohighlight">\(u(x) \equiv 0\)</span> gelten. Also ist der Nullraum des Operators trivial,
+<a class="reference internal" href="#lem:integraloperator_eigenschaften">Lemma 3.1</a> wissen wir, dass das
+Integral genau dann Null wird, wenn <span class="math">\(f(x) = c(x)\cdot u(x) \equiv 0\)</span>
+ist. Wenn jedoch <span class="math">\(c(x) \cdot u(x) \equiv 0\)</span>, so folgt aus der Linearität
+von <span class="math">\(K\)</span>, dass <span class="math">\(K(c \cdot u)(x) \equiv 0\)</span> gelten muss. Da wir
+<span class="math">\(u(x) + K(c \cdot u)(x) = 0\)</span> angenommen haben, muss damit auch
+<span class="math">\(u(x) \equiv 0\)</span> gelten. Also ist der Nullraum des Operators trivial,
 woraus die Invertierbarkeit und damit auch die eindeutige Lösbarkeit des
 Randwertproblems folgt. ◻</p>
 </div>
@@ -611,65 +611,63 @@ Darstellung der Lösung als Integral mehr vorliegen haben.</p>
 <div class="proof corollary admonition" id="cor:maximumsprinzip">
 <p class="admonition-title"><span class="caption-number">Corollary 3.1 </span> (Maximumsprinzip)</p>
 <section class="corollary-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(a \in C^1([0,1])\)</span> eine stetig differenzierbare Funktion mit
-<span class="math notranslate nohighlight">\(a(x) \geq a_0 &gt; 0\)</span> für alle <span class="math notranslate nohighlight">\(x \in [0,1]\)</span>. Seien außerdem
-<span class="math notranslate nohighlight">\(c, f  \in C([0,1])\)</span> nichtnegative, stetige Funktionen, d.h. es gelte
-<span class="math notranslate nohighlight">\(c(x) \geq 0\)</span> und <span class="math notranslate nohighlight">\(f(x) \geq 0\)</span> für alle <span class="math notranslate nohighlight">\(x\in [0,1]\)</span>.</p>
-<p>Dann gilt für die eindeutige Lösung <span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> des
+<p>Sei <span class="math">\(a \in C^1([0,1])\)</span> eine stetig differenzierbare Funktion mit
+<span class="math">\(a(x) \geq a_0 &gt; 0\)</span> für alle <span class="math">\(x \in [0,1]\)</span>. Seien außerdem
+<span class="math">\(c, f  \in C([0,1])\)</span> nichtnegative, stetige Funktionen, d.h. es gelte
+<span class="math">\(c(x) \geq 0\)</span> und <span class="math">\(f(x) \geq 0\)</span> für alle <span class="math">\(x\in [0,1]\)</span>.</p>
+<p>Dann gilt für die eindeutige Lösung <span class="math">\(u \in C^2([0,1])\)</span> des
 Randwertproblems <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> mit beliebigen
-Dirichlet-Randbedingungen <span class="math notranslate nohighlight">\(u(0) = g_0 \in \R\)</span> und <span class="math notranslate nohighlight">\(u(1) = g_1 \in \R\)</span>,
+Dirichlet-Randbedingungen <span class="math">\(u(0) = g_0 \in \R\)</span> und <span class="math">\(u(1) = g_1 \in \R\)</span>,
 die folgende Abschätzung:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u(x) \ \geq \ \min \lbrace g_0, g_1 \rbrace \qquad \forall x \in [0,1].\]</div>
 </section>
 </div><div class="proof admonition" id="proof">
-<p>Proof. Die Existenz und Eindeutigkeit einer Lösung <span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> des
+<p>Proof. Die Existenz und Eindeutigkeit einer Lösung <span class="math">\(u \in C^2([0,1])\)</span> des
 Randwertproblems ist durch
-<span class="xref myst">[thm:randwertproblem_existenz-eindeutigkeit]</span>{reference-type=“ref+label“
-reference=“thm:randwertproblem_existenz-eindeutigkeit“} gegeben. Für das
+<a class="reference internal" href="#thm:randwertproblem_existenz-eindeutigkeit">Theorem 3.2</a> gegeben. Für das
 zu zeigende Maximumsprinzip führen wir einen einfachen
 Widerspruchsbeweis.</p>
-<p>Seien im Folgenden <span class="math notranslate nohighlight">\(c, f \in C([0,1])\)</span> nichtnegative Funktionen und wir
-nehmen an, dass die analytische Lösung <span class="math notranslate nohighlight">\(u(x)\)</span> nicht am Rand des
+<p>Seien im Folgenden <span class="math">\(c, f \in C([0,1])\)</span> nichtnegative Funktionen und wir
+nehmen an, dass die analytische Lösung <span class="math">\(u(x)\)</span> nicht am Rand des
 Intervalls ihr Minimum annimmt, sondern in einem Punkt
-<span class="math notranslate nohighlight">\(\overline{x} \in (0,1)\)</span>. Dann gilt die notwendige
-Optimalitätsbedingungen <span class="math notranslate nohighlight">\(u'(\overline{x}) = 0\)</span> in <span class="math notranslate nohighlight">\(\overline{x}\)</span>. Setzen
+<span class="math">\(\overline{x} \in (0,1)\)</span>. Dann gilt die notwendige
+Optimalitätsbedingungen <span class="math">\(u'(\overline{x}) = 0\)</span> in <span class="math">\(\overline{x}\)</span>. Setzen
 wir diese in die Differentialgleichung ein, so folgt für alle
-<span class="math notranslate nohighlight">\(x \in [0,1]\)</span></p>
-<div class="math notranslate nohighlight">
+<span class="math">\(x \in [0,1]\)</span></p>
+<div class="math">
 \[0 \ \leq \ f(\overline{x}) \ = \ -(a(\overline{x}) \cdot \underbrace{u'(\overline{x})}_{=\: 0})' + c(\overline{x}) \cdot u(\overline{x}) \ = \ c(\overline{x}) \cdot u(\overline{x}) \ \leq \ c(\overline{x}) \cdot u(x).\]</div>
-<p>Wegen der Annahme, dass <span class="math notranslate nohighlight">\(c\)</span> und <span class="math notranslate nohighlight">\(f\)</span> nichtnegative Funktionen sind, folgt
-damit, dass <span class="math notranslate nohighlight">\(u(x)\)</span> ebenfalls nichtnegativ für alle <span class="math notranslate nohighlight">\(x \in [0,1]\)</span> ist. Da
-wir jedoch beliebige Randwerte <span class="math notranslate nohighlight">\(u(0) = g_0\)</span> und <span class="math notranslate nohighlight">\(u(1) = g_1\)</span> für das
+<p>Wegen der Annahme, dass <span class="math">\(c\)</span> und <span class="math">\(f\)</span> nichtnegative Funktionen sind, folgt
+damit, dass <span class="math">\(u(x)\)</span> ebenfalls nichtnegativ für alle <span class="math">\(x \in [0,1]\)</span> ist. Da
+wir jedoch beliebige Randwerte <span class="math">\(u(0) = g_0\)</span> und <span class="math">\(u(1) = g_1\)</span> für das
 Randwertproblem erlauben, können wir ebenfalls Randwerte betrachten, so
-dass <span class="math notranslate nohighlight">\(\min \lbrace g_0, g_1 \rbrace &lt; 0\)</span> gilt. Damit erzeugt die
-gefolgerte Nichtnegativität der Lösung <span class="math notranslate nohighlight">\(u\)</span> einen Widerspruch zu den
-Randwerten und somit nimmt die analytische Lösung <span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> ihr
+dass <span class="math">\(\min \lbrace g_0, g_1 \rbrace &lt; 0\)</span> gilt. Damit erzeugt die
+gefolgerte Nichtnegativität der Lösung <span class="math">\(u\)</span> einen Widerspruch zu den
+Randwerten und somit nimmt die analytische Lösung <span class="math">\(u \in C^2([0,1])\)</span> ihr
 Minimum am Rand an und somit haben wir das Maximumsprinzip gezeigt. ◻</p>
 </div>
 <p>Wegen der Linearität des Problems kann man aus dem Maximumsprinzip in
-<span class="xref myst">[cor:maximumsprinzip]</span>{reference-type=“ref+label“
-reference=“cor:maximumsprinzip“} auch Stabilitätsaussagen herleiten.
-Nehmen wir an <span class="math notranslate nohighlight">\(\tilde u \in C^2([0,1])\)</span> sei eine bekannte Lösung für das
+<a class="reference internal" href="#cor:maximumsprinzip">Corollary 3.1</a> auch Stabilitätsaussagen herleiten.
+Nehmen wir an <span class="math">\(\tilde u \in C^2([0,1])\)</span> sei eine bekannte Lösung für das
 Problem</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[-(a(x) \cdot \tilde u'(x))' + c(x) \cdot \tilde u(x) \ = \ \tilde f(x),\]</div>
-<p>mit Dirichlet Randwerten <span class="math notranslate nohighlight">\(\tilde u(0) = \tilde{g}_0\)</span> und
-<span class="math notranslate nohighlight">\(\tilde u(1) = \tilde{g}_1\)</span>. Betrachten wir nun eine weitere rechte
-Seite <span class="math notranslate nohighlight">\(f \in C([0,1])\)</span> der Differentialgleichung mit
-<span class="math notranslate nohighlight">\(\tilde f(x) \geq f(x)\)</span> für alle <span class="math notranslate nohighlight">\(x\in [0,1]\)</span>, so folgt</p>
-<div class="math notranslate nohighlight">
+<p>mit Dirichlet Randwerten <span class="math">\(\tilde u(0) = \tilde{g}_0\)</span> und
+<span class="math">\(\tilde u(1) = \tilde{g}_1\)</span>. Betrachten wir nun eine weitere rechte
+Seite <span class="math">\(f \in C([0,1])\)</span> der Differentialgleichung mit
+<span class="math">\(\tilde f(x) \geq f(x)\)</span> für alle <span class="math">\(x\in [0,1]\)</span>, so folgt</p>
+<div class="math">
 \[%TODO Auch hier stand eine 0 im Minimum!
 \tilde u(x) - u(x) \ \geq \ \min\{\tilde{g}_0 - g_0, \tilde{g}_1 - g_1 \}.\]</div>
-<p>und daraus eine Abschätzung für das Maximum von <span class="math notranslate nohighlight">\(u\)</span>. Ist <span class="math notranslate nohighlight">\(c &gt; 0\)</span>, so
-können wir etwa sehr einfache konstante Lösungen <span class="math notranslate nohighlight">\(\tilde u = \gamma\)</span>
-konstruieren, indem wir <span class="math notranslate nohighlight">\(\tilde f = \gamma c\)</span> setzen. Ist <span class="math notranslate nohighlight">\(\gamma\)</span>
-hinreichend groß, dann ist <span class="math notranslate nohighlight">\(\tilde f &gt; f\)</span> und <span class="math notranslate nohighlight">\(\tilde{g}_i &gt; g_i\)</span> für
-<span class="math notranslate nohighlight">\(i=0,1\)</span>.</p>
-<p>Damit erhalten wir <span class="math notranslate nohighlight">\(u(x) \leq \gamma\)</span> für alle <span class="math notranslate nohighlight">\(x\)</span>. Umgekehrt können wir
-die Rollen von <span class="math notranslate nohighlight">\(\tilde u\)</span> und <span class="math notranslate nohighlight">\(u\)</span> auch vertauschen und
-<span class="math notranslate nohighlight">\(\tilde u = -\gamma\)</span> wählen, damit erhalten wir eine Abschätzung für
-<span class="math notranslate nohighlight">\(\vert u (x) \vert.\)</span></p>
+<p>und daraus eine Abschätzung für das Maximum von <span class="math">\(u\)</span>. Ist <span class="math">\(c &gt; 0\)</span>, so
+können wir etwa sehr einfache konstante Lösungen <span class="math">\(\tilde u = \gamma\)</span>
+konstruieren, indem wir <span class="math">\(\tilde f = \gamma c\)</span> setzen. Ist <span class="math">\(\gamma\)</span>
+hinreichend groß, dann ist <span class="math">\(\tilde f &gt; f\)</span> und <span class="math">\(\tilde{g}_i &gt; g_i\)</span> für
+<span class="math">\(i=0,1\)</span>.</p>
+<p>Damit erhalten wir <span class="math">\(u(x) \leq \gamma\)</span> für alle <span class="math">\(x\)</span>. Umgekehrt können wir
+die Rollen von <span class="math">\(\tilde u\)</span> und <span class="math">\(u\)</span> auch vertauschen und
+<span class="math">\(\tilde u = -\gamma\)</span> wählen, damit erhalten wir eine Abschätzung für
+<span class="math">\(\vert u (x) \vert.\)</span></p>
 </section>
 </section>
 <section id="neumann-randbedingungen">
@@ -680,60 +678,60 @@ Fall reiner Neumann-Randbedingungen einen Aspekt, den wir besonders
 beachten müssen.</p>
 <p>Betrachten wir also im Folgenden die Differentialgleichung
 <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> mit Randwerten <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb1">(3.2)</a> und
-<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb2">(3.3)</a> für <span class="math notranslate nohighlight">\(\alpha_i =1\)</span> und <span class="math notranslate nohighlight">\(\beta_i =0\)</span>. Zur
-Vereinfachung nehmen wir wieder an, dass <span class="math notranslate nohighlight">\(c(x) \equiv 0\)</span> gilt. Dann
+<a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-randwert-rb2">(3.3)</a> für <span class="math">\(\alpha_i =1\)</span> und <span class="math">\(\beta_i =0\)</span>. Zur
+Vereinfachung nehmen wir wieder an, dass <span class="math">\(c(x) \equiv 0\)</span> gilt. Dann
 können wir die Differentialgleichung zunächst von links und rechts
 aufintegrieren zu</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-&amp;- \int_0^x (a(y) \cdot u'(y))' \, \mathrm{d}y \ = \ -a(x) \cdot u'(x) + a(0) \cdot \underbrace{u'(0)}_{=\: g_0} \ = \ \int_0^x f(y) \, \mathrm{d}y\\
-\Rightarrow \quad &amp;-a(x) \cdot u'(x) \ = \ - a(0) \cdot g_0 + \int_0^x f(y) \, \mathrm{d}y.
-\end{split}\end{split}\]</div>
+<div class="math">
+\[\begin{split}
+&- \int_0^x (a(y) \cdot u'(y))' \, \mathrm{d}y \ = \ -a(x) \cdot u'(x) + a(0) \cdot \underbrace{u'(0)}_{=\: g_0} \ = \ \int_0^x f(y) \, \mathrm{d}y\\
+\Rightarrow \quad &-a(x) \cdot u'(x) \ = \ - a(0) \cdot g_0 + \int_0^x f(y) \, \mathrm{d}y.
+\end{split}\]</div>
 <p>Integrieren wir hingegen mit dem rechten Rand auf so erhalten wir:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-&amp;- \int_x^1 (a(y) \cdot u'(y))' \, \mathrm{d}y \ = \ - a(1) \cdot \underbrace{u'(1)}_{=\: g_1} + \, a(x) \cdot u'(x)\ = \ \int_x^1 f(y) \, \mathrm{d}y\\
-\Rightarrow \quad &amp;-a(x) \cdot u'(x) \: = \: - a(1) \cdot g_1 - \int_x^1 f(y) \, \mathrm{d}y \: = \: - a(1) \cdot g_1 - \int_0^1 f(y) \, \mathrm{d}y + \int_0^x f(y) \, \mathrm{d}y.
-\end{split}\end{split}\]</div>
+<div class="math">
+\[\begin{split}
+&- \int_x^1 (a(y) \cdot u'(y))' \, \mathrm{d}y \ = \ - a(1) \cdot \underbrace{u'(1)}_{=\: g_1} + \, a(x) \cdot u'(x)\ = \ \int_x^1 f(y) \, \mathrm{d}y\\
+\Rightarrow \quad &-a(x) \cdot u'(x) \: = \: - a(1) \cdot g_1 - \int_x^1 f(y) \, \mathrm{d}y \: = \: - a(1) \cdot g_1 - \int_0^1 f(y) \, \mathrm{d}y + \int_0^x f(y) \, \mathrm{d}y.
+\end{split}\]</div>
 <p>Ein direkter Vergleich der beiden Gleichungen zeigt uns, dass die
 folgende Bedingung erfüllt sein muss</p>
-<div class="math notranslate nohighlight" id="equation-eq-randwertproblem-neumann-konsistenzbedingung">
+<div class="math" id="equation-eq-randwertproblem-neumann-konsistenzbedingung">
 <span class="eqno">(3.9)<a class="headerlink" href="#equation-eq-randwertproblem-neumann-konsistenzbedingung" title="Permalink to this equation">#</a></span>\[a(0) \cdot g_0 \ = \  a(1) \cdot g_1 + \int_0^1 f(y) \, \mathrm{d}y\]</div>
 <p>Unter dieser Bedingung ist die Gleichung prinzipiell lösbar, jedoch ist
-eine der Konstanten <span class="math notranslate nohighlight">\(a(0), a(1) \in \R\)</span> dann weiterhin unbestimmt. Dies
+eine der Konstanten <span class="math">\(a(0), a(1) \in \R\)</span> dann weiterhin unbestimmt. Dies
 wird üblicherweise durch eine zusätzliche Normalisierungsbedingung der
 folgenden Art erreicht</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\int_0^1 u(x) \, \mathrm{d}x \ = \ 1.\]</div>
 <p>Der Grund für diese zusätzliche Bedingung ist im Gegensatz zu den oben
 diskutierten Dirichlet-Randwertbedingungen ist, dass der Nullraum des
-Randwertproblems <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> mit <span class="math notranslate nohighlight">\(c(x) \equiv 0\)</span> unter
+Randwertproblems <a class="reference internal" href="00_05_Randwertprobleme.html#equation-eq-divergenzform">(3.4)</a> mit <span class="math">\(c(x) \equiv 0\)</span> unter
 Neumann-Randwertbedingungen nichttrival ist, denn jede konstante
 Funktion löst bereits das homogene Problem</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[-(a(x) \cdot u'(x))' \ = \ 0\]</div>
-<p>mit Randwerten <span class="math notranslate nohighlight">\(u'(0) = u'(1) = 0\)</span>.</p>
+<p>mit Randwerten <span class="math">\(u'(0) = u'(1) = 0\)</span>.</p>
 <p>Interessanterweise ist die Theorie für den Fall nichtnegativer
-Funktionen <span class="math notranslate nohighlight">\(c(x) \geq 0\)</span> hier unterschiedlich. Sobald <span class="math notranslate nohighlight">\(c(x) \geq 0\)</span> mit
-<span class="math notranslate nohighlight">\(c(x) \not \equiv 0\)</span> für alle <span class="math notranslate nohighlight">\(x \in [0,1]\)</span> gilt, hat das
+Funktionen <span class="math">\(c(x) \geq 0\)</span> hier unterschiedlich. Sobald <span class="math">\(c(x) \geq 0\)</span> mit
+<span class="math">\(c(x) \not \equiv 0\)</span> für alle <span class="math">\(x \in [0,1]\)</span> gilt, hat das
 Randwertproblem mit Neumann-Randwertbedingungen nur noch einen trivialen
 Nullraum. Dies lässt sich durch Multiplikation der homogenen
-Differentialgleichung mit <span class="math notranslate nohighlight">\(u(x)\)</span> und anschließender Integration sehen.
+Differentialgleichung mit <span class="math">\(u(x)\)</span> und anschließender Integration sehen.
 Es folgt dann nämlich mit partieller Integration und den
-Randwertbedingungen <span class="math notranslate nohighlight">\(u'(0) = u'(1) = 0\)</span>, dass gilt</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-0 \ &amp;= \ \int_0^1 (-(a(x) \cdot u'(x))' + c(x) \cdot u(x)) \cdot u(x) \, \mathrm{d}x \\
-&amp;= \ \underbrace{-\bigl[ a(x) \cdot u'(x) \cdot u(x) \bigr]^1_0}_{= \: 0} + \int_0^1 a(x) \cdot u'(x) \cdot u'(x) \, \mathrm{d}x + \int_0^1 c(x) \cdot u^2(x) \, \mathrm{d}x\\
-&amp;= \ \int_0^1 a(x) \cdot (u'(x))^2 + c(x) \cdot u^2(x) \, \mathrm{d}x.
-\end{split}\end{split}\]</div>
-<p>Da <span class="math notranslate nohighlight">\(a(x) = e^{P(x)} &gt; 0\)</span> und <span class="math notranslate nohighlight">\(c(x) \geq 0\)</span> angenommen wurde, folgt
-sofort, dass <span class="math notranslate nohighlight">\(u'(x) \equiv 0\)</span> für <span class="math notranslate nohighlight">\(x\in [0,1]\)</span> gelten muss. Also muss
-<span class="math notranslate nohighlight">\(u\)</span> eine konstante Funktion sein. Da <span class="math notranslate nohighlight">\(c(x) \not \equiv 0\)</span> angenommen
+Randwertbedingungen <span class="math">\(u'(0) = u'(1) = 0\)</span>, dass gilt</p>
+<div class="math">
+\[\begin{split}
+0 \ &= \ \int_0^1 (-(a(x) \cdot u'(x))' + c(x) \cdot u(x)) \cdot u(x) \, \mathrm{d}x \\
+&= \ \underbrace{-\bigl[ a(x) \cdot u'(x) \cdot u(x) \bigr]^1_0}_{= \: 0} + \int_0^1 a(x) \cdot u'(x) \cdot u'(x) \, \mathrm{d}x + \int_0^1 c(x) \cdot u^2(x) \, \mathrm{d}x\\
+&= \ \int_0^1 a(x) \cdot (u'(x))^2 + c(x) \cdot u^2(x) \, \mathrm{d}x.
+\end{split}\]</div>
+<p>Da <span class="math">\(a(x) = e^{P(x)} &gt; 0\)</span> und <span class="math">\(c(x) \geq 0\)</span> angenommen wurde, folgt
+sofort, dass <span class="math">\(u'(x) \equiv 0\)</span> für <span class="math">\(x\in [0,1]\)</span> gelten muss. Also muss
+<span class="math">\(u\)</span> eine konstante Funktion sein. Da <span class="math">\(c(x) \not \equiv 0\)</span> angenommen
 wurde kann</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\int_0^1 c(x) \cdot u^2(x) \, \mathrm{d}x \ = \ 0\]</div>
-<p>für eine konstante Funktion <span class="math notranslate nohighlight">\(u\)</span> nur im Fall <span class="math notranslate nohighlight">\(u(x) \equiv 0\)</span> gelten.</p>
+<p>für eine konstante Funktion <span class="math">\(u\)</span> nur im Fall <span class="math">\(u(x) \equiv 0\)</span> gelten.</p>
 <p>Der Unterschied dieser Fälle und der potentiell nichttriviale Nullraum
 des Randwertproblems mit Neumann-Randwertbedingungen ist natürlich auch
 bei der numerischen Lösung zu beachten, welche im nächsten Abschnitt

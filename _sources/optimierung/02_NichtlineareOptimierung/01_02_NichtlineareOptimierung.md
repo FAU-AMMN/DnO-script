@@ -155,8 +155,8 @@ Minimum** der Zielfunktion $F$.
 ````{prf:definition} Striktes Minimum
 Sei $\Omega \subset \mathbb{R}^n$ ein offenes, zusammenhängendes Gebiet
 und sei $F \colon \Omega \rightarrow \mathbb{R}$ eine reellwertige
-Zielfunktion. Sei $x^\in \Omega$ ein lokaler Minimierer der Zielfunktion
-$F$ in einer offenen Umgebung $U \subset \Omega$.
+Zielfunktion. Sei $x^* \in \Omega$ ein lokaler Minimierer der
+Zielfunktion $F$ in einer offenen Umgebung $U \subset \Omega$.
 
 Wir nennen $F(x^*)$ ein **striktes Minimum** von $F$, falls gilt
 ```{math}

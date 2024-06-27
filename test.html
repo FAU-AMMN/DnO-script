@@ -1,0 +1,65 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="de" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <title>1.2. Abstiegsverfahren &#8212; Diskretisierung und numerische Optimierung</title>
+  
+    <script src="_static/katex.min.js"></script>
+    <script src="_static/auto-render.min.js"></script>
+    <script src="_static/katex_autorenderer.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/katex-math.css" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+                  
+ 
+<p>Sei im Folgenden <span class="math">\(\Omega \subset \mathbb{R}^n\)</span> ein offenes,
+zusammenhängendes Gebiet und sei
+<span class="math">\[F \colon \Omega \rightarrow \mathbb{R}\]</span> eine differenzierbare,
+<div class="math">
+\[\min_{x \in \Omega} F(x),\]</div>
+reellwertige Zielfunktion. Die allgemeine Idee der Abstiegsverfahren ist
+es nun ausgehend von einem aktuellen Punkt <span class="math">\(x_k \in \Omega\)</span> einen
+Schritt in eine Richtung <span class="math">\(p_k \in \mathbb{R}^n\)</span> zu machen, so dass der
+Funktionswert von <span class="math">\(F\)</span> 
+
+<div class="math">
+\[u_0&\leq \alpha\in\R^+_0\\
+u_k&\leq \alpha + \sum_{j=0}^{k-1} \beta_j u_j 
+\]</div>
+<div class="math">
+\[u_0 \leq \alpha\in\R^+_0
+\]</div>
+<div class="math">
+\[u_k \leq \alpha + \sum_{j=0}^{k-1} \beta_j u_j 
+\]</div>
+<div class="math">
+\[a & \leq b \\\\
+c & \leq d
+\]</div>
+<div class="math">
+\[
+\begin{aligned}
+a &\leq b \\
+c &\leq d
+\end{aligned}\]</div>
+
+<div class="math">
+\[\begin{aligned} v_{k+1} \ &= \ \Vert u_\tau(t_{k+1}) - u(t_{k+1})\Vert\\ &= \ \left\Vert u_\tau(t_k) + \tau \cdot f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - u(t_k) -\int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \right\Vert\\ &\leq \ v_k + \tau \cdot \norm{f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1}))}\\ & \hspace{1.01cm} + \tau \cdot \left\Vert f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1})) - \frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \right\Vert\\ &\leq \ v_k + \tau \cdot L \cdot (v_k + v_{k+1}) + \norm{g_\tau(t_k)}. \end{aligned}\]
+</div>
+<div class="math">
+\[\begin{aligned} v_{k+1} \ &= \ \Vert u_\tau(t_{k+1}) - u(t_{k+1})\Vert\\ &= \ \Vert u_\tau(t_k) + \tau \cdot f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - u(t_k) -\int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \Vert\\ &\leq \ v_k + \tau \cdot \norm{f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1}))}\\ & \hspace{1.01cm} + \tau \cdot \Vert f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1})) - \frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \Vert\\ &\leq \ v_k + \tau \cdot L \cdot (v_k + v_{k+1}) + \norm{g_\tau(t_k)}. \end{aligned}\]
+</div>
+  <div class="math">
+\[\begin{aligned} \Vert\\ &\leq \ v_k + \tau \cdot \norm{f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1}))}\end{aligned}\]
+</div>
+  </body>
+</html>

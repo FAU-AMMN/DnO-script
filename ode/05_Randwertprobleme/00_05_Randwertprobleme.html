@@ -37,6 +37,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -58,14 +60,15 @@
     <script src="../../_static/translations.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/katex.min.js"></script>
+    <script src="../../_static/auto-render.min.js"></script>
+    <script src="../../_static/katex_autorenderer.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'ode/05_Randwertprobleme/00_05_Randwertprobleme';</script>
     <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
     <link rel="search" title="Suche" href="../../search.html" />
@@ -173,6 +176,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../04_Anfangswertprobleme/00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -358,21 +362,21 @@ document.write(`
 <p>In diesem Kapitel der Vorlesung wollen wir uns mit der Lösung von
 Randwertproblemen für <strong>lineare gewöhnliche Differentialgleichungen
 zweiter Ordnung</strong> beschäftigen. Insbesondere beschäftigen wir uns mit
-Lösungen <span class="math notranslate nohighlight">\(u \in C^2([0,1])\)</span> für Differentialgleichungen der Gestalt</p>
-<div class="math notranslate nohighlight" id="equation-eq-dgl-zweite-ordnung">
+Lösungen <span class="math">\(u \in C^2([0,1])\)</span> für Differentialgleichungen der Gestalt</p>
+<div class="math" id="equation-eq-dgl-zweite-ordnung">
 <span class="eqno">(3.1)<a class="headerlink" href="#equation-eq-dgl-zweite-ordnung" title="Permalink to this equation">#</a></span>\[ -u''(x) - p(x) \cdot u'(x) + q(x) \cdot u(x) \ = \ g(x),\]</div>
-<p>für <span class="math notranslate nohighlight">\(x\in (0,1)\)</span> mit den zusätzlichen Randbedingungen</p>
-<div class="math notranslate nohighlight" id="equation-eq-randwert-rb1">
+<p>für <span class="math">\(x\in (0,1)\)</span> mit den zusätzlichen Randbedingungen</p>
+<div class="math" id="equation-eq-randwert-rb1">
 <span class="eqno">(3.2)<a class="headerlink" href="#equation-eq-randwert-rb1" title="Permalink to this equation">#</a></span>\[\alpha_0 \cdot u'(0) + \beta_0 \cdot u(0) \ = \ g_0,\]</div>
-<div class="math notranslate nohighlight" id="equation-eq-randwert-rb2">
+<div class="math" id="equation-eq-randwert-rb2">
 <span class="eqno">(3.3)<a class="headerlink" href="#equation-eq-randwert-rb2" title="Permalink to this equation">#</a></span>\[\alpha_1 \cdot u'(1) + \beta_1 \cdot u(1) \ = \ g_1. \]</div>
-<p>Im Fall <span class="math notranslate nohighlight">\(\alpha_i = 0\)</span> und <span class="math notranslate nohighlight">\(\beta_i = 1\)</span> für <span class="math notranslate nohighlight">\(i=0,1\)</span> spricht man von
+<p>Im Fall <span class="math">\(\alpha_i = 0\)</span> und <span class="math">\(\beta_i = 1\)</span> für <span class="math">\(i=0,1\)</span> spricht man von
 <strong>Dirichlet-Randbedingungen</strong> für die gilt:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u(0) \, = \, g_0, \qquad u(1) \, = \, g_1.\]</div>
-<p>Im Fall <span class="math notranslate nohighlight">\(\alpha_i=1\)</span> und <span class="math notranslate nohighlight">\(\beta_i=0\)</span> für <span class="math notranslate nohighlight">\(i=0,1\)</span> hingegen sprechen wir
+<p>Im Fall <span class="math">\(\alpha_i=1\)</span> und <span class="math">\(\beta_i=0\)</span> für <span class="math">\(i=0,1\)</span> hingegen sprechen wir
 von <strong>Neumann-Randbedingungen</strong> für die gilt:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u'(0) \, = \, g_0, \qquad u'(1) \, = \, g_1.\]</div>
 <p>In allen anderen Fällen erhalten wir gemischte Randwertbedingungen, die
 auch <em>Robin-Randbedingungen</em> genannt werden.</p>
@@ -380,24 +384,24 @@ auch <em>Robin-Randbedingungen</em> genannt werden.</p>
 Auslenkung eines an zwei Seiten festgebundenen Seils beschreiben will.
 Hierbei wird klar, dass die Auslenkung des Seils am linken und rechten
 Rand verschwindet muss, d.h. wir haben Dirichlet-Randbedingungen
-vorliegen mit <span class="math notranslate nohighlight">\(u(0) = u(1) = 0\)</span>. Ein ähnliches Problem untersucht man
+vorliegen mit <span class="math">\(u(0) = u(1) = 0\)</span>. Ein ähnliches Problem untersucht man
 bei der Berechnung der Temperaturverteilung eines Metallstabs, der an
 beiden Enden erhitzt wird.</p>
-<p>Nehmen wir an <span class="math notranslate nohighlight">\(P(x)\)</span> sei eine Stammfunktion der Funktion <span class="math notranslate nohighlight">\(p(x)\)</span>, so dass
-<span class="math notranslate nohighlight">\(P'(x) = p(x)\)</span> gilt. Dann können wir beide Seiten der Gleichung
-<a class="reference internal" href="#equation-eq-dgl-zweite-ordnung">(3.1)</a> mit dem Term <span class="math notranslate nohighlight">\(a(x) \coloneqq e^{P(x)}\)</span>
+<p>Nehmen wir an <span class="math">\(P(x)\)</span> sei eine Stammfunktion der Funktion <span class="math">\(p(x)\)</span>, so dass
+<span class="math">\(P'(x) = p(x)\)</span> gilt. Dann können wir beide Seiten der Gleichung
+<a class="reference internal" href="#equation-eq-dgl-zweite-ordnung">(3.1)</a> mit dem Term <span class="math">\(a(x) \coloneqq e^{P(x)}\)</span>
 multiplizieren und erhalten somit:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[-a(x) \cdot u''(x) - e^{P(x)} \cdot p(x) \cdot u'(x) + e^{P(x)} \cdot q(x) \cdot u(x) \ = \ e^{P(x)} \cdot g(x).\]</div>
 <p>Wenn wir nun die Produktregel für Differentiation anwenden sehen wir,
 dass gilt</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[-(a(x) \cdot u'(x))' \ = \ -a(x) \cdot u''(x) - a'(x) \cdot u'(x) \ = \ -a(x) \cdot u''(x) - e^{P(x)} \cdot p(x) \cdot u'(x).\]</div>
-<p>Zusammen mit den Hilfsfunktionen <span class="math notranslate nohighlight">\(c(x) \coloneqq e^{P(x)} \cdot q(x)\)</span>
-und <span class="math notranslate nohighlight">\(f(x) \coloneqq e^{P(x)} \cdot g(x)\)</span> können wir das Problem
+<p>Zusammen mit den Hilfsfunktionen <span class="math">\(c(x) \coloneqq e^{P(x)} \cdot q(x)\)</span>
+und <span class="math">\(f(x) \coloneqq e^{P(x)} \cdot g(x)\)</span> können wir das Problem
 <a class="reference internal" href="#equation-eq-dgl-zweite-ordnung">(3.1)</a> schließlich in eine sogenannte
 <strong>Divergenzform</strong> bringen mit:</p>
-<div class="math notranslate nohighlight" id="equation-eq-divergenzform">
+<div class="math" id="equation-eq-divergenzform">
 <span class="eqno">(3.4)<a class="headerlink" href="#equation-eq-divergenzform" title="Permalink to this equation">#</a></span>\[-(a(x) \cdot u'(x))' + c(x) \cdot u(x) \ = \ f(x).\]</div>
 <p>Die Divergenzform <a class="reference internal" href="#equation-eq-divergenzform">(3.4)</a> der ursprünglichen
 Differentialgleichung hat einige Vorteile für die Analyse der

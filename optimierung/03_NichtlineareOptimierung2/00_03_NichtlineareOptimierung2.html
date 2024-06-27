@@ -37,6 +37,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -58,14 +60,15 @@
     <script src="../../_static/translations.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/katex.min.js"></script>
+    <script src="../../_static/auto-render.min.js"></script>
+    <script src="../../_static/katex_autorenderer.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2';</script>
     <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
     <link rel="search" title="Suche" href="../../search.html" />
@@ -173,6 +176,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">1.4. Wahl der Schrittweite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../ode/04_Anfangswertprobleme/00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -357,214 +361,214 @@ document.write(`
 <span id="id1"></span><h1><span class="section-number">1.4. </span>Wahl der Schrittweite<a class="headerlink" href="#wahl-der-schrittweite" title="Permalink to this heading">#</a></h1>
 <p>Wir haben in den vorausgegangenen Abschnitten bereits verschiedene
 Abstiegsverfahren der Form</p>
-<div class="math notranslate nohighlight">
-\[x_{k+1} \ = \ x_k + \alpha_k p_k, \qquad \alpha_k &gt; 0, \quad p_k \in \R^n,\]</div>
+<div class="math">
+\[x_{k+1} \ = \ x_k + \alpha_k p_k, \qquad \alpha_k > 0, \quad p_k \in \R^n,\]</div>
 <p>wie in <a class="reference internal" href="../02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html#equation-eq-abstiegsverfahren">(1.3)</a> kennen gelernt, die basierend auf
 verschiedenen Annahmen unterschiedliche Abstiegsrichtungen
-<span class="math notranslate nohighlight">\(p_k \in \R^n\)</span> realisiert haben. Bis auf eine heuristische Wahl von
+<span class="math">\(p_k \in \R^n\)</span> realisiert haben. Bis auf eine heuristische Wahl von
 adaptiven Schrittweiten in <a class="reference internal" href="../02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html#equation-eq-gradient-descent-adaptive">(1.9)</a> und der
 Wahl einer optimalen Schrittweite im Fall von strikt konvexen,
 quadratischen Zielfunktionen in <a class="reference internal" href="../02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html#equation-eq-optimal-step-size-conjugated">(1.38)</a>
 haben wir uns bisher noch nicht weiter mit der Frage einer geeigneten
-Wahl der Schrittweiten <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> beschäftigt. Dies wollen wir im
+Wahl der Schrittweiten <span class="math">\(\alpha_k &gt; 0\)</span> beschäftigt. Dies wollen wir im
 Folgenden nachholen.</p>
-<p>Wir werden ab jetzt immer annehmen, dass <span class="math notranslate nohighlight">\(p_k \in \R^n\)</span> eine fest
+<p>Wir werden ab jetzt immer annehmen, dass <span class="math">\(p_k \in \R^n\)</span> eine fest
 gewählte Abstiegsrichtung ist, d.h. für die Richtungsableitung in
-Richtung <span class="math notranslate nohighlight">\(p_k\)</span> in jedem Iterationsschritt <span class="math notranslate nohighlight">\(k=0,1,\ldots\)</span> gilt</p>
-<div class="math notranslate nohighlight">
-\[\langle \nabla F(x_k), p_k \rangle \, &lt; \, 0.\]</div>
-<p>Nehmen wir an, dass die Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> stetig differenzierbar ist und
-Ist die gewählte <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> sehr klein, so bleiben wir sicher in
-einer lokalen Umgebung von <span class="math notranslate nohighlight">\(x_k\)</span> in der die folgende
+Richtung <span class="math">\(p_k\)</span> in jedem Iterationsschritt <span class="math">\(k=0,1,\ldots\)</span> gilt</p>
+<div class="math">
+\[\langle \nabla F(x_k), p_k \rangle \, < \, 0.\]</div>
+<p>Nehmen wir an, dass die Zielfunktion <span class="math">\(F\)</span> stetig differenzierbar ist und
+Ist die gewählte <span class="math">\(\alpha_k &gt; 0\)</span> sehr klein, so bleiben wir sicher in
+einer lokalen Umgebung von <span class="math">\(x_k\)</span> in der die folgende
 Taylor-Approximation erster Ordnung gilt:</p>
-<div class="math notranslate nohighlight">
-\[F(x_k +\alpha_k p_k) \ \approx \ F(x_k) + \alpha_k \langle \nabla F(x_k), p_k \rangle  \: &lt; \: F(x_k).\]</div>
+<div class="math">
+\[F(x_k +\alpha_k p_k) \ \approx \ F(x_k) + \alpha_k \langle \nabla F(x_k), p_k \rangle  \: < \: F(x_k).\]</div>
 <p>Allerdings würde das Iterationsverfahren dann in der Regel sehr langsam
-konvergieren. Ist andererseits <span class="math notranslate nohighlight">\(\alpha_k\)</span> zu groß, dann ist die
+konvergieren. Ist andererseits <span class="math">\(\alpha_k\)</span> zu groß, dann ist die
 Abstiegsbedingung nicht mehr garantiert. Es könnte zum Beispiel
 passieren, dass man beim Iterationsschritt
-<span class="math notranslate nohighlight">\(x_{k+1} = x_k + \alpha_k p_k\)</span> zu weit über ein lokales Minimum springt.
+<span class="math">\(x_{k+1} = x_k + \alpha_k p_k\)</span> zu weit über ein lokales Minimum springt.
 Deshalb benötigen wir intuitiv zwei Bedingungen an die Schrittweite
-<span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span>, die zu kleine und zu große Schritte verhindern sollen.</p>
+<span class="math">\(\alpha_k &gt; 0\)</span>, die zu kleine und zu große Schritte verhindern sollen.</p>
 <p>Zunächst wollen wir analog zu <a class="reference internal" href="../02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html#equation-eq-optimal-step-size-conjugated">(1.38)</a> eine
 theoretische Möglichkeit der optimalen Wahl der Schrittweite
-<span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> untersuchen, nämlich jene Schrittweite, die zum
+<span class="math">\(\alpha_k &gt; 0\)</span> untersuchen, nämlich jene Schrittweite, die zum
 größtmöglichen Abstieg führt:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\alpha_k  \ \coloneqq \ \text{arg}\min_{\alpha \in \R^+} F(x_k + \alpha p_k).\]</div>
-<p>Um eine optimale Schrittweite <span class="math notranslate nohighlight">\(\alpha_k\)</span> ausrechnen zu können, müssen
+<p>Um eine optimale Schrittweite <span class="math">\(\alpha_k\)</span> ausrechnen zu können, müssen
 wir beliebige eindimensionale Probleme analytisch lösen können, was
 jedoch im Allgemeinen schwierig ist. Deshalb fordern wir nicht die
-analytische Optimalität der Schrittweite <span class="math notranslate nohighlight">\(\alpha_k &gt;0\)</span>, sondern
+analytische Optimalität der Schrittweite <span class="math">\(\alpha_k &gt;0\)</span>, sondern
 versuchen lediglich Bedingungen zu finden, die wir numerisch leicht
 überprüfen können und für die wir Konvergenz des Abstiegverfahrens
 garantieren können.</p>
-<p>Die Idee hierbei ist es für eine vorgegebene Schrittweite <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span>
+<p>Die Idee hierbei ist es für eine vorgegebene Schrittweite <span class="math">\(\alpha &gt; 0\)</span>
 eine Linearisierung des Problems zu betrachten und den linearisierten
 Abstieg mit dem echten Abstieg zu vergleichen. Hierzu machen wir
 zunächst folgende Definitionen.</p>
 <div class="proof definition admonition" id="def:erwarteter_abstieg">
 <p class="admonition-title"><span class="caption-number">Definition 1.9 </span> (Erwarteter und tatsächlicher Abstieg)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(F \colon \Omega \rightarrow \R\)</span> eine stetig differenzierbare
-Funktion für die wir das Abstiegsverfahren <span class="math notranslate nohighlight">\(x_{k
-+1} = x_k + \alpha p_k\)</span> für <span class="math notranslate nohighlight">\(x_k \in \Omega\)</span>,
-<span class="math notranslate nohighlight">\(p_k \in \R^n \setminus \lbrace 0\rbrace\)</span> und <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span> betrachten.
+<p>Sei <span class="math">\(F \colon \Omega \rightarrow \R\)</span> eine stetig differenzierbare
+Funktion für die wir das Abstiegsverfahren <span class="math">\(x_{k
++1} = x_k + \alpha p_k\)</span> für <span class="math">\(x_k \in \Omega\)</span>,
+<span class="math">\(p_k \in \R^n \setminus \lbrace 0\rbrace\)</span> und <span class="math">\(\alpha &gt; 0\)</span> betrachten.
 Wir definieren basierend auf der Taylorapproximation erster Ordnung den
-<strong>erwarteten Abstieg</strong> im Punkt <span class="math notranslate nohighlight">\(x_k\)</span> in Richtung <span class="math notranslate nohighlight">\(p_k\)</span> mit Schrittweite
-<span class="math notranslate nohighlight">\(\alpha\)</span> als</p>
-<div class="math notranslate nohighlight" id="equation-eq-abstieg-erwartet">
+<strong>erwarteten Abstieg</strong> im Punkt <span class="math">\(x_k\)</span> in Richtung <span class="math">\(p_k\)</span> mit Schrittweite
+<span class="math">\(\alpha\)</span> als</p>
+<div class="math" id="equation-eq-abstieg-erwartet">
 <span class="eqno">(1.45)<a class="headerlink" href="#equation-eq-abstieg-erwartet" title="Permalink to this equation">#</a></span>\[E_k(\alpha) \ \coloneqq \ F(x_k) + \alpha  \langle \nabla F(x_k), p_k \rangle - F(x_k) \ = \ \alpha \langle \nabla F(x_k), p_k \rangle.\]</div>
 <p>Darüber hinaus definieren wir für die gleichen Größen den
 <strong>tatsächlichen Abstieg</strong> als</p>
-<div class="math notranslate nohighlight" id="equation-eq-abstieg-tatsaechlich">
+<div class="math" id="equation-eq-abstieg-tatsaechlich">
 <span class="eqno">(1.46)<a class="headerlink" href="#equation-eq-abstieg-tatsaechlich" title="Permalink to this equation">#</a></span>\[D_k(\alpha) \ \coloneqq \ F(x_k  + \alpha p_k) - F(x_k) .\]</div>
 </section>
-</div><p>Unsere beiden Bedingungen an eine geeignete Schrittweite <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span>
+</div><p>Unsere beiden Bedingungen an eine geeignete Schrittweite <span class="math">\(\alpha &gt; 0\)</span>
 können wir nun über die Abweichung des erwarteten und tatsächlichen
-Abstiegs <span class="math notranslate nohighlight">\(D_k(\alpha)\)</span> und <span class="math notranslate nohighlight">\(E_k(\alpha)\)</span> in
+Abstiegs <span class="math">\(D_k(\alpha)\)</span> und <span class="math">\(E_k(\alpha)\)</span> in
 <a class="reference internal" href="#def:erwarteter_abstieg">Definition 1.9</a> formulieren.</p>
 <div class="proof definition admonition" id="def:armijo-goldstein">
 <p class="admonition-title"><span class="caption-number">Definition 1.10 </span> (Armijo-Goldstein Bedingungen)</p>
 <section class="definition-content" id="proof-content">
 <p>Sei ein allgemeines Abstiegsverfahren der Form
-<span class="math notranslate nohighlight">\(x_{k+1} = x_k + \alpha_k p_k\)</span> für eine vorgegebene Abstiegsrichtung
-<span class="math notranslate nohighlight">\(p_k \in \R^n\)</span> gegeben und seien <span class="math notranslate nohighlight">\(c_1, c_2 \in \R^+\)</span> Konstanten mit
-<span class="math notranslate nohighlight">\(0 &lt; c_1 &lt; c_2 &lt; 1\)</span>.</p>
+<span class="math">\(x_{k+1} = x_k + \alpha_k p_k\)</span> für eine vorgegebene Abstiegsrichtung
+<span class="math">\(p_k \in \R^n\)</span> gegeben und seien <span class="math">\(c_1, c_2 \in \R^+\)</span> Konstanten mit
+<span class="math">\(0 &lt; c_1 &lt; c_2 &lt; 1\)</span>.</p>
 <p>Dann formuliert man die sogenannten <strong>Armijo-Goldstein Bedingungen</strong> für
-die Wahl einer geeigneten Schrittweite <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> des
+die Wahl einer geeigneten Schrittweite <span class="math">\(\alpha_k &gt; 0\)</span> des
 Abstiegsverfahrens als</p>
-<div class="math notranslate nohighlight" id="equation-eq-armijo-goldstein">
-<span class="eqno">(1.47)<a class="headerlink" href="#equation-eq-armijo-goldstein" title="Permalink to this equation">#</a></span>\[c_1  E_k(\alpha_k) \: &gt; \: D_k(\alpha_k) \: &gt; \: c_2 E_k(\alpha_k),\]</div>
-<p>wobei <span class="math notranslate nohighlight">\(E_k\)</span> und <span class="math notranslate nohighlight">\(D_k\)</span> den erwarteten und tatsächlichen Abstieg aus
+<div class="math" id="equation-eq-armijo-goldstein">
+<span class="eqno">(1.47)<a class="headerlink" href="#equation-eq-armijo-goldstein" title="Permalink to this equation">#</a></span>\[c_1  E_k(\alpha_k) \: > \: D_k(\alpha_k) \: > \: c_2 E_k(\alpha_k),\]</div>
+<p>wobei <span class="math">\(E_k\)</span> und <span class="math">\(D_k\)</span> den erwarteten und tatsächlichen Abstieg aus
 <a class="reference internal" href="#equation-eq-abstieg-erwartet">(1.45)</a> und <a class="reference internal" href="#equation-eq-abstieg-tatsaechlich">(1.46)</a> definieren.
-Da wir den erwarteten Abstieg für kleine Schrittweiten <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span>
-als negativ annehmen, d.h., es gilt <span class="math notranslate nohighlight">\(E_k(\alpha_k) &lt; 0\)</span>, ist
+Da wir den erwarteten Abstieg für kleine Schrittweiten <span class="math">\(\alpha_k &gt; 0\)</span>
+als negativ annehmen, d.h., es gilt <span class="math">\(E_k(\alpha_k) &lt; 0\)</span>, ist
 <a class="reference internal" href="#equation-eq-armijo-goldstein">(1.47)</a> sinnvoll definiert.</p>
 </section>
 </div><p>Die erste Bedingung auf der linken Seite der Armijo-Goldstein
 Bedingungen in <a class="reference internal" href="#equation-eq-armijo-goldstein">(1.47)</a> garantiert, dass zumindest ein
 gewisser Teil des Abstiegs erreicht wird. Die zweite Bedingung auf der
-rechten Seite verhindert, dass wir uns zu stark dem Fall <span class="math notranslate nohighlight">\(\alpha_k =0\)</span>
+rechten Seite verhindert, dass wir uns zu stark dem Fall <span class="math">\(\alpha_k =0\)</span>
 annähern, in dem die rechte Seite zu einer Gleichheit mit Konstante
 gleich eins wird. Eine typische Wahl der Parameter in
-<a class="reference internal" href="#def:armijo-goldstein">Definition 1.10</a> ist <span class="math notranslate nohighlight">\(c_1 =0.1\)</span> und <span class="math notranslate nohighlight">\(c_2 = 0.9\)</span>.</p>
+<a class="reference internal" href="#def:armijo-goldstein">Definition 1.10</a> ist <span class="math">\(c_1 =0.1\)</span> und <span class="math">\(c_2 = 0.9\)</span>.</p>
 <p>In der Praxis lassen sich die Armijo-Goldstein Bedingungen wie folgt
 einsetzen. Man beginnt mit einer Schrittweite von
-<span class="math notranslate nohighlight">\(\alpha_{k} = \alpha_{k-1} &gt; 0\)</span>, die im letzten Iterationsschritt <span class="math notranslate nohighlight">\(k-1\)</span>
+<span class="math">\(\alpha_{k} = \alpha_{k-1} &gt; 0\)</span>, die im letzten Iterationsschritt <span class="math">\(k-1\)</span>
 zu einem Abstieg geführt hat und testet mit dieser die Armijo-Goldstein
 Bedingungen aus <a class="reference internal" href="#def:armijo-goldstein">Definition 1.10</a>. Ist die erste
 Ungleichung nicht erfüllt, d.h., für den tatsächlichen Abstieg gilt
-<span class="math notranslate nohighlight">\(c_1 E_k(\alpha_k) \leq D_k(\alpha_k)\)</span>, so verkleinert man die
+<span class="math">\(c_1 E_k(\alpha_k) \leq D_k(\alpha_k)\)</span>, so verkleinert man die
 Schrittweite (zum Beispiel durch Halbierung). Ist andererseits die
 zweite Ungleichung nicht erfüllt, d.h., für den tatsächlichen Abstieg
-gilt <span class="math notranslate nohighlight">\(D_k(\alpha_k) \leq c_2 E_k(\alpha_k)\)</span>, so vergrößert man die
+gilt <span class="math">\(D_k(\alpha_k) \leq c_2 E_k(\alpha_k)\)</span>, so vergrößert man die
 Schrittweite entsprechend. Um nicht in einen periodischen Zyklus zu
 geraten, sollte man zur Vergrößerung der Schrittweite einen anderen
-Faktor als zur Verkleinerung wählen, etwa <span class="math notranslate nohighlight">\(\sigma = 1.5\)</span>. Die Wahl der
+Faktor als zur Verkleinerung wählen, etwa <span class="math">\(\sigma = 1.5\)</span>. Die Wahl der
 Schrittweite nach den Armijo-Goldstein Regeln ist also relativ einfach
 durchführbar und führt zu einer beweisbaren Konvergenz eines
 Abstiegsverfahrens, wie das folgende Theorem zeigt.</p>
 <div class="proof theorem admonition" id="thm:konvergenz_abstieg">
 <p class="admonition-title"><span class="caption-number">Theorem 1.10 </span> (Konvergenz von Abstiegsverfahren)</p>
 <section class="theorem-content" id="proof-content">
-<p>Sei ein Abstiegsverfahren der Form <span class="math notranslate nohighlight">\(x_{k+1} = x_k + \alpha_k p_k\)</span>
-gegeben, mit einer Menge von Vektoren <span class="math notranslate nohighlight">\(p_k \in \R^n\)</span>, die für jeden
-Punkt <span class="math notranslate nohighlight">\(x_k \in \Omega\)</span>, der kein stationärer Punkt ist, eine uniforme
+<p>Sei ein Abstiegsverfahren der Form <span class="math">\(x_{k+1} = x_k + \alpha_k p_k\)</span>
+gegeben, mit einer Menge von Vektoren <span class="math">\(p_k \in \R^n\)</span>, die für jeden
+Punkt <span class="math">\(x_k \in \Omega\)</span>, der kein stationärer Punkt ist, eine uniforme
 Abstiegsrichung liefern, d.h., es existieren fixe Konstanten
-<span class="math notranslate nohighlight">\(\beta, \gamma &gt; 0\)</span>, so dass gilt</p>
-<div class="math notranslate nohighlight">
-\[\langle \nabla F(x_k), p_k \rangle \ &lt; \ - \gamma \cdot \Vert \nabla F(x_k)  \Vert^{\beta+1}.\]</div>
-<p>Die Folge der Schrittweiten <span class="math notranslate nohighlight">\((\alpha_k)_{k\in\N}\)</span> erfülle die
+<span class="math">\(\beta, \gamma &gt; 0\)</span>, so dass gilt</p>
+<div class="math">
+\[\langle \nabla F(x_k), p_k \rangle \ < \ - \gamma \cdot \Vert \nabla F(x_k)  \Vert^{\beta+1}.\]</div>
+<p>Die Folge der Schrittweiten <span class="math">\((\alpha_k)_{k\in\N}\)</span> erfülle die
 Armijo-Goldstein Bedingungen. Außerdem sei
-<span class="math notranslate nohighlight">\(F: \mathbb{R}^n \rightarrow \mathbb{R}\)</span> eine nach unten beschränkte,
+<span class="math">\(F: \mathbb{R}^n \rightarrow \mathbb{R}\)</span> eine nach unten beschränkte,
 stetig differenzierbare Zielfunktion, für die somit die Niveaumenge
-<span class="math notranslate nohighlight">\(K \coloneqq \{ x \in \R^n ~|~ F(x) \leq F(x_0) \}\)</span> beschränkt ist.</p>
-<p>Ist darüber hinaus die Folge der Abstiegsrichtungen <span class="math notranslate nohighlight">\((p_k)_{k\in\N}\)</span>
+<span class="math">\(K \coloneqq \{ x \in \R^n ~|~ F(x) \leq F(x_0) \}\)</span> beschränkt ist.</p>
+<p>Ist darüber hinaus die Folge der Abstiegsrichtungen <span class="math">\((p_k)_{k\in\N}\)</span>
 beschränkt, dann bestitzt die Folge der Iterationsschritte
-<span class="math notranslate nohighlight">\((x_k)_{k\in\N}\)</span> eine konvergente Teilfolge und jeder Häufungspunkt der
-Folge ist ein stationärer Punkt der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span>.</p>
+<span class="math">\((x_k)_{k\in\N}\)</span> eine konvergente Teilfolge und jeder Häufungspunkt der
+Folge ist ein stationärer Punkt der Zielfunktion <span class="math">\(F\)</span>.</p>
 </section>
 </div><div class="proof admonition" id="proof">
-<p>Proof. Falls für ein <span class="math notranslate nohighlight">\(k \in \N\)</span> gilt, dass der Vektor <span class="math notranslate nohighlight">\(p_k  = \vec{0}\)</span> ist, so
+<p>Proof. Falls für ein <span class="math">\(k \in \N\)</span> gilt, dass der Vektor <span class="math">\(p_k  = \vec{0}\)</span> ist, so
 haben wir bereits einen stationären Punkt erreicht und die Aussage des
 Theorems ist trivialerweise erfüllt.</p>
-<p>Nehmen wir also im Folgenden an, dass <span class="math notranslate nohighlight">\(p_k \neq \vec{0}\)</span> für alle
-<span class="math notranslate nohighlight">\(k \in \N\)</span> gilt und wir damit einen echten Abstieg vorliegen haben. In
+<p>Nehmen wir also im Folgenden an, dass <span class="math">\(p_k \neq \vec{0}\)</span> für alle
+<span class="math">\(k \in \N\)</span> gilt und wir damit einen echten Abstieg vorliegen haben. In
 diesem Fall impliziert die erste Armijo-Goldstein Bedingung
-<span class="math notranslate nohighlight">\(c_1 E_k(\alpha_k) &gt; D_k(\alpha_k)\)</span>, dass gilt</p>
-<div class="math notranslate nohighlight">
-\[F(x_{k+1}) - F(x_k) \: &lt; \: c_1 \cdot \alpha_k \langle \nabla F(x_k) ,p_k \rangle \: &lt; \: 0.\]</div>
+<span class="math">\(c_1 E_k(\alpha_k) &gt; D_k(\alpha_k)\)</span>, dass gilt</p>
+<div class="math">
+\[F(x_{k+1}) - F(x_k) \: < \: c_1 \cdot \alpha_k \langle \nabla F(x_k) ,p_k \rangle \: < \: 0.\]</div>
 <p>Induktiv gilt somit ebenfalls</p>
-<div class="math notranslate nohighlight" id="equation-eq-monotoner-abstieg">
-<span class="eqno">(1.48)<a class="headerlink" href="#equation-eq-monotoner-abstieg" title="Permalink to this equation">#</a></span>\[F(x_{k+1}) &lt; F(x_k) &lt; \ldots &lt; F(x_0).\]</div>
-<p>Also liegt die gesamte Folge <span class="math notranslate nohighlight">\((x_k)_{k\in\N}\)</span> in der nach Voraussetzung
-beschränkten Menge <span class="math notranslate nohighlight">\(K \coloneqq \{ x \in \R^n ~|~ F(x) \leq F(x_0) \}\)</span>
+<div class="math" id="equation-eq-monotoner-abstieg">
+<span class="eqno">(1.48)<a class="headerlink" href="#equation-eq-monotoner-abstieg" title="Permalink to this equation">#</a></span>\[F(x_{k+1}) < F(x_k) < \ldots < F(x_0).\]</div>
+<p>Also liegt die gesamte Folge <span class="math">\((x_k)_{k\in\N}\)</span> in der nach Voraussetzung
+beschränkten Menge <span class="math">\(K \coloneqq \{ x \in \R^n ~|~ F(x) \leq F(x_0) \}\)</span>
 und hat nach dem <em>Satz von Bolzano-Weierstrass</em> somit eine konvergente
-Teilfolge <span class="math notranslate nohighlight">\((x_{k_\ell})_{\ell \in \N}\)</span>. Darüber hinaus sehen wir ein,
-dass die Menge <span class="math notranslate nohighlight">\(K\)</span> ebenfalls abgeschlossen und somit nach dem <em>Satz von
-Heine-Borell</em> sogar kompakt ist. Daher liegt der Grenzwert <span class="math notranslate nohighlight">\(x^* \in K\)</span>
-ebenfalls in der Menge <span class="math notranslate nohighlight">\(K\)</span>.</p>
+Teilfolge <span class="math">\((x_{k_\ell})_{\ell \in \N}\)</span>. Darüber hinaus sehen wir ein,
+dass die Menge <span class="math">\(K\)</span> ebenfalls abgeschlossen und somit nach dem <em>Satz von
+Heine-Borell</em> sogar kompakt ist. Daher liegt der Grenzwert <span class="math">\(x^* \in K\)</span>
+ebenfalls in der Menge <span class="math">\(K\)</span>.</p>
 <p>Durch Einsetzen in die folgende Teleskopsumme</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[F(x_k) - F(x_0) \ = \ \sum_{j=0}^{k-1} F(x_{j+1}) - F(x_j)\]</div>
 <p>erhalten wir die stärkere Bedingung</p>
-<div class="math notranslate nohighlight" id="equation-eq-starke-bedingung">
-<span class="eqno">(1.49)<a class="headerlink" href="#equation-eq-starke-bedingung" title="Permalink to this equation">#</a></span>\[F(x_k) + c_1 \sum_{j=0}^{k-1} - \alpha_j \langle \nabla F(x_j), p_j \rangle \ &lt; \ F(x_0).\]</div>
+<div class="math" id="equation-eq-starke-bedingung">
+<span class="eqno">(1.49)<a class="headerlink" href="#equation-eq-starke-bedingung" title="Permalink to this equation">#</a></span>\[F(x_k) + c_1 \sum_{j=0}^{k-1} - \alpha_j \langle \nabla F(x_j), p_j \rangle \ < \ F(x_0).\]</div>
 <p>Mit der nach Voraussetzung geltenden uniformen Schranke folgt dann für
-fixe Konstanten <span class="math notranslate nohighlight">\(\beta, \gamma &gt; 0\)</span> und für alle <span class="math notranslate nohighlight">\(k \in \N\)</span> die
+fixe Konstanten <span class="math">\(\beta, \gamma &gt; 0\)</span> und für alle <span class="math">\(k \in \N\)</span> die
 Ungleichung</p>
-<div class="math notranslate nohighlight">
-\[|| \nabla F(x_k) ||^{\beta + 1} \: &lt; \: -\frac{1}{\gamma} \langle \nabla F(x_k), p_k \rangle.\]</div>
-<p>Da die Niveaumenge <span class="math notranslate nohighlight">\(K\)</span> kompakt ist wissen wir, dass ein Punkt
-<span class="math notranslate nohighlight">\(x^* \in K\)</span> existiert in der die Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> ihr Minimum auf <span class="math notranslate nohighlight">\(K\)</span>
+<div class="math">
+\[|| \nabla F(x_k) ||^{\beta + 1} \: < \: -\frac{1}{\gamma} \langle \nabla F(x_k), p_k \rangle.\]</div>
+<p>Da die Niveaumenge <span class="math">\(K\)</span> kompakt ist wissen wir, dass ein Punkt
+<span class="math">\(x^* \in K\)</span> existiert in der die Zielfunktion <span class="math">\(F\)</span> ihr Minimum auf <span class="math">\(K\)</span>
 annimmt. Dann gilt wegen <a class="reference internal" href="#equation-eq-monotoner-abstieg">(1.48)</a> offensichtlich für
-alle <span class="math notranslate nohighlight">\(k \in \N\)</span></p>
-<div class="math notranslate nohighlight">
-\[0 \: &lt; \: F(x_0) - F(x_k) \: &lt; \: F(x_0) - F(x^*) \ =: \ M.\]</div>
+alle <span class="math">\(k \in \N\)</span></p>
+<div class="math">
+\[0 \: < \: F(x_0) - F(x_k) \: < \: F(x_0) - F(x^*) \ =: \ M.\]</div>
 <p>Zusammen mit der Ungleichung <a class="reference internal" href="#equation-eq-starke-bedingung">(1.49)</a> können wir somit
 folgern, dass gilt</p>
-<div class="math notranslate nohighlight">
-\[\sum_{j=0}^{k-1}  \alpha_j \Vert \nabla F(x_j) \Vert^{\beta+1}  \ \leq \ \frac{1}\gamma \sum_{j=0}^{k-1} - \alpha_j \langle \nabla F(x_j), p_j \rangle \ \leq \ \frac{1}{\gamma c_1} (F(x_0) - F(x_k)) \: &lt; \: \frac{M}{\gamma c_1}.\]</div>
+<div class="math">
+\[\sum_{j=0}^{k-1}  \alpha_j \Vert \nabla F(x_j) \Vert^{\beta+1}  \ \leq \ \frac{1}\gamma \sum_{j=0}^{k-1} - \alpha_j \langle \nabla F(x_j), p_j \rangle \ \leq \ \frac{1}{\gamma c_1} (F(x_0) - F(x_k)) \: < \: \frac{M}{\gamma c_1}.\]</div>
 <p>Damit gilt offensichtlich
-<span class="math notranslate nohighlight">\(\alpha_k ||\nabla F(x_k)||^{\beta + 1} \rightarrow 0\)</span> und somit gilt
-ebenfalls <span class="math notranslate nohighlight">\(\alpha_k \nabla F(x_k) \rightarrow \vec{0}\)</span> für
-<span class="math notranslate nohighlight">\(k \rightarrow \infty\)</span>.</p>
+<span class="math">\(\alpha_k ||\nabla F(x_k)||^{\beta + 1} \rightarrow 0\)</span> und somit gilt
+ebenfalls <span class="math">\(\alpha_k \nabla F(x_k) \rightarrow \vec{0}\)</span> für
+<span class="math">\(k \rightarrow \infty\)</span>.</p>
 <p>Nun müssen wir abschließend noch zeigen, dass die Folge der
-Schrittweiten <span class="math notranslate nohighlight">\((\alpha_k)_{k \in \N}\)</span> selbst nicht gegen Null
-konvergiert, damit <span class="math notranslate nohighlight">\(\nabla F(x_k) \rightarrow \vec{0}\)</span> gilt und somit
-die Folge der Iterationsschritte <span class="math notranslate nohighlight">\((x_k)_{k\in\N}\)</span> gegen einen
-stationären Punkt der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> konvergiert. Nehmen wir also das
-Gegenteil für eine Teilfolge <span class="math notranslate nohighlight">\((\alpha_{k_\ell})_{\ell \in \N}\)</span> an, die
+Schrittweiten <span class="math">\((\alpha_k)_{k \in \N}\)</span> selbst nicht gegen Null
+konvergiert, damit <span class="math">\(\nabla F(x_k) \rightarrow \vec{0}\)</span> gilt und somit
+die Folge der Iterationsschritte <span class="math">\((x_k)_{k\in\N}\)</span> gegen einen
+stationären Punkt der Zielfunktion <span class="math">\(F\)</span> konvergiert. Nehmen wir also das
+Gegenteil für eine Teilfolge <span class="math">\((\alpha_{k_\ell})_{\ell \in \N}\)</span> an, die
 gegen Null konvergiert, so gilt auch
-<span class="math notranslate nohighlight">\(\alpha_{k_\ell} p_{k_\ell} \rightarrow \vec{0}\)</span>. Damit gilt aber schon
-für beliebiges <span class="math notranslate nohighlight">\(\epsilon &gt; 0\)</span> mit <span class="math notranslate nohighlight">\((1-\epsilon) &gt; c_2\)</span>, dass für
-hinreichend große <span class="math notranslate nohighlight">\(k_\ell \in \N\)</span> die folgende Ungleichung erfüllt ist:</p>
-<div class="math notranslate nohighlight">
-\[F(x_{k_\ell} + \alpha_{k_\ell} p_{k_\ell}) - F(x_{k_\ell}) \: \leq \: (1-\epsilon) \cdot \alpha_{k_\ell} \langle \nabla F(x_{k_\ell}), p_{k_\ell} \rangle \: &lt; \: c_2 \cdot \alpha_{k_\ell} \langle \nabla F(x_{k_\ell}), p_{k_\ell}\rangle.\]</div>
+<span class="math">\(\alpha_{k_\ell} p_{k_\ell} \rightarrow \vec{0}\)</span>. Damit gilt aber schon
+für beliebiges <span class="math">\(\epsilon &gt; 0\)</span> mit <span class="math">\((1-\epsilon) &gt; c_2\)</span>, dass für
+hinreichend große <span class="math">\(k_\ell \in \N\)</span> die folgende Ungleichung erfüllt ist:</p>
+<div class="math">
+\[F(x_{k_\ell} + \alpha_{k_\ell} p_{k_\ell}) - F(x_{k_\ell}) \: \leq \: (1-\epsilon) \cdot \alpha_{k_\ell} \langle \nabla F(x_{k_\ell}), p_{k_\ell} \rangle \: < \: c_2 \cdot \alpha_{k_\ell} \langle \nabla F(x_{k_\ell}), p_{k_\ell}\rangle.\]</div>
 <p>Dies ist jedoch nicht möglich, da die Armijo-Goldstein Bedingungen nach
 Voraussetzung erfüllt sind. ◻</p>
 </div>
 <p>Für das Gradientenabstiegsverfahren bzw. dessen Varianten in
 <a class="reference internal" href="../02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html#ss-gradient-descent"><span class="std std-ref">Gradientenabstiegsverfahren</span></a> können wir im folgenden Korollar noch mehr
-zeigen,, da die Abstiegsvektoren <span class="math notranslate nohighlight">\(p_k \in \R^n\)</span> in direkter Verbindung
-zum Gradienten der Zielfunktion <span class="math notranslate nohighlight">\(-\nabla F(x_k)\)</span> stehen.</p>
+zeigen,, da die Abstiegsvektoren <span class="math">\(p_k \in \R^n\)</span> in direkter Verbindung
+zum Gradienten der Zielfunktion <span class="math">\(-\nabla F(x_k)\)</span> stehen.</p>
 <div class="proof corollary admonition" id="corollary-3">
 <p class="admonition-title"><span class="caption-number">Corollary 1.2 </span> (Konvergenz des Gradientenabstiegverfahrens)</p>
 <section class="corollary-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(F: \mathbb{R}^n \rightarrow \mathbb{R}\)</span> eine nach unten
+<p>Sei <span class="math">\(F: \mathbb{R}^n \rightarrow \mathbb{R}\)</span> eine nach unten
 beschränkte, stetig differenzierbare Funktion, so dass die Niveaumenge
-<span class="math notranslate nohighlight">\(K \coloneqq \{ x \in \R^n ~|~ F(x) \leq F(x_0) \}\)</span> beschränkt ist.
+<span class="math">\(K \coloneqq \{ x \in \R^n ~|~ F(x) \leq F(x_0) \}\)</span> beschränkt ist.
 Gegeben sei außerdem eine Wahl an Abstiegsrichtungen der Form</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[p_k \ = \ -A_k \nabla F(x_k),\]</div>
-<p>wobei für jedes <span class="math notranslate nohighlight">\(k \in \N\)</span> die Matrix <span class="math notranslate nohighlight">\(A_k \in \mathbb{R}^{n \times n}\)</span>
+<p>wobei für jedes <span class="math">\(k \in \N\)</span> die Matrix <span class="math">\(A_k \in \mathbb{R}^{n \times n}\)</span>
 symmetrisch positiv definit ist. Der kleinste und größte Eigenwert der
-Matrizen <span class="math notranslate nohighlight">\(A_k\)</span> seien darüber hinaus für jedes <span class="math notranslate nohighlight">\(k \in \N\)</span> uniform durch
-<span class="math notranslate nohighlight">\(\lambda_{max} \geq \lambda_{min} &gt; 0\)</span> nach unten bzw. nach oben
+Matrizen <span class="math">\(A_k\)</span> seien darüber hinaus für jedes <span class="math">\(k \in \N\)</span> uniform durch
+<span class="math">\(\lambda_{max} \geq \lambda_{min} &gt; 0\)</span> nach unten bzw. nach oben
 beschränkt.</p>
-<p>Dann hat die Folge <span class="math notranslate nohighlight">\((x_k)_{k \in \N}\)</span> eine konvergente Teilfolge und
-jeder Häufungspunkt ist ein stationärer Punkt von <span class="math notranslate nohighlight">\(F\)</span>.</p>
+<p>Dann hat die Folge <span class="math">\((x_k)_{k \in \N}\)</span> eine konvergente Teilfolge und
+jeder Häufungspunkt ist ein stationärer Punkt von <span class="math">\(F\)</span>.</p>
 </section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. In den Übungsaufgaben zu zeigen. ◻</p>

@@ -125,11 +125,12 @@ etwas näher diskutieren. Dazu beachten wir, dass falls die Funktion $F$
 im zweiten Argument Lipschitz-stetig ist (mit Lipschitz-Konstante
 $L > 0$), folgendes gilt
 ```{math}
+\begin{aligned}
 \Vert {\cal F}(u_1) - {\cal F}(u_2) \Vert_\infty \ &= \ \max_{0 \leq t \leq T} \left\vert \int_0^t F(s,u_1(s)) - F(s,u_2(s)) \, \mathrm{d}s \right\vert \\
 &\leq \  \max_{0 \leq t \leq T} \int_0^t \vert  F(s,u_1(s)) - F(s,u_2(s))\vert \, \mathrm{d}s\\
 &\leq  \ L \cdot \max_{0 \leq t \leq T} \int_0^t \vert u_1(s) - u_2(s) \vert  \, \mathrm{d}s\\
 &\leq  \ L T \cdot \max_{0 \leq s \leq T} \vert u_1(s) - u_2(s) \vert \ = \ L T \cdot \Vert u_1 - u_2 \Vert_\infty. 
-
+\end{aligned}
 ```
 Wir erkennen an dieser Abschätzung, dass die Abbildung
 ${\cal F}:C^1([0,T]) \rightarrow C^1([0,T])$ kontraktiv ist, wenn
@@ -275,8 +276,9 @@ und höchstens wie $e^{Lt}$ wächst:
 ```
 Dies führt zu der Idee, die folgende gewichtete Norm zu betrachten:
 ```{math}
+\begin{aligned}
 \Vert u \Vert_{\infty,L} \ \coloneqq \ \max_{0 \leq t \leq T} e^{-Lt} \cdot \vert u(t) \vert.
-
+\end{aligned}
 ```
 Da $e^{-Lt}$ nach oben durch Eins und nach unten durch $e^{-LT} \geq 0$
 beschränkt ist, ist dies eine äquivalente Norm im Raum der stetig
@@ -285,11 +287,12 @@ differenzierbaren Funktionen $C^1([0,T])$.
 Wir wiederholen also unsere Abschätzung des Fixpunktoperators in dieser
 konstruierten Norm und erhalten somit
 ```{math}
+\begin{aligned}
 \Vert {\cal F}(u_1) - {\cal F}(u_2) \Vert_{L,\infty} \ &= \ \max_{0 \leq t \leq T}  e^{-Lt} \cdot \left\vert \int_0^t F(s,u_1(s)) - F(s,u_2(s)) \,\mathrm{d}s \right\vert \\
 &\leq \ \max_{0 \leq t \leq T} \int_0^t e^{L(s-t)} \cdot e^{-Ls} \cdot \vert  F(s,u_1(s)) - F(s,u_2(s))\vert\,\mathrm{d}s\\
 &\leq  \ \int_0^T e^{-L\tau}\,\mathrm{d}\tau \cdot \max_{0 \leq s \leq T}  e^{-Ls} \cdot L \cdot \vert u_1(s) - u_2(s) \vert \\
 &= \ (1-e^{-LT}) \cdot \Vert u_1 - u_2 \Vert_{L,\infty}. 
-
+\end{aligned}
 ```
 Der Operator ist nun also kontraktiv bezüglich der gewählten Norm für
 beliebiges $T > 0$, da stets $1- e^{-LT} < 1$ gilt.

@@ -36,6 +36,8 @@
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/katex-math.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -57,6 +59,9 @@
     <script src="_static/translations.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js"></script>
+    <script src="_static/katex.min.js"></script>
+    <script src="_static/auto-render.min.js"></script>
+    <script src="_static/katex_autorenderer.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
@@ -175,6 +180,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="ode/04_Anfangswertprobleme/00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -690,7 +696,7 @@ document.write(`
      <tr>
        <td></td>
        <td>
-       <a href="optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html#definition-4"><code class="xref">definition-4</code></a> <em>(optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung)</em></td><td>
+       <a href="ode/04_Anfangswertprobleme/02_04_Anfangswertprobleme.html#definition-4"><code class="xref">definition-4</code></a> <em>(ode/04_Anfangswertprobleme/02_04_Anfangswertprobleme)</em></td><td>
        <em>definition</em></td></tr>
      <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
      <tr class="cap" id="cap-definition-5"><td></td><td>
@@ -1026,7 +1032,7 @@ document.write(`
      <tr>
        <td></td>
        <td>
-       <a href="optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html#remark-10"><code class="xref">remark-10</code></a> <em>(optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2)</em></td><td>
+       <a href="optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung.html#remark-10"><code class="xref">remark-10</code></a> <em>(optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung)</em></td><td>
        <em>remark</em></td></tr>
      <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
      <tr class="cap" id="cap-remark-11"><td></td><td>

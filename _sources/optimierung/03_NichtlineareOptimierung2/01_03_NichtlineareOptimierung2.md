@@ -92,7 +92,7 @@ Basierend auf dieser Beobachtung im Eindimensionalen können wir auch das
 Subdifferential der $\ell^1$-Norm im $\R^n$ im folgenden Beispiel
 ausrechnen.
 
-````{prf:example} Subdifferential der $\ell^1$-Norm
+````{prf:example} Subdifferential der \\ell\^1-Norm
 Wir betrachten die $\ell^1$-Norm, die durch die konvexe Funktion
 $H(x) = \Vert x \Vert_{\ell^1}$ gegeben ist. Dann können wir das
 Subdifferential der $\ell^1$-Norm für alle Punkte $x \in \R^n$ angeben
@@ -173,8 +173,9 @@ automatisch Iterationsschritte $x_{k+1} \in \R^n$ mit nichtleerem
 Subdifferential und ebenso ein $p_{k+1} \in \partial H(x_{k+1})$
 ausgewählt werden.
 
+
 (ss:proximal_splitting)=
-## Proximales Splitting
+# Proximales Splitting
 
 Die Idee des sogenannten proximalen Splitting, auch *Forward-Backward
 Splitting* genannt, ist es den differenzierbaren Teil genauso wie beim
@@ -340,9 +341,10 @@ Ungleichung*:
 Wegen {prf:ref}`def:subdifferential` des Subgradienten können wir
 festhalten, dass gilt
 ```{math}
+\begin{aligned}
 \langle p_1, x_1- x_2 \rangle \ &\geq \ H(x_1) - H(x_2) \\
 \langle p_2, x_2- x_1 \rangle \ &\geq \ H(x_2) - H(x_1).
-
+\end{aligned}
 ```
 Addieren wir diese beiden Ungleichungen, so erhalten wir insgesamt
 $\langle p_1 - p_2, x_1-x_2 \rangle \geq 0$. Damit können wir die linke
@@ -521,11 +523,12 @@ vertauschen können (was möglich ist, falls ein Sattelpunkt existiert)
 und nutzen die Relationen $\inf_{x,y} - E(x,y) = - \sup_{x,y} E(x,y)$
 und $\sup_{z} -F(z) = - \inf_{z} F(z)$ dann lösen wir
 ```{math}
+\begin{aligned}
 &\quad \ \sup_{z \in \R^n} \inf_{x,y \in \R^n} (G(x) + J(y) + \langle z, Bx - y\rangle) \\
 &= \ \sup_{z \in \R^n} \inf_{x,y \in \R^n} -(\langle z,y \rangle - J(y) + \langle -B^Tz, x \rangle - G(x) )\\
 &= \ - \inf_{z \in \R^n}  \sup_{x,y \in \R^n} \ (\langle z,y \rangle - J(y) + \langle -B^Tz, x \rangle - G(x) ) \\
 &= \ - \inf_{z \in \R^n} ( \sup_{y \in \R^n} (\langle z,y \rangle - J(y)) + \sup_{x \in \R^n} (\langle -B^Tz, x \rangle - G(x)) ) .
-
+\end{aligned}
 ```
 Bevor wir eine sogenannte primal-duale Formulierungen des ursprünglichen
 Problems herleiten, werden wir zunächst die Konvex-Konjugierte

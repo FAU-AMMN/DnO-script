@@ -37,6 +37,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -58,14 +60,15 @@
     <script src="../../_static/translations.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/katex.min.js"></script>
+    <script src="../../_static/auto-render.min.js"></script>
+    <script src="../../_static/katex_autorenderer.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'optimierung/02_NichtlineareOptimierung/02_02_NichtlineareOptimierung';</script>
     <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
     <link rel="search" title="Suche" href="../../search.html" />
@@ -173,6 +176,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../ode/04_Anfangswertprobleme/00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -382,19 +386,19 @@ wurden bereits kurz im Zusammenhang mit dem Gauss-Newton Verfahren in
 der Vorlesung Einführung in die Numerik in <span id="id1">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span> erwähnt,
 jedoch nicht ausführlich diskutiert. Dies wollen wir im Folgenden
 nachholen.</p>
-<p>Sei im Folgenden <span class="math notranslate nohighlight">\(\Omega \subset \mathbb{R}^n\)</span> ein offenes,
+<p>Sei im Folgenden <span class="math">\(\Omega \subset \mathbb{R}^n\)</span> ein offenes,
 zusammenhängendes Gebiet und sei
-<span class="math notranslate nohighlight">\(F \colon \Omega \rightarrow \mathbb{R}\)</span> eine differenzierbare,
+<span class="math">\(F \colon \Omega \rightarrow \mathbb{R}\)</span> eine differenzierbare,
 reellwertige Zielfunktion. Die allgemeine Idee der Abstiegsverfahren ist
-es nun ausgehend von einem aktuellen Punkt <span class="math notranslate nohighlight">\(x_k \in \Omega\)</span> einen
-Schritt in eine Richtung <span class="math notranslate nohighlight">\(p_k \in \mathbb{R}^n\)</span> zu machen, so dass der
-Funktionswert von <span class="math notranslate nohighlight">\(F\)</span> in dem neuen Punkt <span class="math notranslate nohighlight">\(x_{k+1}\)</span> abnimmt. Das bedeutet
+es nun ausgehend von einem aktuellen Punkt <span class="math">\(x_k \in \Omega\)</span> einen
+Schritt in eine Richtung <span class="math">\(p_k \in \mathbb{R}^n\)</span> zu machen, so dass der
+Funktionswert von <span class="math">\(F\)</span> in dem neuen Punkt <span class="math">\(x_{k+1}\)</span> abnimmt. Das bedeutet
 wir versuchen ein <strong>allgemeines Abstiegsverfahren</strong> der Form</p>
-<div class="math notranslate nohighlight" id="equation-eq-abstiegsverfahren">
+<div class="math" id="equation-eq-abstiegsverfahren">
 <span class="eqno">(1.3)<a class="headerlink" href="#equation-eq-abstiegsverfahren" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k + \alpha_k p_k, \quad \alpha_k \in \R^+,\]</div>
-<p>zu konstruieren, das in jedem Schritt den Funktionswert <span class="math notranslate nohighlight">\(F(x_k)\)</span>
+<p>zu konstruieren, das in jedem Schritt den Funktionswert <span class="math">\(F(x_k)\)</span>
 verringert bis keine Verbesserung mehr möglich ist. Die Schrittweite
-<span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> in Richtung <span class="math notranslate nohighlight">\(p_k \in \mathbb{R}^n\)</span> wird häufig in jedem
+<span class="math">\(\alpha_k &gt; 0\)</span> in Richtung <span class="math">\(p_k \in \mathbb{R}^n\)</span> wird häufig in jedem
 Schritt des Abstiegsverfahrens neu gewählt.</p>
 <section id="gradientenabstiegsverfahren">
 <span id="ss-gradient-descent"></span><h2><span class="section-number">1.2.1. </span>Gradientenabstiegsverfahren<a class="headerlink" href="#gradientenabstiegsverfahren" title="Permalink to this heading">#</a></h2>
@@ -402,81 +406,82 @@ Schritt des Abstiegsverfahrens neu gewählt.</p>
 dem <em>Gradientenabstiegsverfahren</em> (im Englischen: <em>gradient descent
 (GD)</em>). Dieses wird wegen seiner Einfachheit für viele numerische
 Optimierungsprobleme verwendet.</p>
-<p>Da <span class="math notranslate nohighlight">\(F\)</span> differenzierbar ist können wir dessen Gradienten in jedem Punkt
-<span class="math notranslate nohighlight">\(x \in \Omega\)</span> betrachten. Wir gehen im Folgenden immer davon aus, dass
-wir den Gradienten <span class="math notranslate nohighlight">\(\nabla F\)</span> der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> analytisch bestimmen
-können und eine Auswertung <span class="math notranslate nohighlight">\(\nabla F(x_k)\)</span> für eine Folge von Punkten
-<span class="math notranslate nohighlight">\((x_i)_{i\in\N} \subset \Omega\)</span> numerisch durchführbar ist. Wir werden
+<p>Da <span class="math">\(F\)</span> differenzierbar ist können wir dessen Gradienten in jedem Punkt
+<span class="math">\(x \in \Omega\)</span> betrachten. Wir gehen im Folgenden immer davon aus, dass
+wir den Gradienten <span class="math">\(\nabla F\)</span> der Zielfunktion <span class="math">\(F\)</span> analytisch bestimmen
+können und eine Auswertung <span class="math">\(\nabla F(x_k)\)</span> für eine Folge von Punkten
+<span class="math">\((x_i)_{i\in\N} \subset \Omega\)</span> numerisch durchführbar ist. Wir werden
 also nicht versuchen den Gradienten mit Hilfe von <em>finiten
 Differenzenverfahren</em> numerisch zu approximieren.</p>
-<p>Der Gradient <span class="math notranslate nohighlight">\(\nabla F(x)\)</span> beschreibt bekanntlich eine Richtung des
-stärksten Anstiegs der Funktion <span class="math notranslate nohighlight">\(F\)</span> im Punkt <span class="math notranslate nohighlight">\(x\)</span> und dementsprechend
-zeigt der negative Gradient <span class="math notranslate nohighlight">\(-\nabla F(x)\)</span> in die Richtung des stärksten
+<p>Der Gradient <span class="math">\(\nabla F(x)\)</span> beschreibt bekanntlich eine Richtung des
+stärksten Anstiegs der Funktion <span class="math">\(F\)</span> im Punkt <span class="math">\(x\)</span> und dementsprechend
+zeigt der negative Gradient <span class="math">\(-\nabla F(x)\)</span> in die Richtung des stärksten
 Abstiegs. Das lässt sich auch formal zeigen indem wir uns die
-Taylorapproximation erster Ordnung der Funktion <span class="math notranslate nohighlight">\(F\)</span> in allgemeine
-Richtung <span class="math notranslate nohighlight">\(p\)</span> mit Schrittweite <span class="math notranslate nohighlight">\(\alpha &gt; 0\)</span> für den <span class="math notranslate nohighlight">\(k\)</span>-ten Schritt des
-Abstiegsverfahren näher anschauen. Hier gilt nämlich</p>
-<div class="math notranslate nohighlight">
+Taylorapproximation erster Ordnung der Funktion <span class="math">\(F\)</span> in allgemeine
+Richtung <span class="math">\(p \in \R^n / \lbrace 0 \rbrace\)</span> mit Schrittweite <span class="math">\(\alpha &gt; 0\)</span>
+für den <span class="math">\(k\)</span>-ten Schritt des Abstiegsverfahren näher anschauen. Hier gilt
+nämlich</p>
+<div class="math">
 \[F(x_k + \alpha p) \ = \ F(x_k) + \alpha \langle \nabla F(x_k), p \rangle + \mathcal{O}( \nabla^2 F(x_k)),\]</div>
-<p>wobei <span class="math notranslate nohighlight">\(\nabla^2 F\)</span> die Hesse-Matrix der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> bezeichnet. Für
-kleine Schrittweiten <span class="math notranslate nohighlight">\(\alpha\)</span> wird klar, dass die Änderung der
-Funktionswerte von <span class="math notranslate nohighlight">\(F\)</span> im Wesentlichen von der Größe des Terms
-<span class="math notranslate nohighlight">\(\langle \nabla F(x_k), p \rangle\)</span> bestimmt wird. Wir können also für
-eine maximale Verringerung der Funktion <span class="math notranslate nohighlight">\(F\)</span> nach derjenigen Richtung mit
+<p>wobei <span class="math">\(\nabla^2 F\)</span> die Hesse-Matrix der Zielfunktion <span class="math">\(F\)</span> bezeichnet. Für
+kleine Schrittweiten <span class="math">\(\alpha\)</span> wird klar, dass die Änderung der
+Funktionswerte von <span class="math">\(F\)</span> im Wesentlichen von der Größe des Terms
+<span class="math">\(\langle \nabla F(x_k), p \rangle\)</span> bestimmt wird. Wir können also für
+eine maximale Verringerung der Funktion <span class="math">\(F\)</span> nach derjenigen Richtung mit
 Einheitslänge suchen, die das folgende Minimierungsproblem löst:</p>
-<div class="math notranslate nohighlight" id="equation-eq-optimization-direction">
+<div class="math" id="equation-eq-optimization-direction">
 <span class="eqno">(1.4)<a class="headerlink" href="#equation-eq-optimization-direction" title="Permalink to this equation">#</a></span>\[\min_{p \in \mathbb{R}^n} \langle \nabla F(x_k), p \rangle \quad \text{ mit } \quad ||p|| = 1.\]</div>
 <p>Da außerdem gilt</p>
-<div class="math notranslate nohighlight" id="equation-eq-optimization-direction-cosine">
+<div class="math" id="equation-eq-optimization-direction-cosine">
 <span class="eqno">(1.5)<a class="headerlink" href="#equation-eq-optimization-direction-cosine" title="Permalink to this equation">#</a></span>\[ \langle \nabla F(x_k), p \rangle \ = \ ||\nabla F(x_k)|| \cdot ||p|| \cdot \cos(\theta),\]</div>
-<p>wobei <span class="math notranslate nohighlight">\(\theta\)</span> der Winkel zwischen den Vektoren <span class="math notranslate nohighlight">\(\nabla F(x_k)\)</span> und <span class="math notranslate nohighlight">\(p\)</span>
+<p>wobei <span class="math">\(\theta\)</span> der Winkel zwischen den Vektoren <span class="math">\(\nabla F(x_k)\)</span> und <span class="math">\(p\)</span>
 bildet, können wir das Problem <a class="reference internal" href="#equation-eq-optimization-direction">(1.4)</a>
 umschreiben zu</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\min_{\theta \in [0,2\pi)} ||\nabla F(x_k)|| \cdot \cos(\theta).\]</div>
-<p>Der Kosinus nimmt sein Minimum von <span class="math notranslate nohighlight">\(\cos(\theta)=-1\)</span> in <span class="math notranslate nohighlight">\(\theta = \pi\)</span>
+<p>Der Kosinus nimmt sein Minimum von <span class="math">\(\cos(\theta)=-1\)</span> in <span class="math">\(\theta = \pi\)</span>
 an. Eingesetzt in <a class="reference internal" href="#equation-eq-optimization-direction-cosine">(1.5)</a> erhalten wir
-damit, dass die optimale Richtung <span class="math notranslate nohighlight">\(p \in \mathbb{R}^n\)</span> folgenden
+damit, dass die optimale Richtung <span class="math">\(p \in \mathbb{R}^n\)</span> folgenden
 Zusammenhang erfüllen muss:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\langle p, \frac{\nabla F(x_k)}{||\nabla F(x_k)||}\rangle \ = \ -1.\]</div>
-<p>Da die unbekannte Richtung <span class="math notranslate nohighlight">\(p \in \R^n\)</span> aber normiert sein soll, folgt
+<p>Da die unbekannte Richtung <span class="math">\(p \in \R^n\)</span> aber normiert sein soll, folgt
 damit aber auch schon, dass gilt</p>
-<div class="math notranslate nohighlight" id="equation-eq-optimal-direction">
+<div class="math" id="equation-eq-optimal-direction">
 <span class="eqno">(1.6)<a class="headerlink" href="#equation-eq-optimal-direction" title="Permalink to this equation">#</a></span>\[p \ = \ -\frac{\nabla F(x_k)}{||\nabla F(x_k)||}.\]</div>
-<p>Das bedeutet, dass der Funktionswert von <span class="math notranslate nohighlight">\(F\)</span> am stärksten in Richtung
+<p>Das bedeutet, dass der Funktionswert von <span class="math">\(F\)</span> am stärksten in Richtung
 des negativen Gradienten abnimmt.</p>
-<p>Da wir daran interessiert sind die Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> schnellstmöglich zu
+<p>Da wir daran interessiert sind die Zielfunktion <span class="math">\(F\)</span> schnellstmöglich zu
 minimieren, macht es Sinn in eben dieser Richtung nach einem lokalen
 Minimum zu suchen. Aus dieser Idee heraus lässt sich bereits ein sehr
-simpler Algorithmus zur Minimierung von <span class="math notranslate nohighlight">\(F\)</span> formulieren. Sei
-<span class="math notranslate nohighlight">\(x_0 \in \Omega\)</span> ein beliebiger Startwert. Dann können wir iterativ eine
-Folge von Punkten <span class="math notranslate nohighlight">\(x_1,x_2,\ldots\)</span> in <span class="math notranslate nohighlight">\(\Omega\)</span> bestimmen, so dass die
-entsprechenden Funktionswerte von <span class="math notranslate nohighlight">\(F\)</span> monoton fallen sollten:</p>
-<div class="math notranslate nohighlight" id="equation-eq-gradient-descent-simple">
+simpler Algorithmus zur Minimierung von <span class="math">\(F\)</span> formulieren. Sei
+<span class="math">\(x_0 \in \Omega\)</span> ein beliebiger Startwert. Dann können wir iterativ eine
+Folge von Punkten <span class="math">\(x_1,x_2,\ldots\)</span> in <span class="math">\(\Omega\)</span> bestimmen, so dass die
+entsprechenden Funktionswerte von <span class="math">\(F\)</span> monoton fallen sollten:</p>
+<div class="math" id="equation-eq-gradient-descent-simple">
 <span class="eqno">(1.7)<a class="headerlink" href="#equation-eq-gradient-descent-simple" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \nabla F(x_k).\]</div>
 <p>Intuitiv stoppt man das Iterationsschema
 <a class="reference internal" href="#equation-eq-gradient-descent-simple">(1.7)</a> sobald die Folge der Funktionswerte
-<span class="math notranslate nohighlight">\(F(x_k)\)</span> nicht mehr kleiner wird. Man sieht leicht ein, dass das simple
+<span class="math">\(F(x_k)\)</span> nicht mehr kleiner wird. Man sieht leicht ein, dass das simple
 Iterationsschema <a class="reference internal" href="#equation-eq-gradient-descent-simple">(1.7)</a> ein Spezialfall des
 allgemeinen Abstiegsverfahrens <a class="reference internal" href="#equation-eq-abstiegsverfahren">(1.3)</a> mit einer
-festen Schrittweite <span class="math notranslate nohighlight">\(\alpha_k = 1\)</span> und Richtungsvektor
-<span class="math notranslate nohighlight">\(p_k = -\nabla F(x_k)\)</span> ist. Diese einfache Methode lässt sich durch
+festen Schrittweite <span class="math">\(\alpha_k = 1\)</span> und Richtungsvektor
+<span class="math">\(p_k = -\nabla F(x_k)\)</span> ist. Diese einfache Methode lässt sich durch
 folgenden Algorithmus implementieren.</p>
 <div class="proof algorithm admonition" id="alg:gradient_descent_simple">
 <p class="admonition-title"><span class="caption-number">Algorithm 1.1 </span> (Simples Gradientenabstiegsverfahren)</p>
 <section class="algorithm-content" id="proof-content">
-<p><strong>function</strong> <span class="math notranslate nohighlight">\([x^*, F(x^*)]=\)</span><code class="docutils literal notranslate"><span class="pre">gradientDescentSimple</span></code><span class="math notranslate nohighlight">\((F,\nabla F, x_0)\)</span></p>
+<p><strong>function</strong> <span class="math">\([x^*, F(x^*)]=\)</span><code class="docutils literal notranslate"><span class="pre">gradientDescentSimple</span></code><span class="math">\((F,\nabla F, x_0)\)</span></p>
 <p># Initialisierung<br />
-<span class="math notranslate nohighlight">\(x_k = x_0\)</span><br />
-<span class="math notranslate nohighlight">\(F(x_{k+1}) = -\infty\)</span></p>
-<p><strong>while</strong> <span class="math notranslate nohighlight">\(F(x_{k+1})-F(x_k) &lt; 0\)</span> <strong>do</strong><br />
+<span class="math">\(x_k = x_0\)</span><br />
+<span class="math">\(F(x_{k+1}) = -\infty\)</span></p>
+<p><strong>while</strong> <span class="math">\(F(x_{k+1})-F(x_k) &lt; 0\)</span> <strong>do</strong><br />
     # Update in Richtung des größten Gradientenabstiegs<br />
-    <span class="math notranslate nohighlight">\(x_{k+1} = x_k - \nabla F(x_k)\)</span><br />
+    <span class="math">\(x_{k+1} = x_k - \nabla F(x_k)\)</span><br />
 <strong>end while</strong></p>
 <p># Ausgabe des letzten Punktes<br />
-<span class="math notranslate nohighlight">\(x^* = x_k\)</span><br />
-<span class="math notranslate nohighlight">\(F(x^*) = F(x_k)\)</span></p>
+<span class="math">\(x^* = x_k\)</span><br />
+<span class="math">\(F(x^*) = F(x_k)\)</span></p>
 </section>
 </div><p>Unglücklicherweise ist Algorithmus
 <a class="reference internal" href="#alg:gradient_descent_simple">Algorithm 1.1</a> in dieser Form praktisch nicht
@@ -484,58 +489,58 @@ anwendbar. Warum dies so ist sieht man leicht an folgendem Beispiel.</p>
 <div class="proof example admonition" id="ex:gradient_descent_simple">
 <p class="admonition-title"><span class="caption-number">Example 1.2 </span> (Simpler Gradientenabstieg)</p>
 <section class="example-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(\Omega = \mathbb{R}\)</span> und sei <span class="math notranslate nohighlight">\(F(x) \coloneqq |x|\)</span>. Man beachte,
-dass <span class="math notranslate nohighlight">\(F\)</span> überall differenzierbar ist, außer an der Stelle <span class="math notranslate nohighlight">\(x=0\)</span>. Das
+<p>Sei <span class="math">\(\Omega = \mathbb{R}\)</span> und sei <span class="math">\(F(x) \coloneqq |x|\)</span>. Man beachte,
+dass <span class="math">\(F\)</span> überall differenzierbar ist, außer an der Stelle <span class="math">\(x=0\)</span>. Das
 eindeutig bestimmte, globale Minimum der konvexen, nichtlinearen
-Funktion <span class="math notranslate nohighlight">\(F\)</span> wird ebenfalls in <span class="math notranslate nohighlight">\(x^* = 0\)</span> angenommen.</p>
-<p>Definiert man <span class="math notranslate nohighlight">\(\nabla F(0) \coloneqq 0\)</span> in der Singularität, so erhält
-man das Minimum <span class="math notranslate nohighlight">\(x^* = 0\)</span> durch Algorithmus
+Funktion <span class="math">\(F\)</span> wird ebenfalls in <span class="math">\(x^* = 0\)</span> angenommen.</p>
+<p>Definiert man <span class="math">\(\nabla F(0) \coloneqq 0\)</span> in der Singularität, so erhält
+man das Minimum <span class="math">\(x^* = 0\)</span> durch Algorithmus
 <a class="reference internal" href="#alg:gradient_descent_simple">Algorithm 1.1</a> nur für Startwerte
-<span class="math notranslate nohighlight">\(x_0 \in \mathbb{Z}\)</span>. Wähle zum Beispiel den Startwert <span class="math notranslate nohighlight">\(x_0 = 0.5\)</span>, so
+<span class="math">\(x_0 \in \mathbb{Z}\)</span>. Wähle zum Beispiel den Startwert <span class="math">\(x_0 = 0.5\)</span>, so
 terminiert das Gradientenabstiegsverfahren bereits nach dem ersten
-Schritt ohne eine gute Näherung an <span class="math notranslate nohighlight">\(x^* = 0\)</span> zu liefern.</p>
+Schritt ohne eine gute Näherung an <span class="math">\(x^* = 0\)</span> zu liefern.</p>
 </section>
 </div><p>Wie das <a class="reference internal" href="#ex:gradient_descent_simple">Example 1.2</a> zeigt, besteht bei dem
 Gradientenabstiegsverfahren in Algorithmus
 <a class="reference internal" href="#alg:gradient_descent_simple">Algorithm 1.1</a> die Gefahr einen stationären
 Punkt und somit ein potentielles Minimum zu überspringen. Aus diesem
-Grund kommt man auf die Idee die Schrittweite <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> in
+Grund kommt man auf die Idee die Schrittweite <span class="math">\(\alpha_k &gt; 0\)</span> in
 <a class="reference internal" href="#equation-eq-abstiegsverfahren">(1.3)</a> <strong>genügend klein</strong> zu wählen. Damit diese
 feste Schrittweite unabhängig von der Magnitude des Gradienten
-<span class="math notranslate nohighlight">\(\nabla F\)</span> ist, normiert man in der Regel die Richtung des steilsten
+<span class="math">\(\nabla F\)</span> ist, normiert man in der Regel die Richtung des steilsten
 Gradientenabstiegs durch die Norm des Gradienten, d.h., wir erhalten
 eine <strong>steuerbare Version des Gradientenabstiegsverfahrens</strong> in
 <a class="reference internal" href="#equation-eq-gradient-descent-simple">(1.7)</a> durch:</p>
-<div class="math notranslate nohighlight" id="equation-eq-gradient-descent-control">
-<span class="eqno">(1.8)<a class="headerlink" href="#equation-eq-gradient-descent-control" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \tau \frac{\nabla F(x_k)}{||\nabla F(x_k)||}, \quad \tau &gt; 0 .\]</div>
+<div class="math" id="equation-eq-gradient-descent-control">
+<span class="eqno">(1.8)<a class="headerlink" href="#equation-eq-gradient-descent-control" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \tau \frac{\nabla F(x_k)}{||\nabla F(x_k)||}, \quad \tau > 0 .\]</div>
 <p>Das Iterationsschema <a class="reference internal" href="#equation-eq-gradient-descent-adaptive">(1.9)</a> ist wiederum ein
 Spezialfall des allgemeinen Abstiegsverfahrens in
 <a class="reference internal" href="#equation-eq-abstiegsverfahren">(1.3)</a> für eine feste Schritteweite
-<span class="math notranslate nohighlight">\(\alpha_k = \tau &gt; 0\)</span> und den Richtungsvektor
-<span class="math notranslate nohighlight">\(p_k = -\nabla F(x_k) / ||\nabla F(x_k)||\)</span>.</p>
-<p>Es ist klar, dass durch eine kleinere Schrittweite <span class="math notranslate nohighlight">\(\tau &gt; 0\)</span> ein
-stationärer Punkt <span class="math notranslate nohighlight">\(x^* \in \Omega\)</span> der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> immer besser
+<span class="math">\(\alpha_k = \tau &gt; 0\)</span> und den Richtungsvektor
+<span class="math">\(p_k = -\nabla F(x_k) / ||\nabla F(x_k)||\)</span>.</p>
+<p>Es ist klar, dass durch eine kleinere Schrittweite <span class="math">\(\tau &gt; 0\)</span> ein
+stationärer Punkt <span class="math">\(x^* \in \Omega\)</span> der Zielfunktion <span class="math">\(F\)</span> immer besser
 angenähert werden kann. Leider erhöht sich aber gleichzeit die benötigte
 Iterationszahl zur Erreichung einer erwünschten Genauigkeit
-<span class="math notranslate nohighlight">\(|F(x^*) - F(x_k)| &lt; \epsilon\)</span> je kleiner man die Schrittweite <span class="math notranslate nohighlight">\(\tau\)</span>
+<span class="math">\(|F(x^*) - F(x_k)| &lt; \epsilon\)</span> je kleiner man die Schrittweite <span class="math">\(\tau\)</span>
 wählt. Man muss also bei der Wahl der Schrittweite einen Kompromiss
 zwischen Genauigkeit der numerischen Approximation und der Laufzeit des
 Verfahrens eingehen.</p>
 <p>Eine weiterführende Idee ist es die Schrittweiten <strong>adaptiv</strong> zu wählen,
 dass heißt man passt sie innerhalb des Iterationsschemas an die
-Funktionswerte von <span class="math notranslate nohighlight">\(F\)</span> geeignet an. Ein Iterationsschema, dass eine
-immer kleiner werdende Schrittweite <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> verwendet, lässt sich
-für einen fest gewählten Reduktionsfaktor <span class="math notranslate nohighlight">\(0 &lt; \sigma &lt; 1\)</span> wie folgt
+Funktionswerte von <span class="math">\(F\)</span> geeignet an. Ein Iterationsschema, dass eine
+immer kleiner werdende Schrittweite <span class="math">\(\alpha_k &gt; 0\)</span> verwendet, lässt sich
+für einen fest gewählten Reduktionsfaktor <span class="math">\(0 &lt; \mu &lt; 1\)</span> wie folgt
 angeben:</p>
-<div class="math notranslate nohighlight" id="equation-eq-gradient-descent-adaptive">
-<span class="eqno">(1.9)<a class="headerlink" href="#equation-eq-gradient-descent-adaptive" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
-\alpha_{k+1} \ &amp;= \
+<div class="math" id="equation-eq-gradient-descent-adaptive">
+<span class="eqno">(1.9)<a class="headerlink" href="#equation-eq-gradient-descent-adaptive" title="Permalink to this equation">#</a></span>\[\begin{split}
+\alpha_{k+1} \ &= \
 \begin{cases}
-\ \alpha_k, \quad &amp;\text{ falls } F\left(x_k - \alpha_k \frac{\nabla F(x_k)}{||\nabla F(x_k)||}\right) &lt; F(x_k) , \\
-\ \sigma \alpha_k, \quad &amp;\text{ sonst}.
+\ \alpha_k, \quad &\text{ falls } F\left(x_k - \alpha_k \frac{\nabla F(x_k)}{||\nabla F(x_k)||}\right) < F(x_k) , \\
+\ \mu \alpha_k, \quad &\text{ sonst}.
 \end{cases},\\
-x_{k+1} \ &amp;= \ x_k - \alpha_{k+1} \frac{\nabla F(x_k)}{||\nabla F(x_k)||}.
-\end{split}\end{split}\]</div>
+x_{k+1} \ &= \ x_k - \alpha_{k+1} \frac{\nabla F(x_k)}{||\nabla F(x_k)||}.
+\end{split}\]</div>
 <p>Das adaptive Gradientenabstiegsverfahren in
 <a class="reference internal" href="#equation-eq-gradient-descent-adaptive">(1.9)</a> lässt sich mit folgendem Algorithmus
 umsetzen.</p>
@@ -543,38 +548,38 @@ umsetzen.</p>
 <div class="proof algorithm admonition" id="alg:gradient_descent_adaptive">
 <p class="admonition-title"><span class="caption-number">Algorithm 1.2 </span> (Adaptives Gradientenabstiegsverfahren)</p>
 <section class="algorithm-content" id="proof-content">
-<p><strong>function</strong> <span class="math notranslate nohighlight">\([x^*, F(x^*)]=\)</span><code class="docutils literal notranslate"><span class="pre">gradientDescentAdaptive</span></code><span class="math notranslate nohighlight">\((F,\nabla F, x_0, \alpha_0, \sigma, \epsilon\)</span>)</p>
+<p><strong>function</strong> <span class="math">\([x^*, F(x^*)]=\)</span><code class="docutils literal notranslate"><span class="pre">gradientDescentAdaptive</span></code><span class="math">\((F,\nabla F, x_0, \alpha_0, \sigma, \epsilon\)</span>)</p>
 <p># Initialisierung<br />
-<span class="math notranslate nohighlight">\(\alpha_k = \alpha_0\)</span><br />
-<span class="math notranslate nohighlight">\(x_k = x_0\)</span><br />
-<span class="math notranslate nohighlight">\(F(x_{k+1}) = +\infty\)</span></p>
+<span class="math">\(\alpha_k = \alpha_0\)</span><br />
+<span class="math">\(x_k = x_0\)</span><br />
+<span class="math">\(F(x_{k+1}) = +\infty\)</span></p>
 <p># Iteriere bis gewünschte Genauigkeit erreicht ist<br />
-<strong>while</strong> <span class="math notranslate nohighlight">\(|F(x_{k+1}) - F(x_k)| &gt; \epsilon\)</span> <strong>do</strong><br />
-    <strong>while</strong> <span class="math notranslate nohighlight">\(F(x_k) - \alpha_k \nabla F(x_k)/|| \nabla F(x_k)||) &gt; F(x_k)\)</span> <strong>do</strong><br />
-        # Verringere Schrittweite um Faktor <span class="math notranslate nohighlight">\(\sigma\)</span><br />
-        <span class="math notranslate nohighlight">\(\alpha_k = \sigma\alpha_k\)</span><br />
+<strong>while</strong> <span class="math">\(|F(x_{k+1}) - F(x_k)| &gt; \epsilon\)</span> <strong>do</strong><br />
+    <strong>while</strong> <span class="math">\(F(x_k) - \alpha_k \nabla F(x_k)/|| \nabla F(x_k)||) &gt; F(x_k)\)</span> <strong>do</strong><br />
+        # Verringere Schrittweite um Faktor <span class="math">\(\sigma\)</span><br />
+        <span class="math">\(\alpha_k = \sigma\alpha_k\)</span><br />
     <strong>end while</strong><br />
     # Update in Richtung des größten Gradientenabstiegs<br />
-    <span class="math notranslate nohighlight">\(x_{k+1} = x_k - \alpha_k\nabla F(x_k)/||\nabla F(x_k)||\)</span><br />
+    <span class="math">\(x_{k+1} = x_k - \alpha_k\nabla F(x_k)/||\nabla F(x_k)||\)</span><br />
 <strong>end while</strong></p>
 <p># Ausgabe des letzten Punktes<br />
-<span class="math notranslate nohighlight">\(x^* = x_k\)</span><br />
-<span class="math notranslate nohighlight">\(F(x^*) = F(x_k)\)</span></p>
+<span class="math">\(x^* = x_k\)</span><br />
+<span class="math">\(F(x^*) = F(x_k)\)</span></p>
 </section>
 </div><div class="proof remark admonition" id="remark-3">
 <p class="admonition-title"><span class="caption-number">Remark 1.5 </span> (Zurücksetzen der Schrittweite)</p>
 <section class="remark-content" id="proof-content">
 <p>In manchen Anwendungsfällen macht es Sinn die Schrittweite
-<span class="math notranslate nohighlight">\(\alpha_{k+1}\)</span> in <a class="reference internal" href="#equation-eq-gradient-descent-adaptive">(1.9)</a> in jedem Schritt
-wieder auf den initialen Wert <span class="math notranslate nohighlight">\(\alpha_0 &gt; 0\)</span> zurückzusetzen, um eine
+<span class="math">\(\alpha_{k+1}\)</span> in <a class="reference internal" href="#equation-eq-gradient-descent-adaptive">(1.9)</a> in jedem Schritt
+wieder auf den initialen Wert <span class="math">\(\alpha_0 &gt; 0\)</span> zurückzusetzen, um eine
 verbesserte Konvergenzgeschwindigkeit zu erhalten. Dies macht vor allem
-dann SInn, wenn eine Auswertung der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> und ihres
-Gradienten <span class="math notranslate nohighlight">\(\nabla F\)</span> numerisch günstig zu realisieren ist.</p>
+dann SInn, wenn eine Auswertung der Zielfunktion <span class="math">\(F\)</span> und ihres
+Gradienten <span class="math">\(\nabla F\)</span> numerisch günstig zu realisieren ist.</p>
 </section>
 </div><figure class="align-default" id="fig-gradient-descent-adaptive">
 <img alt="../../_images/gradient_descent.png" src="../../_images/gradient_descent.png" />
 <figcaption>
-<p><span class="caption-number">Abb. 1.1 </span><span class="caption-text">Approximation des Minimierers einer Funktion <span class="math notranslate nohighlight">\(F\)</span> in zwei Variablen mit
+<p><span class="caption-number">Abb. 1.1 </span><span class="caption-text">Approximation des Minimierers einer Funktion <span class="math">\(F\)</span> in zwei Variablen mit
 Hilfe des adaptiven Gradientenverfahrens
 <a class="reference internal" href="#equation-eq-gradient-descent-adaptive">(1.9)</a>.</span><a class="headerlink" href="#fig-gradient-descent-adaptive" title="Link zu diesem Bild">#</a></p>
 </figcaption>
@@ -582,23 +587,23 @@ Hilfe des adaptiven Gradientenverfahrens
 <p>In <a class="reference internal" href="#fig-gradient-descent-adaptive"><span class="std std-numref">Abb. 1.1</span></a> ist ein typischer Verlauf des
 adaptiven Gradientenverfahrens in Algorithmus
 <a class="reference internal" href="#alg:gradient_descent_adaptive">Algorithm 1.2</a> bei der Minimierung einer
-konvexen Zielfunktion <span class="math notranslate nohighlight">\(F \colon \mathbb{R}^2 \rightarrow \mathbb{R}\)</span> zu
+konvexen Zielfunktion <span class="math">\(F \colon \mathbb{R}^2 \rightarrow \mathbb{R}\)</span> zu
 sehen. Man erkennt, dass die Schrittweiten immer kleiner werden, je
-näher man sich dem lokalen Minimum <span class="math notranslate nohighlight">\(x_*\)</span> nähert. Außerdem sieht man,
+näher man sich dem lokalen Minimum <span class="math">\(x_*\)</span> nähert. Außerdem sieht man,
 dass die Richtung des steilsten Gradientenabstiegs immer orthogonal zu
 den Niveaulinien der zu minimierenden Funktion steht.</p>
 <div class="proof remark admonition" id="remark-4">
 <p class="admonition-title"><span class="caption-number">Remark 1.6 </span></p>
 <section class="remark-content" id="proof-content">
 <p>Das in diesem Abschnitt beschriebene Gradientenabstiegsverfahren mit
-adaptiver Schrittweite <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> ist ein gängiger Algorithmus zur
-Minimierung einer Funktion <span class="math notranslate nohighlight">\(F\)</span>, wenn deren Ableitung <span class="math notranslate nohighlight">\(\nabla F\)</span> bekannt
+adaptiver Schrittweite <span class="math">\(\alpha_k &gt; 0\)</span> ist ein gängiger Algorithmus zur
+Minimierung einer Funktion <span class="math">\(F\)</span>, wenn deren Ableitung <span class="math">\(\nabla F\)</span> bekannt
 und numerisch günstig zu berechnen ist. Dennoch gibt es Situationen in
 denen es ratsam ist alternative Optimierungsalgorithmen zu verwenden.
 Zum Beispiel ist ein häufiges Problem des Gradientenverfahrens die
 starke Verlangsamung in der Nähe eines Sattelpunktes, was zu sehr langen
 Laufzeiten des Algorithmus führt. Außerdem passiert die Minimierung
-einer Funktion <span class="math notranslate nohighlight">\(F\)</span> mit Hilfe des Gradientenabstiegsverfahrens in der
+einer Funktion <span class="math">\(F\)</span> mit Hilfe des Gradientenabstiegsverfahrens in der
 Regel entlang eines Zickzack-Pfades (siehe
 <a class="reference internal" href="#fig-gradient-descent-adaptive"><span class="std std-numref">Abb. 1.1</span></a>), welcher in den meisten Fällen
 offensichtlich suboptimal ist. Aus diesen Gründen wollen wir uns in den
@@ -620,14 +625,14 @@ Auswahlregel, z.B. mit einem <em>Rundlaufverfahren</em>, oder aber <em>zufällig
 geschehen.</p>
 <p>Wir wollen im Folgenden den Fall einer <strong>zufälligen Wahl der
 Koordinatenrichtung</strong> diskutieren. Für einen zufälligen Index
-<span class="math notranslate nohighlight">\(j \in \lbrace 1,\ldots,n\rbrace\)</span> und den entsprechenden zufälligen
-Einheitsvektor <span class="math notranslate nohighlight">\(e_j \in \mathbb{R}^n\)</span> lässt sich das
+<span class="math">\(j \in \lbrace 1,\ldots,n\rbrace\)</span> und den entsprechenden zufälligen
+Einheitsvektor <span class="math">\(e_j \in \mathbb{R}^n\)</span> lässt sich das
 Koordinatenabstiegsverfahren schreiben als:</p>
-<div class="math notranslate nohighlight" id="equation-eq-coordinate-descent-stochastic">
+<div class="math" id="equation-eq-coordinate-descent-stochastic">
 <span class="eqno">(1.10)<a class="headerlink" href="#equation-eq-coordinate-descent-stochastic" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \alpha_k \langle \nabla F(x_k), e_j \rangle e_j \ = \ x_k - \alpha_k \frac{\partial F}{\partial x^i}(x_k) e_j.\]</div>
 <p>Das bedeutet, dass man in jeder Iteration nur eine Koordinate des
-aktuellen Parametervektors <span class="math notranslate nohighlight">\(x_k \in \Omega\)</span> verändern muss. Die
-Schrittweite <span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> in <a class="reference internal" href="#equation-eq-coordinate-descent-stochastic">(1.10)</a>
+aktuellen Parametervektors <span class="math">\(x_k \in \Omega\)</span> verändern muss. Die
+Schrittweite <span class="math">\(\alpha_k &gt; 0\)</span> in <a class="reference internal" href="#equation-eq-coordinate-descent-stochastic">(1.10)</a>
 kann hierbei ähnlich wie in <a class="reference internal" href="#ss-gradient-descent"><span class="std std-ref">Gradientenabstiegsverfahren</span></a> <em>fest</em> oder
 <em>adaptiv</em> gewählt werden. Das Koordinatenabstiegsverfahren in
 <a class="reference internal" href="#equation-eq-coordinate-descent-stochastic">(1.10)</a> mit adaptiver Schrittweite lässt
@@ -637,32 +642,32 @@ sich mit folgendem Algorithmus umsetzen.</p>
 <p class="admonition-title"><span class="caption-number">Algorithm 1.3 </span> (Koordinatenabstiegsverfahren)</p>
 <section class="algorithm-content" id="proof-content">
 <p>label=“alg:coordinate_descent_stochastic“}</p>
-<p><strong>function</strong> <span class="math notranslate nohighlight">\([x^*, F(x^*)]=\)</span><code class="docutils literal notranslate"><span class="pre">coordinateDescentStochastic</span></code><span class="math notranslate nohighlight">\((F,\nabla F, x_0, \alpha_0, \sigma, \epsilon\)</span>)</p>
+<p><strong>function</strong> <span class="math">\([x^*, F(x^*)]=\)</span><code class="docutils literal notranslate"><span class="pre">coordinateDescentStochastic</span></code><span class="math">\((F,\nabla F, x_0, \alpha_0, \sigma, \epsilon\)</span>)</p>
 <p># Initialisierung<br />
-<span class="math notranslate nohighlight">\(\alpha_k = \alpha_0\)</span><br />
-<span class="math notranslate nohighlight">\(x_k = x_0\)</span><br />
-<span class="math notranslate nohighlight">\(F(x_{k+1}) = +\infty\)</span></p>
+<span class="math">\(\alpha_k = \alpha_0\)</span><br />
+<span class="math">\(x_k = x_0\)</span><br />
+<span class="math">\(F(x_{k+1}) = +\infty\)</span></p>
 <p># Iteriere bis gewünschte Genauigkeit erreicht ist<br />
-<strong>while</strong> <span class="math notranslate nohighlight">\(|F(x_{k+1} - F(x_k)|&gt;\epsilon\)</span> <strong>do</strong><br />
+<strong>while</strong> <span class="math">\(|F(x_{k+1} - F(x_k)|&gt;\epsilon\)</span> <strong>do</strong><br />
 <br />
     # Wähle zufällige Koordinatenrichtung<br />
-    <span class="math notranslate nohighlight">\(i = \texttt{randomDraw}([1:n])\)</span><br />
+    <span class="math">\(i = \texttt{randomDraw}([1:n])\)</span><br />
 <br />
     # Berechne Ableitung in Koordinatenrichtung<br />
-    <span class="math notranslate nohighlight">\(p_k = \frac{\partial}{\partial x_k^i}F(x_k) \cdot e_i\)</span><br />
+    <span class="math">\(p_k = \frac{\partial}{\partial x_k^i}F(x_k) \cdot e_i\)</span><br />
 <br />
-    <strong>while</strong> <span class="math notranslate nohighlight">\(F(x_k - \alpha_k p_k) &gt; F(x_k)\)</span> <strong>do</strong><br />
-        # Verringere Schrittweite um Faktor <span class="math notranslate nohighlight">\(\sigma\)</span><br />
-        <span class="math notranslate nohighlight">\(\alpha_k = \sigma\alpha_k\)</span><br />
+    <strong>while</strong> <span class="math">\(F(x_k - \alpha_k p_k) &gt; F(x_k)\)</span> <strong>do</strong><br />
+        # Verringere Schrittweite um Faktor <span class="math">\(\sigma\)</span><br />
+        <span class="math">\(\alpha_k = \sigma\alpha_k\)</span><br />
     <strong>end while</strong><br />
 <br />
     # Update in Richtung des größten Gradientenabstiegs<br />
-    <span class="math notranslate nohighlight">\(x_{k+1} = x_k - \alpha_k p_k\)</span><br />
+    <span class="math">\(x_{k+1} = x_k - \alpha_k p_k\)</span><br />
 <strong>end while</strong><br />
 <br />
 # Ausgabe des letzten Punktes<br />
-<span class="math notranslate nohighlight">\(x^* = x_k\)</span><br />
-<span class="math notranslate nohighlight">\(F(x^*) = F(x_k)\)</span></p>
+<span class="math">\(x^* = x_k\)</span><br />
+<span class="math">\(F(x^*) = F(x_k)\)</span></p>
 </section>
 </div><p>Das Koordinatenabstiegsverfahren benötigt in der Regel deutlich mehr
 Iterationen als das normale Gradientenabstiegsverfahren und beschreibt
@@ -676,28 +681,28 @@ des gesamten Gradienten in jedem Schritt.</p>
 <p class="admonition-title"><span class="caption-number">Remark 1.7 </span> (Blockkoordinatenabstiegsverfahren)</p>
 <section class="remark-content" id="proof-content">
 <p>Um den Zufallseffekten und den damit verbundenen Zickzack Pfad bei der
-Minimierung der Funktion <span class="math notranslate nohighlight">\(F\)</span> durch das Koordinatenabstiegsverfahren
+Minimierung der Funktion <span class="math">\(F\)</span> durch das Koordinatenabstiegsverfahren
 entgegen zu wirken, kann man einen Kompromiss zwischen der Verwendung
 einer einzelnen Koordinatenrichtung und dem gesamten Gradienten
 eingehen. Hierbei spricht man von den sogenannten
 <em>Blockkoordinatenabtiegsverfahren</em> (im Englischen <em>block coordinate
 descent</em> (BCD)). Hierbei wählt man zuerst die Größe
-<span class="math notranslate nohighlight">\(s \in \lbrace 1,\ldots,n\rbrace\)</span> der Koordinatenblöcke, d.h., die Größe
+<span class="math">\(s \in \lbrace 1,\ldots,n\rbrace\)</span> der Koordinatenblöcke, d.h., die Größe
 der Teilmenge der verwendeten Richtungsableitungen des Gradienten
-<span class="math notranslate nohighlight">\(\nabla F\)</span>. Anschließend wird in jedem Schritt ein Block an
+<span class="math">\(\nabla F\)</span>. Anschließend wird in jedem Schritt ein Block an
 Koordinatenrichtungen deterministisch oder zufällig ausgewählt und in
 dessen Richtung minimiert. Für eine zufällige Wahl der Koordinatenblöcke
 ergibt sich somit:</p>
-<div class="math notranslate nohighlight" id="equation-eq-block-coordinate-descent">
+<div class="math" id="equation-eq-block-coordinate-descent">
 <span class="eqno">(1.11)<a class="headerlink" href="#equation-eq-block-coordinate-descent" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \alpha_k \sum_{i=1}^s \langle \nabla F(x_k), e_{\sigma(i)} \rangle e_{\sigma(i)}.\]</div>
 <p>Hierbei ist
-<span class="math notranslate nohighlight">\(\sigma \colon \lbrace1,\ldots,n\rbrace \rightarrow \ \lbrace1,\ldots,n\rbrace\)</span>
-eine zufällige Permutation der Indizes <span class="math notranslate nohighlight">\(1,\ldots,n\)</span>. Es ist klar, dass
+<span class="math">\(\sigma \colon \lbrace1,\ldots,n\rbrace \rightarrow \ \lbrace1,\ldots,n\rbrace\)</span>
+eine zufällige Permutation der Indizes <span class="math">\(1,\ldots,n\)</span>. Es ist klar, dass
 das Koordinatenabstiegsverfahren in
 <a class="reference internal" href="#equation-eq-coordinate-descent-stochastic">(1.10)</a> und das normale
 Gradientenabstiegsverfahren in <a class="reference internal" href="#equation-eq-gradient-descent-adaptive">(1.9)</a>
 Spezialfälle des Blockkoordinatenabstiegsverfahrens in
-<a class="reference internal" href="#equation-eq-block-coordinate-descent">(1.11)</a> für Blockgrößen <span class="math notranslate nohighlight">\(s = 1\)</span> und <span class="math notranslate nohighlight">\(s=n\)</span>
+<a class="reference internal" href="#equation-eq-block-coordinate-descent">(1.11)</a> für Blockgrößen <span class="math">\(s = 1\)</span> und <span class="math">\(s=n\)</span>
 sind.</p>
 </section>
 </div></section>
@@ -721,9 +726,9 @@ Variationen Anwendung, da man hierdurch dem bekannten Problem des
 <em>Übertrainierens</em> des neuronalen Netzes entgegen wirken kann.</p>
 <p>Beim stochastischen Gradientenverfahren geht man davon aus, dass sich
 die zu minimierende Zielfunktion
-<span class="math notranslate nohighlight">\(F \colon \Omega \rightarrow \mathbb{R}\)</span> als eine Summe der folgenden
+<span class="math">\(F \colon \Omega \rightarrow \mathbb{R}\)</span> als eine Summe der folgenden
 Gestalt schreiben lässt:</p>
-<div class="math notranslate nohighlight" id="equation-eq-objective-function-sum">
+<div class="math" id="equation-eq-objective-function-sum">
 <span class="eqno">(1.12)<a class="headerlink" href="#equation-eq-objective-function-sum" title="Permalink to this equation">#</a></span>\[F(x) \ = \ \sum_{i=1}^m F_i(x), \quad \text{ für alle } x \in \Omega.\]</div>
 <p>Solche Zielfunktionen treten natürlicherweise in vielen
 Problemstellungen auf, zum Beispiel bei Maximimum-Likelihood Ansätzen
@@ -732,16 +737,16 @@ Lernens lässt sich der Trainingsfehler über alle Trainingsdaten in der
 Regel als eine solche Summe schreiben. In diesem Fall lässt sich das
 normale Gradientenabstiegsverfahren in
 <a class="reference internal" href="#equation-eq-gradient-descent-adaptive">(1.9)</a> umschreiben zu:</p>
-<div class="math notranslate nohighlight" id="equation-eq-gradient-descent-sum">
-<span class="eqno">(1.13)<a class="headerlink" href="#equation-eq-gradient-descent-sum" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \alpha_k \frac{\nabla F(x_k)}{||\nabla F(x_k)||} \ = \ x_k - \alpha_k \frac{\sum_{i=1}^m\nabla F_i(x_k)}{||\sum_{i=1}^m\nabla F_i(x_k)||}, \quad \alpha_k &gt; 0 .\]</div>
+<div class="math" id="equation-eq-gradient-descent-sum">
+<span class="eqno">(1.13)<a class="headerlink" href="#equation-eq-gradient-descent-sum" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \alpha_k \frac{\nabla F(x_k)}{||\nabla F(x_k)||} \ = \ x_k - \alpha_k \frac{\sum_{i=1}^m\nabla F_i(x_k)}{||\sum_{i=1}^m\nabla F_i(x_k)||}, \quad \alpha_k > 0 .\]</div>
 <p>Die Idee des stochastischen Gradientenverfahrens ist es nun einen
 zufälligen Summanden aus <a class="reference internal" href="#equation-eq-objective-function-sum">(1.12)</a> zu wählen und
 nur den Gradienten bezüglich dieses Summanden zu betrachten. Durch diese
 starke Vereinfachung von <a class="reference internal" href="#equation-eq-gradient-descent-sum">(1.13)</a> führt man mit
-einem zufällig ausgewählten Index <span class="math notranslate nohighlight">\(j \in \lbrace 1,\ldots,m\rbrace\)</span> nun
+einem zufällig ausgewählten Index <span class="math">\(j \in \lbrace 1,\ldots,m\rbrace\)</span> nun
 einen Gradientenabstieg der Form</p>
-<div class="math notranslate nohighlight" id="equation-eq-stochastic-gradient-descent">
-<span class="eqno">(1.14)<a class="headerlink" href="#equation-eq-stochastic-gradient-descent" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \alpha_k \frac{\nabla F_j(x_k)}{||\nabla F_j(x_k)||}, \quad \alpha_k &gt; 0\]</div>
+<div class="math" id="equation-eq-stochastic-gradient-descent">
+<span class="eqno">(1.14)<a class="headerlink" href="#equation-eq-stochastic-gradient-descent" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k - \alpha_k \frac{\nabla F_j(x_k)}{||\nabla F_j(x_k)||}, \quad \alpha_k > 0\]</div>
 <p>durch.</p>
 <div class="proof remark admonition" id="remark-7">
 <p class="admonition-title"><span class="caption-number">Remark 1.8 </span></p>
@@ -752,14 +757,14 @@ Gradientenverfahren die Möglichkeit einen Kompromiss zwischen dem
 normalen Gradientenabstieg in <a class="reference internal" href="#equation-eq-gradient-descent-control">(1.8)</a> und dem
 auf einen Summanden beschränkten Gradientenabstieg
 <a class="reference internal" href="#equation-eq-stochastic-gradient-descent">(1.14)</a> einzugehen. Indem man eine
-zufällige Untermenge von fester Größe <span class="math notranslate nohighlight">\(s \in \lbrace 1,\ldots,m\rbrace\)</span>
-von Summanden von <span class="math notranslate nohighlight">\(F\)</span> auswählt, lässt sich das sogenannte <em>stochastische
+zufällige Untermenge von fester Größe <span class="math">\(s \in \lbrace 1,\ldots,m\rbrace\)</span>
+von Summanden von <span class="math">\(F\)</span> auswählt, lässt sich das sogenannte <em>stochastische
 Minibatch-Gradientenabstiegsverfahren</em> formulieren:</p>
-<div class="math notranslate nohighlight">
-\[x_{k+1} = x_k - \alpha_k \frac{\sum_{i=1}^s\nabla F_{\sigma(i)}(x_k)}{||\sum_{i=1}^s\nabla F_{\sigma(i)}(x_k)||}, \quad \alpha_k &gt; 0 .\]</div>
+<div class="math">
+\[x_{k+1} = x_k - \alpha_k \frac{\sum_{i=1}^s\nabla F_{\sigma(i)}(x_k)}{||\sum_{i=1}^s\nabla F_{\sigma(i)}(x_k)||}, \quad \alpha_k > 0 .\]</div>
 <p>Hierbei ist
-<span class="math notranslate nohighlight">\(\sigma \colon \lbrace 1,\ldots,m\rbrace \rightarrow \lbrace 1,\ldots,m\rbrace\)</span>
-eine zufällige Permutation der Indizes <span class="math notranslate nohighlight">\(1,\ldots,m\)</span>.</p>
+<span class="math">\(\sigma \colon \lbrace 1,\ldots,m\rbrace \rightarrow \lbrace 1,\ldots,m\rbrace\)</span>
+eine zufällige Permutation der Indizes <span class="math">\(1,\ldots,m\)</span>.</p>
 </section>
 </div></section>
 <section id="newton-verfahren">
@@ -770,71 +775,71 @@ nichtlinearen Funktionen verallgemeinern. In <span id="id2">[<a class="reference
 wir das <em>Newton Verfahren</em> zur Approximation von Nullstellen
 nichtlinearer Gleichungssysteme hergeleitet. Wir haben zunächst die
 Taylorapproximation einer nichtlinearen Nullstellengleichung
-<span class="math notranslate nohighlight">\(F(x^*) = 0\)</span> von der folgenden Form betrachtet</p>
-<div class="math notranslate nohighlight">
+<span class="math">\(F(x^*) = 0\)</span> von der folgenden Form betrachtet</p>
+<div class="math">
 \[0 \ = \ F(x^*) \ \approx \ F(x) + F'(x)(x^* - x),\]</div>
-<p>wobei <span class="math notranslate nohighlight">\(F'\)</span> die als regulär angenommene Jacobi-Matrix der
-differenzierbaren Funktion <span class="math notranslate nohighlight">\(F \colon \R^n \rightarrow \R^n\)</span> bezeichnet.
+<p>wobei <span class="math">\(F'\)</span> die als regulär angenommene Jacobi-Matrix der
+differenzierbaren Funktion <span class="math">\(F \colon \R^n \rightarrow \R^n\)</span> bezeichnet.
 Hierauf basierend haben wir die folgende <strong>Fixpunktfunktion</strong> als
 Approximation erster Ordnung angegeben:</p>
-<div class="math notranslate nohighlight" id="equation-eq-newton-fixpunkt">
+<div class="math" id="equation-eq-newton-fixpunkt">
 <span class="eqno">(1.15)<a class="headerlink" href="#equation-eq-newton-fixpunkt" title="Permalink to this equation">#</a></span>\[G(x) \ = \ x - (F'(x))^{-1} F(x), \quad \text{ für } F'(x) \text{ regulär}.\]</div>
 <p>Hierbei haben wir die Fixpunktgleichung als erfüllt gesehen, wenn wir
-ein <span class="math notranslate nohighlight">\(x^* \in \Omega\)</span> gefunden haben, so dass für die Fixpunktgleichung
-<a class="reference internal" href="#equation-eq-newton-fixpunkt">(1.15)</a> gilt <span class="math notranslate nohighlight">\(x^* = G(x^*)\)</span>. Unter dieser Beobachtung
+ein <span class="math">\(x^* \in \Omega\)</span> gefunden haben, so dass für die Fixpunktgleichung
+<a class="reference internal" href="#equation-eq-newton-fixpunkt">(1.15)</a> gilt <span class="math">\(x^* = G(x^*)\)</span>. Unter dieser Beobachtung
 haben wir das <em>Newton-Verfahren</em> als iteratives Schema zur Bestimmung
-eines solchen Fixpunktes <span class="math notranslate nohighlight">\(x^* \in \Omega\)</span> hergeleitet:</p>
-<div class="math notranslate nohighlight">
+eines solchen Fixpunktes <span class="math">\(x^* \in \Omega\)</span> hergeleitet:</p>
+<div class="math">
 \[x_{k+1} \ = \ x_k - (F'(x_k))^{-1} F(x_k),, \quad \text{ für } F'(x_k) \text{ regulär}.\]</div>
-<p>Hierfür benötigten wir einen geeigneten Startwert <span class="math notranslate nohighlight">\(x_0 \in \Omega\)</span> in
-einer lokalen Umgebung <span class="math notranslate nohighlight">\(U \subset \Omega\)</span> des Fixpunktes <span class="math notranslate nohighlight">\(x^* \in U\)</span>.</p>
+<p>Hierfür benötigten wir einen geeigneten Startwert <span class="math">\(x_0 \in \Omega\)</span> in
+einer lokalen Umgebung <span class="math">\(U \subset \Omega\)</span> des Fixpunktes <span class="math">\(x^* \in U\)</span>.</p>
 <p>Der folgende Satz formuliert Bedingungen für die lokale Konvergenz des
 Newton-Verfahrens.</p>
 <div class="proof theorem admonition" id="theorem-8">
 <p class="admonition-title"><span class="caption-number">Theorem 1.4 </span> (Lokale Konvergenz des Newton Verfahrens)</p>
 <section class="theorem-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(F: \R^n \rightarrow \R^n\)</span> in einer Umgebung von
-<span class="math notranslate nohighlight">\(\overline{x} \in \R^n\)</span> stetig differenzierbar und <span class="math notranslate nohighlight">\(\overline{x}\)</span> sei
-eine Nullstelle von <span class="math notranslate nohighlight">\(F\)</span> mit <span class="math notranslate nohighlight">\(F(\overline{x}) = 0\)</span>. Sei außerdem die
-Jacobi-Matrix <span class="math notranslate nohighlight">\(F'\)</span> lokal Lipschitz-stetig und <span class="math notranslate nohighlight">\(F'(\overline{x})\)</span> regulär
+<p>Sei <span class="math">\(F: \R^n \rightarrow \R^n\)</span> in einer Umgebung von
+<span class="math">\(\overline{x} \in \R^n\)</span> stetig differenzierbar und <span class="math">\(\overline{x}\)</span> sei
+eine Nullstelle von <span class="math">\(F\)</span> mit <span class="math">\(F(\overline{x}) = 0\)</span>. Sei außerdem die
+Jacobi-Matrix <span class="math">\(F'\)</span> lokal Lipschitz-stetig und <span class="math">\(F'(\overline{x})\)</span> regulär
 in der Nullstelle.</p>
-<p>Dann existiert eine lokale Umgebung <span class="math notranslate nohighlight">\(B_R(\overline{x})\)</span>, so dass das
-Newton-Verfahren für jeden Startwert <span class="math notranslate nohighlight">\(x_0 \in B_R(\overline{x})\)</span> gegen
-die Nullstelle <span class="math notranslate nohighlight">\(\overline{x}\)</span> konvergiert, d.h. es gilt
-<span class="math notranslate nohighlight">\(\lim_{x\rightarrow \infty} x_k =  \overline{x}\)</span>.</p>
+<p>Dann existiert eine lokale Umgebung <span class="math">\(B_R(\overline{x})\)</span>, so dass das
+Newton-Verfahren für jeden Startwert <span class="math">\(x_0 \in B_R(\overline{x})\)</span> gegen
+die Nullstelle <span class="math">\(\overline{x}\)</span> konvergiert, d.h. es gilt
+<span class="math">\(\lim_{x\rightarrow \infty} x_k =  \overline{x}\)</span>.</p>
 </section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. Siehe <span id="id3">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>. ◻</p>
 </div>
-<p>Anstatt nun eine Nullstelle der Funktion <span class="math notranslate nohighlight">\(F\)</span> zu suchen, wollen wir das
-Newton-Verfahren nutzen, um eine Nullstelle des Gradienten <span class="math notranslate nohighlight">\(\nabla F\)</span>
-(d.h einen stationären Punkt von <span class="math notranslate nohighlight">\(F\)</span>) zu approximieren und damit die
+<p>Anstatt nun eine Nullstelle der Funktion <span class="math">\(F\)</span> zu suchen, wollen wir das
+Newton-Verfahren nutzen, um eine Nullstelle des Gradienten <span class="math">\(\nabla F\)</span>
+(d.h einen stationären Punkt von <span class="math">\(F\)</span>) zu approximieren und damit die
 notwendigen Optimalitätsbedingungen in <a class="reference internal" href="01_02_NichtlineareOptimierung.html#thm:minimum_notwendig">Theorem 1.1</a>
-zu erfüllen. Im Folgenden sei <span class="math notranslate nohighlight">\(\Omega \subset \mathbb{R}^n\)</span> ein offenes,
-zusammenhängendes Gebiet und <span class="math notranslate nohighlight">\(F \colon \Omega \rightarrow \mathbb{R}\)</span>
+zu erfüllen. Im Folgenden sei <span class="math">\(\Omega \subset \mathbb{R}^n\)</span> ein offenes,
+zusammenhängendes Gebiet und <span class="math">\(F \colon \Omega \rightarrow \mathbb{R}\)</span>
 eine differenzierbare, reellwertige Funktion. Wir betrachten wieder die
-Taylorapproximation der Funktion <span class="math notranslate nohighlight">\(F\)</span> in eine Abstiegsrichtung
-<span class="math notranslate nohighlight">\(x_k + p \in \Omega\)</span> des allgemeinen Iterationsschemas
+Taylorapproximation der Funktion <span class="math">\(F\)</span> in eine Abstiegsrichtung
+<span class="math">\(x_k + p \in \Omega\)</span> des allgemeinen Iterationsschemas
 <a class="reference internal" href="#equation-eq-abstiegsverfahren">(1.3)</a>, aber berücksichtigen diesmal auch Terme von
 zweiter Ordnung:</p>
-<div class="math notranslate nohighlight" id="equation-eq-modellfunktion">
+<div class="math" id="equation-eq-modellfunktion">
 <span class="eqno">(1.16)<a class="headerlink" href="#equation-eq-modellfunktion" title="Permalink to this equation">#</a></span>\[F(x_k + p) \ \approx \ F(x_k) + \langle p, \nabla F(x_k) \rangle + \frac{1}{2} \langle p, \nabla^2F(x_k)p \rangle \ \eqqcolon \ m_k(p).\]</div>
-<p>Unter gewissen Bedingungen an die Hessematrix <span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span>, lässt
-sich ein eindeutiges Minimum der Modellfunktion <span class="math notranslate nohighlight">\(m_k(p)\)</span> in
+<p>Unter gewissen Bedingungen an die Hessematrix <span class="math">\(\nabla^2 F(x_k)\)</span>, lässt
+sich ein eindeutiges Minimum der Modellfunktion <span class="math">\(m_k(p)\)</span> in
 <a class="reference internal" href="#equation-eq-modellfunktion">(1.16)</a> bestimmen, wie folgendes Theorem besagt.</p>
 <div class="proof theorem admonition" id="theorem-9">
 <p class="admonition-title"><span class="caption-number">Theorem 1.5 </span> (Newton-Abstiegsrichtung)</p>
 <section class="theorem-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(\Omega \subset \R^n\)</span> ein offenes, zusammenhängendes Gebiet. Sei
-außerdem <span class="math notranslate nohighlight">\(F \colon \Omega \rightarrow \R\)</span> eine in einer lokalen Umgebung
-eines Punktes <span class="math notranslate nohighlight">\(x_k \in \Omega\)</span> zweimal stetig differenzierbare
-Zielfunktion, deren Hessematrix <span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span> im Punkt <span class="math notranslate nohighlight">\(x_k\)</span> positiv
+<p>Sei <span class="math">\(\Omega \subset \R^n\)</span> ein offenes, zusammenhängendes Gebiet. Sei
+außerdem <span class="math">\(F \colon \Omega \rightarrow \R\)</span> eine in einer lokalen Umgebung
+eines Punktes <span class="math">\(x_k \in \Omega\)</span> zweimal stetig differenzierbare
+Zielfunktion, deren Hessematrix <span class="math">\(\nabla^2 F(x_k)\)</span> im Punkt <span class="math">\(x_k\)</span> positiv
 definit ist.</p>
 <p>Dann ist der <strong>Newton-Abstiegsrichtung</strong> benannte Vektor
-<span class="math notranslate nohighlight">\(p_k^N \in \R^n\)</span> mit</p>
-<div class="math notranslate nohighlight" id="equation-eq-newton-richtung">
+<span class="math">\(p_k^N \in \R^n\)</span> mit</p>
+<div class="math" id="equation-eq-newton-richtung">
 <span class="eqno">(1.17)<a class="headerlink" href="#equation-eq-newton-richtung" title="Permalink to this equation">#</a></span>\[p_k^N \ = \ -(\nabla^2 F(x_k))^{-1} \nabla F(x_k)\]</div>
-<p>das eindeutige Minimum der Modellfunktion <span class="math notranslate nohighlight">\(m_k(p)\)</span> in
+<p>das eindeutige Minimum der Modellfunktion <span class="math">\(m_k(p)\)</span> in
 <a class="reference internal" href="#equation-eq-modellfunktion">(1.16)</a>.</p>
 </section>
 </div><div class="proof admonition" id="proof">
@@ -842,33 +847,33 @@ definit ist.</p>
 </div>
 <p>Mit der Newton-Abstiegsrichtung in <a class="reference internal" href="#equation-eq-newton-richtung">(1.17)</a> lässt sich
 ein iteratives Abstiegsverfahren für einen initialen Punkt
-<span class="math notranslate nohighlight">\(x_0 \in \Omega\)</span>, welcher geeignet in der Nähe des stationären Punktes
-<span class="math notranslate nohighlight">\(x^* \in \Omega\)</span> gewählt wird, wie folgt konstruieren:</p>
-<div class="math notranslate nohighlight" id="equation-eq-newton-abstieg">
+<span class="math">\(x_0 \in \Omega\)</span>, welcher geeignet in der Nähe des stationären Punktes
+<span class="math">\(x^* \in \Omega\)</span> gewählt wird, wie folgt konstruieren:</p>
+<div class="math" id="equation-eq-newton-abstieg">
 <span class="eqno">(1.18)<a class="headerlink" href="#equation-eq-newton-abstieg" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k + p_k^N \ = \ x_k - (\nabla^2 F(x_k))^{-1} \nabla F(x_k).\]</div>
 <p>Damit das Newton-Abstiegsverfahren in <a class="reference internal" href="#equation-eq-newton-abstieg">(1.18)</a> überhaupt
 sinnvoll ist, müssen wir fordern, dass die Hessematrix in jedem Punkt
-<span class="math notranslate nohighlight">\(x_k \in \Omega\)</span> der Iterationsfolge <em>regulär</em> und somit invertierbar
+<span class="math">\(x_k \in \Omega\)</span> der Iterationsfolge <em>regulär</em> und somit invertierbar
 ist. Um sicher zu gehen, dass es sich tatsächlich um eine
 Abstiegsrichtung handelt müssen wir fordern, dass die Hessematrix
-<span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span> nicht nur invertierbar für alle <span class="math notranslate nohighlight">\(x_k \in \Omega\)</span> der
-Iterationsfolge ist, sondern auch <em>positiv definit</em> in jedem Punkt <span class="math notranslate nohighlight">\(x_k\)</span>
+<span class="math">\(\nabla^2 F(x_k)\)</span> nicht nur invertierbar für alle <span class="math">\(x_k \in \Omega\)</span> der
+Iterationsfolge ist, sondern auch <em>positiv definit</em> in jedem Punkt <span class="math">\(x_k\)</span>
 ist. Denn dann ergibt eine Taylorapproximation zweiter Ordnung die
 folgende Abschätzung:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-F(x_{k+1}) \ &amp;= \ F(x_k + p_k^N) \ \approx \ F(x_k) + \langle p_k^N, \nabla F(x_k) \rangle + \frac{1}{2} \langle p_k^N, \nabla^2F(x_k) p_k^N \rangle \\
-\ &amp;= \ F(x_k) - \langle p_k^N, \nabla^2 F(x_k) p_k^N \rangle + \frac{1}{2} \langle p_k^N, \nabla^2F(x_k) p_k^N \rangle \\
-\ &amp;= \ F(x_k) - \frac{1}{2} \underbrace{\langle p_k^N, \nabla^2 F(x_k) p_k^N}_{&gt;~0} \rangle.
-\end{split}\end{split}\]</div>
+<div class="math">
+\[\begin{split}
+F(x_{k+1}) \ &= \ F(x_k + p_k^N) \ \approx \ F(x_k) + \langle p_k^N, \nabla F(x_k) \rangle + \frac{1}{2} \langle p_k^N, \nabla^2F(x_k) p_k^N \rangle \\
+\ &= \ F(x_k) - \langle p_k^N, \nabla^2 F(x_k) p_k^N \rangle + \frac{1}{2} \langle p_k^N, \nabla^2F(x_k) p_k^N \rangle \\
+\ &= \ F(x_k) - \frac{1}{2} \underbrace{\langle p_k^N, \nabla^2 F(x_k) p_k^N}_{>~0} \rangle.
+\end{split}\]</div>
 <p>Wir sehen also, dass wir einen echten Abstieg der Funktionswerte
-erhalten, wenn die Hessematrix <span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span> positiv definit ist für
-alle <span class="math notranslate nohighlight">\(x_k \in \Omega\)</span> der Iterationsfolge. Sollte die Hessematrix nicht
-positiv definit in einem Punkt <span class="math notranslate nohighlight">\(x_k\)</span> der Iterationsfolge sein, so muss
+erhalten, wenn die Hessematrix <span class="math">\(\nabla^2 F(x_k)\)</span> positiv definit ist für
+alle <span class="math">\(x_k \in \Omega\)</span> der Iterationsfolge. Sollte die Hessematrix nicht
+positiv definit in einem Punkt <span class="math">\(x_k\)</span> der Iterationsfolge sein, so muss
 zumindest eine Abnahme der Funktionswerte vorliegen, d.h., es muss für
 die Newton-Abstiegsrichtung gelten:</p>
-<div class="math notranslate nohighlight">
-\[\langle (\nabla^2F(x_k))^{-1} \nabla F(x_k), \nabla F(x_k) \rangle \ &gt; \ 0.\]</div>
+<div class="math">
+\[-\langle (\nabla^2F(x_k))^{-1} \nabla F(x_k), \nabla F(x_k) \rangle \ > \ 0.\]</div>
 <p>Sollte dies nicht der Fall sein, so existieren Methoden um dennoch einen
 Abstieg zu erzwingen, siehe zum Beispiel <span id="id4">[<a class="reference internal" href="../../references.html#id2" title="Jorge Nocedal and Stephen J. Wright. Numerical Optimization. Springer Verlag, New York, 1 edition, 1999.">NW99</a>]</span>. Auf
 diese werden wir jedoch im weiteren Verlauf der Vorlesung nicht näher
@@ -878,59 +883,59 @@ eingehen.</p>
 <section class="remark-content" id="proof-content">
 <p>Das Newton-Abstiegsverfahren in <a class="reference internal" href="#equation-eq-newton-abstieg">(1.18)</a> ist ein
 Abstiegsverfahren der Art <a class="reference internal" href="#equation-eq-abstiegsverfahren">(1.3)</a> dessen Schrittweite
-<span class="math notranslate nohighlight">\(\alpha_k &gt; 0\)</span> implizit durch die lokale Krümmung und die Ableitung der
-Funktion <span class="math notranslate nohighlight">\(F\)</span> bestimmt ist. In diesem Fall können wir <span class="math notranslate nohighlight">\(\alpha_k \equiv 1\)</span>
-für alle <span class="math notranslate nohighlight">\(k \in \mathbb{N}\)</span> setzen. Das Newton-Abstiegsverfahren
+<span class="math">\(\alpha_k &gt; 0\)</span> implizit durch die lokale Krümmung und die Ableitung der
+Funktion <span class="math">\(F\)</span> bestimmt ist. In diesem Fall können wir <span class="math">\(\alpha_k \equiv 1\)</span>
+für alle <span class="math">\(k \in \mathbb{N}\)</span> setzen. Das Newton-Abstiegsverfahren
 konvergiert in der Regel <em>quadratisch</em> gegen einen stationären Punkt
-<span class="math notranslate nohighlight">\(x^* \in \Omega\)</span> mit <span class="math notranslate nohighlight">\(\nabla F(x^*)=0\)</span>, d.h. man erreicht sehr schnell
-eine hohe Genauigkeit bei der Approximation von <span class="math notranslate nohighlight">\(x^*\)</span>.</p>
+<span class="math">\(x^* \in \Omega\)</span> mit <span class="math">\(\nabla F(x^*)=0\)</span>, d.h. man erreicht sehr schnell
+eine hohe Genauigkeit bei der Approximation von <span class="math">\(x^*\)</span>.</p>
 </section>
 </div></section>
 <section id="quasi-newton-verfahren">
 <span id="ss-quasi-newton"></span><h2><span class="section-number">1.2.5. </span>Quasi-Newton Verfahren<a class="headerlink" href="#quasi-newton-verfahren" title="Permalink to this heading">#</a></h2>
 <p>Im <a class="reference internal" href="#ss-newton"><span class="std std-ref">Newton Verfahren</span></a> haben wir das Newton Verfahren zur iterativen
-Approximation eines stationären Punktes <span class="math notranslate nohighlight">\(x^* \in \Omega\)</span> einer Funktion
-<span class="math notranslate nohighlight">\(F\)</span> mit <span class="math notranslate nohighlight">\(\nabla F(x^*) = 0\)</span> hergeleitet. Hierbei haben wir im Gegensatz
+Approximation eines stationären Punktes <span class="math">\(x^* \in \Omega\)</span> einer Funktion
+<span class="math">\(F\)</span> mit <span class="math">\(\nabla F(x^*) = 0\)</span> hergeleitet. Hierbei haben wir im Gegensatz
 zu den vorherigen numerischen Verfahren auch Ableitungen höherer Ordnung
 hinzugezogen. Dies führt in der Regel zu einem verbesserten
 Konvergenzverhalten im Vergleich zu den Verfahren, die nur die lokale
-Ableitung <span class="math notranslate nohighlight">\(\nabla F\)</span> der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> verwenden.</p>
+Ableitung <span class="math">\(\nabla F\)</span> der Zielfunktion <span class="math">\(F\)</span> verwenden.</p>
 <p>Dennoch ist das Newton Verfahren aus numerischer Sicht noch nicht ideal,
 da es einige Probleme mit sich bringt. Zuerst mussten wir fordern, dass
-die Hessematrix <span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span> in jedem Punkt des
+die Hessematrix <span class="math">\(\nabla^2 F(x_k)\)</span> in jedem Punkt des
 Iterationsverfahrens positiv definit ist, da ansonsten kein Abstieg der
 Funktionswerte garantiert werden kann. Zweitens muss für die Berechnung
 der Newton-Richtung in <a class="reference internal" href="#equation-eq-newton-richtung">(1.17)</a> zuerst die Hessematrix
 bestimmt und anschließend invertiert werden. Dies ist aus
-Effizienzgründen unerwünscht, da die Inversion einer <span class="math notranslate nohighlight">\(n \times n\)</span>-Matrix
-bekanntlich in <span class="math notranslate nohighlight">\(\mathcal{O}(n^3)\)</span> Rechenoperationen liegt (siehe
+Effizienzgründen unerwünscht, da die Inversion einer <span class="math">\(n \times n\)</span>-Matrix
+bekanntlich in <span class="math">\(\mathcal{O}(n^3)\)</span> Rechenoperationen liegt (siehe
 <span id="id5">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>. Da die Bestimmung und die Inversion der Hessematrix
 in jedem Iterationsschritt passieren müssen, ist das Newton Verfahren
 nur eingeschränkt empfehlenswert für die numerische Optimierung.</p>
 <p>Eine naheliegende Idee ist es nun die echte Hessematrix in jedem
 Iterationsschritt durch eine geeignete Matrix zu approximieren, so dass
 der numerische Aufwand geringer wird, d.h., wir suchen nach einer Matrix
-<span class="math notranslate nohighlight">\(B_k \in \R^{n \times n}\)</span></p>
-<div class="math notranslate nohighlight" id="equation-eq-matrix-bk">
+<span class="math">\(B_k \in \R^{n \times n}\)</span></p>
+<div class="math" id="equation-eq-matrix-bk">
 <span class="eqno">(1.19)<a class="headerlink" href="#equation-eq-matrix-bk" title="Permalink to this equation">#</a></span>\[B_k \approx \nabla^2 F(x_k).\]</div>
-<p>Damit können wir die Modellfunktion <span class="math notranslate nohighlight">\(m_k(p)\)</span> in <a class="reference internal" href="#equation-eq-modellfunktion">(1.16)</a>
+<p>Damit können wir die Modellfunktion <span class="math">\(m_k(p)\)</span> in <a class="reference internal" href="#equation-eq-modellfunktion">(1.16)</a>
 schreiben als:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[m_k(p) \ = \ F(x_k) + \langle p, \nabla F(x_k)\rangle + \frac{1}{2} \langle p, B_k p \rangle,\]</div>
-<p>das heißt, wir approximieren die Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> im <span class="math notranslate nohighlight">\(k\)</span>-ten
-Iterationsschritt entlang der Richtung <span class="math notranslate nohighlight">\(p \in \mathbb{R}^n\)</span> lokal durch
+<p>das heißt, wir approximieren die Zielfunktion <span class="math">\(F\)</span> im <span class="math">\(k\)</span>-ten
+Iterationsschritt entlang der Richtung <span class="math">\(p \in \mathbb{R}^n\)</span> lokal durch
 eine quadratische Funktion. Für sehr kleine Schrittweiten können wir
 davon ausgehen, dass der Fehler dieser Approximation gering ist, da wir
-davon ausgehen, dass <span class="math notranslate nohighlight">\(F\)</span> stetig differenzierbar in einer lokalen
-Umgebung <span class="math notranslate nohighlight">\(U \subset \Omega\)</span> des stationären Punktes <span class="math notranslate nohighlight">\(x^* \in \Omega\)</span> ist
-und für <span class="math notranslate nohighlight">\(p = 0\)</span> die Approximation exakt ist, da gilt</p>
-<div class="math notranslate nohighlight">
+davon ausgehen, dass <span class="math">\(F\)</span> stetig differenzierbar in einer lokalen
+Umgebung <span class="math">\(U \subset \Omega\)</span> des stationären Punktes <span class="math">\(x^* \in \Omega\)</span> ist
+und für <span class="math">\(p = 0\)</span> die Approximation exakt ist, da gilt</p>
+<div class="math">
 \[m_k(0) \ = \ F(x_k).\]</div>
-<p>Wenn wir fordern, dass <span class="math notranslate nohighlight">\(B_k\)</span> in <a class="reference internal" href="#equation-eq-matrix-bk">(1.19)</a> eine positiv definite
+<p>Wenn wir fordern, dass <span class="math">\(B_k\)</span> in <a class="reference internal" href="#equation-eq-matrix-bk">(1.19)</a> eine positiv definite
 Matrix ist, so lässt sich ein Abstiegsschritt des Iterationsverfahrens
 <a class="reference internal" href="#equation-eq-abstiegsverfahren">(1.3)</a> analog zur Herleitung des Newton
 Abstiegsverfahrens in <a class="reference internal" href="#ss-newton"><span class="std std-ref">Newton Verfahren</span></a> angeben als:</p>
-<div class="math notranslate nohighlight" id="equation-eq-quasi-newton-abstieg">
+<div class="math" id="equation-eq-quasi-newton-abstieg">
 <span class="eqno">(1.20)<a class="headerlink" href="#equation-eq-quasi-newton-abstieg" title="Permalink to this equation">#</a></span>\[x_{k+1} \ = \ x_k + \alpha_k p_k, \qquad p_k \ = \ -B_k^{-1} \nabla F(x_k).\]</div>
 <p>Die sogenannten <em>Quasi-Newton Verfahren</em> verfolgen diesen Ansatz.</p>
 <div class="proof remark admonition" id="remark-11">
@@ -940,8 +945,8 @@ Abstiegsverfahrens in <a class="reference internal" href="#ss-newton"><span clas
 Verfahren an Genauigkeit, wodurch ihre Konvergenzgeschwindigkeit
 <em>superlinear</em> anstatt <em>quadratisch</em> ist. Dafür gewinnen sie zusätzliche
 Geschwindigkeit durch die Vermeidung der Bestimmung und Inversion von
-<span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span>. Der Vorteil der Quasi-Newton Methoden ist es, dass
-man nur den Gradienten <span class="math notranslate nohighlight">\(\nabla F\)</span> für einen Schritt des numerischen
+<span class="math">\(\nabla^2 F(x_k)\)</span>. Der Vorteil der Quasi-Newton Methoden ist es, dass
+man nur den Gradienten <span class="math">\(\nabla F\)</span> für einen Schritt des numerischen
 Optimierungsverfahrens benötigt und keine expliziten Informationen über
 die zweiten Ableitungen. Dadurch werden sie in bestimmten Problemen
 sogar effizienter bei der Approximation eines stationären Punktes als
@@ -951,168 +956,168 @@ das Newton Abstiegsverfahren in <a class="reference internal" href="#ss-newton">
 <span id="id6"></span><h3><span class="section-number">1.2.5.1. </span>Sekantengleichung und Krümmungsbedingung<a class="headerlink" href="#sekantengleichung-und-krummungsbedingung" title="Permalink to this heading">#</a></h3>
 <p>Die entscheidende Frage bei der Konstruktion eines Quasi-Newton
 Abstiegsverfahrens der Form <a class="reference internal" href="#equation-eq-quasi-newton-abstieg">(1.20)</a> ist es, wie
-die positiv definite Matrix <span class="math notranslate nohighlight">\(B_k\)</span> in jedem Schritt möglichst effizient
-bestimmt werden kann. Anstatt die Näherung <span class="math notranslate nohighlight">\(B_k\)</span> der Hessematrix
-<span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span> in jedem Schritt von Grund auf neu zu berechnen, wäre
-es wünschenswert ein initiales <span class="math notranslate nohighlight">\(B_0\)</span> zu bestimmen, das in jedem Schritt
+die positiv definite Matrix <span class="math">\(B_k\)</span> in jedem Schritt möglichst effizient
+bestimmt werden kann. Anstatt die Näherung <span class="math">\(B_k\)</span> der Hessematrix
+<span class="math">\(\nabla^2 F(x_k)\)</span> in jedem Schritt von Grund auf neu zu berechnen, wäre
+es wünschenswert ein initiales <span class="math">\(B_0\)</span> zu bestimmen, das in jedem Schritt
 des Iterationsverfahrens nur aktualisiert werden muss. Hierbei ist es
 möglich die durch den Iterationsschritt erhaltenen Informationen über
-den Gradienten <span class="math notranslate nohighlight">\(\nabla F\)</span> zu Hilfe zu nehmen.</p>
+den Gradienten <span class="math">\(\nabla F\)</span> zu Hilfe zu nehmen.</p>
 <p>Wir nehmen an, wir haben bereits einen Abstiegsschritt durchgeführt und
-so einen neuen Punkt <span class="math notranslate nohighlight">\(x_{k+1} = x_k + \alpha_kp\)</span> erhalten. Unsere
+so einen neuen Punkt <span class="math">\(x_{k+1} = x_k + \alpha_kp\)</span> erhalten. Unsere
 quadratische Approximation in diesem neuen Punkt für eine neue Richtung
-<span class="math notranslate nohighlight">\(p \in \mathbb{R}^n\)</span> sieht dementsprechend wie folgt aus:</p>
-<div class="math notranslate nohighlight" id="equation-eq-quasi-newton-modellfunktion">
+<span class="math">\(p \in \mathbb{R}^n\)</span> sieht dementsprechend wie folgt aus:</p>
+<div class="math" id="equation-eq-quasi-newton-modellfunktion">
 <span class="eqno">(1.21)<a class="headerlink" href="#equation-eq-quasi-newton-modellfunktion" title="Permalink to this equation">#</a></span>\[m_{k+1}(p) \ = \ F(x_{k+1}) + \langle \nabla F(x_{k+1}), p \rangle + \frac{1}{2}\langle p, B_{k+1}p \rangle.\]</div>
-<p>Es ist leicht einzusehen, dass die Modellfunktion <span class="math notranslate nohighlight">\(m_{k+1}\)</span> im Punkt
-<span class="math notranslate nohighlight">\(x_{k+1} \in \R^n\)</span> zentriert ist und für <span class="math notranslate nohighlight">\(p=0\)</span> mit dem Funktionswert der
-Zielfunktion im Punkt <span class="math notranslate nohighlight">\(x_{k+1}\)</span> übereinstimmt, d.h., es gilt
-<span class="math notranslate nohighlight">\(m_{k+1}(0) = F(x_{k+1})\)</span>.</p>
-<p>Da wir uns bei der Wahl der positiv definiten Matrix <span class="math notranslate nohighlight">\(B_{k+1}\)</span> noch
+<p>Es ist leicht einzusehen, dass die Modellfunktion <span class="math">\(m_{k+1}\)</span> im Punkt
+<span class="math">\(x_{k+1} \in \R^n\)</span> zentriert ist und für <span class="math">\(p=0\)</span> mit dem Funktionswert der
+Zielfunktion im Punkt <span class="math">\(x_{k+1}\)</span> übereinstimmt, d.h., es gilt
+<span class="math">\(m_{k+1}(0) = F(x_{k+1})\)</span>.</p>
+<p>Da wir uns bei der Wahl der positiv definiten Matrix <span class="math">\(B_{k+1}\)</span> noch
 nicht festgelegt haben, wird durch <a class="reference internal" href="#equation-eq-quasi-newton-modellfunktion">(1.21)</a>
 eine Funktionenschar beschrieben. Eine Forderung, die man nun die
-Modellfunktion <span class="math notranslate nohighlight">\(m_{k+1}\)</span> stellen kann, um eine sinnvolle Matrix
-<span class="math notranslate nohighlight">\(B_{k+1}\)</span> zu bestimmen, ist, dass ihre Ableitung <span class="math notranslate nohighlight">\(\nabla m_{k+1}\)</span> mit
-der Ableitung der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> in den letzten beiden Punkten <span class="math notranslate nohighlight">\(x_k\)</span>
-und <span class="math notranslate nohighlight">\(x_{k+1}\)</span> übereinstimmt. Dies bedeutet, dass man die Matrix
-<span class="math notranslate nohighlight">\(B_{k+1}\)</span> versucht so zu bestimmen, dass die Modellfunktion <span class="math notranslate nohighlight">\(m_{k+1}\)</span>
-die Krümmung der Zielfunktion <span class="math notranslate nohighlight">\(F\)</span> gut approximiert. Da bereits gilt</p>
-<div class="math notranslate nohighlight">
+Modellfunktion <span class="math">\(m_{k+1}\)</span> stellen kann, um eine sinnvolle Matrix
+<span class="math">\(B_{k+1}\)</span> zu bestimmen, ist, dass ihre Ableitung <span class="math">\(\nabla m_{k+1}\)</span> mit
+der Ableitung der Zielfunktion <span class="math">\(F\)</span> in den letzten beiden Punkten <span class="math">\(x_k\)</span>
+und <span class="math">\(x_{k+1}\)</span> übereinstimmt. Dies bedeutet, dass man die Matrix
+<span class="math">\(B_{k+1}\)</span> versucht so zu bestimmen, dass die Modellfunktion <span class="math">\(m_{k+1}\)</span>
+die Krümmung der Zielfunktion <span class="math">\(F\)</span> gut approximiert. Da bereits gilt</p>
+<div class="math">
 \[\nabla m_{k+1}(0) \ = \ \nabla F(x_{k+1}),\]</div>
 <p>ist eine der beiden Forderungen automatisch erfüllt. Für die zweite
-Forderung können wir nutzen, dass <span class="math notranslate nohighlight">\(x_k = x_{k+1} - \alpha_k p_k\)</span> gilt
+Forderung können wir nutzen, dass <span class="math">\(x_k = x_{k+1} - \alpha_k p_k\)</span> gilt
 und wir erhalten somit:</p>
-<div class="math notranslate nohighlight" id="equation-eq-quasi-newton-forderung">
+<div class="math" id="equation-eq-quasi-newton-forderung">
 <span class="eqno">(1.22)<a class="headerlink" href="#equation-eq-quasi-newton-forderung" title="Permalink to this equation">#</a></span>\[\nabla F(x_k) \ \overset{!}{=} \ \nabla m_{k+1}(-\alpha_kp_k) \ = \ \nabla F(x_{k+1}) - B_{k+1}\alpha_kp_k.\]</div>
 <p>Durch Umstellen von <a class="reference internal" href="#equation-eq-quasi-newton-forderung">(1.22)</a> erhalten wir die
 Bedingung</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\nabla F(x_{k+1}) - \nabla F(x_k)  \ \overset{!}{=} \ B_{k+1}\alpha_k p_k \ = \ B_{k+1}(x_{k+1} - x_k).\]</div>
-<p>Eine vernünftige Wahl der Matrix <span class="math notranslate nohighlight">\(B_{k+1}\)</span> in <a class="reference internal" href="#equation-eq-matrix-bk">(1.19)</a> sollte
+<p>Eine vernünftige Wahl der Matrix <span class="math">\(B_{k+1}\)</span> in <a class="reference internal" href="#equation-eq-matrix-bk">(1.19)</a> sollte
 diese Eigenschaft, auch bekannt als <strong>Sekantengleichung</strong>, versuchen zu
 imitieren. Im eindimensionalen Fall mit
-<span class="math notranslate nohighlight">\(F \colon \Omega \subset \mathbb{R} \rightarrow \mathbb{R}\)</span> bedeutet die
-Sekantengleichung nichts anderes, als dass der Faktor <span class="math notranslate nohighlight">\(B_{k+1}\)</span> eine
-Approximation des zweiten Ableitung von <span class="math notranslate nohighlight">\(F\)</span> im Sinne eines
-Differenzenquotienten ist, d.h., im Fall <span class="math notranslate nohighlight">\(n=1\)</span> soll gelten:</p>
-<div class="math notranslate nohighlight">
+<span class="math">\(F \colon \Omega \subset \mathbb{R} \rightarrow \mathbb{R}\)</span> bedeutet die
+Sekantengleichung nichts anderes, als dass der Faktor <span class="math">\(B_{k+1}\)</span> eine
+Approximation des zweiten Ableitung von <span class="math">\(F\)</span> im Sinne eines
+Differenzenquotienten ist, d.h., im Fall <span class="math">\(n=1\)</span> soll gelten:</p>
+<div class="math">
 \[B_{k+1} \ \overset{!}{=} \ \frac{F'(x_{k+1})-F'(x_k)}{x_{k+1} - x_k}.\]</div>
 <p>Für unser allgemeines Quasi-Newton Verfahren in
 <a class="reference internal" href="#equation-eq-quasi-newton-abstieg">(1.20)</a> suchen wir also einen Weg die bereits
-bekannte Approximation der Hessematrix <span class="math notranslate nohighlight">\(B_k \approx \nabla^2F(x_k)\)</span> zu
-einer Matrix <span class="math notranslate nohighlight">\(B_{k+1}\)</span> zu aktualisieren, so dass der folgende
-Zusammenhang für den nächsten Punkt <span class="math notranslate nohighlight">\(x_{k+1} \in \Omega\)</span> erfüllt wird:</p>
-<div class="math notranslate nohighlight" id="equation-eq-sekantengleichung">
+bekannte Approximation der Hessematrix <span class="math">\(B_k \approx \nabla^2F(x_k)\)</span> zu
+einer Matrix <span class="math">\(B_{k+1}\)</span> zu aktualisieren, so dass der folgende
+Zusammenhang für den nächsten Punkt <span class="math">\(x_{k+1} \in \Omega\)</span> erfüllt wird:</p>
+<div class="math" id="equation-eq-sekantengleichung">
 <span class="eqno">(1.23)<a class="headerlink" href="#equation-eq-sekantengleichung" title="Permalink to this equation">#</a></span>\[B_{k+1} s_k \ = \ y_k,\]</div>
 <p>wobei</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[s_k \ = \ x_{k+1} - x_k, \qquad y_k = \nabla F(x_{k+1}) - \nabla F(x_k).\]</div>
 <p>Es wird klar, dass diese Forderung alleine nicht genügt für die
 Konstruktion eines Abstiegsverfahrens, da die Sekantengleichung in
-<a class="reference internal" href="#equation-eq-sekantengleichung">(1.23)</a> für <span class="math notranslate nohighlight">\(n &gt; 1\)</span> unterbestimmt ist, d.h., dass es
-mehr unbekannte Einträge der Matrix <span class="math notranslate nohighlight">\(B_{k+1} \in \R^{n \times n}\)</span> gibt
-als durch die <span class="math notranslate nohighlight">\(n\)</span> Gleichungen festgelegt werden. Daher versuchen wir im
-Folgenden weitere Forderungen an die Matrix <span class="math notranslate nohighlight">\(B_{k+1}\)</span> zu stellen.</p>
-<p>Um die positive Definitheit der Matrix <span class="math notranslate nohighlight">\(B_{k+1}\)</span> in Schrittrichtung
-<span class="math notranslate nohighlight">\(x_{k+1} - x_k = \alpha p_k \in \R^n\)</span> zu gewährleisten müssen wir
-fordern, dass die Vektoren <span class="math notranslate nohighlight">\(y_k\)</span> und <span class="math notranslate nohighlight">\(s_k\)</span> die sogenannte
+<a class="reference internal" href="#equation-eq-sekantengleichung">(1.23)</a> für <span class="math">\(n &gt; 1\)</span> unterbestimmt ist, d.h., dass es
+mehr unbekannte Einträge der Matrix <span class="math">\(B_{k+1} \in \R^{n \times n}\)</span> gibt
+als durch die <span class="math">\(n\)</span> Gleichungen festgelegt werden. Daher versuchen wir im
+Folgenden weitere Forderungen an die Matrix <span class="math">\(B_{k+1}\)</span> zu stellen.</p>
+<p>Um die positive Definitheit der Matrix <span class="math">\(B_{k+1}\)</span> in Schrittrichtung
+<span class="math">\(x_{k+1} - x_k = \alpha p_k \in \R^n\)</span> zu gewährleisten müssen wir
+fordern, dass die Vektoren <span class="math">\(y_k\)</span> und <span class="math">\(s_k\)</span> die sogenannte
 <strong>Krümmungsbedingung</strong> erfüllen:</p>
-<div class="math notranslate nohighlight" id="equation-eq-kruemmungsbedingung">
-<span class="eqno">(1.24)<a class="headerlink" href="#equation-eq-kruemmungsbedingung" title="Permalink to this equation">#</a></span>\[\langle s_k, y_k \rangle \ &gt; \ 0.\]</div>
+<div class="math" id="equation-eq-kruemmungsbedingung">
+<span class="eqno">(1.24)<a class="headerlink" href="#equation-eq-kruemmungsbedingung" title="Permalink to this equation">#</a></span>\[\langle s_k, y_k \rangle \ > \ 0.\]</div>
 <p>Dies ist eine hinreichende Bedingung für die positive Definitheit von
-<span class="math notranslate nohighlight">\(B_{k+1}\)</span> bezüglich der Richtung <span class="math notranslate nohighlight">\(\alpha_k p_k\)</span>, da wir einfach die
+<span class="math">\(B_{k+1}\)</span> bezüglich der Richtung <span class="math">\(\alpha_k p_k\)</span>, da wir einfach die
 Sekantengleichung <a class="reference internal" href="#equation-eq-sekantengleichung">(1.23)</a> von links mit dem Vektor
-<span class="math notranslate nohighlight">\(s_k^T\)</span> multiplizieren können und so erhalten wir mit der Forderung
+<span class="math">\(s_k^T\)</span> multiplizieren können und so erhalten wir mit der Forderung
 <a class="reference internal" href="#equation-eq-kruemmungsbedingung">(1.24)</a> schon:</p>
-<div class="math notranslate nohighlight">
-\[\langle s_k, B_{k+1}s_k \rangle \ = \ \langle s_k, y_k \rangle \ &gt; \ 0.\]</div>
+<div class="math">
+\[\langle s_k, B_{k+1}s_k \rangle \ = \ \langle s_k, y_k \rangle \ > \ 0.\]</div>
 <div class="proof remark admonition" id="remark-12">
 <p class="admonition-title"><span class="caption-number">Remark 1.11 </span> (Krümmungsbedingung und Konvexität)</p>
 <section class="remark-content" id="proof-content">
-<p>Falls die Zielunktion <span class="math notranslate nohighlight">\(F\)</span> strikt konvex ist, so ist die
+<p>Falls die Zielunktion <span class="math">\(F\)</span> strikt konvex ist, so ist die
 Krümmungsbedingung <a class="reference internal" href="#equation-eq-kruemmungsbedingung">(1.24)</a> für alle Punktepaare
-<span class="math notranslate nohighlight">\(x_k, x_{k+1} \in \Omega\)</span> erfüllt und die Matrix <span class="math notranslate nohighlight">\(B_{k+1}\)</span> wird damit
+<span class="math">\(x_k, x_{k+1} \in \Omega\)</span> erfüllt und die Matrix <span class="math">\(B_{k+1}\)</span> wird damit
 positiv definit. Für nichtkonvexe Funktionen hingegen muss man die
 Krümmungsbedingung explizit forcieren, um ein Abstiegsverfahren zu
 erhalten.</p>
 </section>
 </div><p>Falls die Krümmungsbedingung <a class="reference internal" href="#equation-eq-kruemmungsbedingung">(1.24)</a> erfüllt ist,
-so existiert mindestens eine Lösung <span class="math notranslate nohighlight">\(B_{k+1}\)</span> der Sekantengleichung
+so existiert mindestens eine Lösung <span class="math">\(B_{k+1}\)</span> der Sekantengleichung
 <a class="reference internal" href="#equation-eq-sekantengleichung">(1.23)</a>. Man sieht ein, dass es in der Tat sogar
-unendlich viele Lösungen <span class="math notranslate nohighlight">\(B_{k+1}\)</span> gibt, da eine symmetrische
-<span class="math notranslate nohighlight">\(n \times n\)</span> Matrix <span class="math notranslate nohighlight">\(n(n+1)/2\)</span> Freiheitsgrade besitzt und die
-Sekantengleichung <a class="reference internal" href="#equation-eq-sekantengleichung">(1.23)</a> nur <span class="math notranslate nohighlight">\(n\)</span> Bedingungen an
-<span class="math notranslate nohighlight">\(B_{k+1}\)</span> stellt. Zusätzlich erhält man <span class="math notranslate nohighlight">\(n\)</span> Bedingungen an <span class="math notranslate nohighlight">\(B_{k+1}\)</span>
-durch die Forderung von positiver Definitheit, da alle <span class="math notranslate nohighlight">\(n\)</span> Hauptminoren
-von <span class="math notranslate nohighlight">\(B_{k+1}\)</span> positiv sein müssen. Dies reicht jedoch nicht für die
-eindeutige Bestimmung der Matrix <span class="math notranslate nohighlight">\(B_{k+1}\)</span>. Hierfür müssen wir
-zusätzlich fordern, dass die Matrix <span class="math notranslate nohighlight">\(B_{k+1}\)</span> diejenige Matrix unter
-allen möglichen Lösungen ist, die der vorherigen Matrix <span class="math notranslate nohighlight">\(B_k\)</span> am
+unendlich viele Lösungen <span class="math">\(B_{k+1}\)</span> gibt, da eine symmetrische
+<span class="math">\(n \times n\)</span> Matrix <span class="math">\(n(n+1)/2\)</span> Freiheitsgrade besitzt und die
+Sekantengleichung <a class="reference internal" href="#equation-eq-sekantengleichung">(1.23)</a> nur <span class="math">\(n\)</span> Bedingungen an
+<span class="math">\(B_{k+1}\)</span> stellt. Zusätzlich erhält man <span class="math">\(n\)</span> Bedingungen an <span class="math">\(B_{k+1}\)</span>
+durch die Forderung von positiver Definitheit, da alle <span class="math">\(n\)</span> Hauptminoren
+von <span class="math">\(B_{k+1}\)</span> positiv sein müssen. Dies reicht jedoch nicht für die
+eindeutige Bestimmung der Matrix <span class="math">\(B_{k+1}\)</span>. Hierfür müssen wir
+zusätzlich fordern, dass die Matrix <span class="math">\(B_{k+1}\)</span> diejenige Matrix unter
+allen möglichen Lösungen ist, die der vorherigen Matrix <span class="math">\(B_k\)</span> am
 nächsten bezüglich eines geeigneten Maßes ist. Das heißt wir suchen eine
 Lösung des folgenden Optimierungsproblems:</p>
-<div class="math notranslate nohighlight" id="equation-eq-quasi-newton-optimization-problem">
-<span class="eqno">(1.25)<a class="headerlink" href="#equation-eq-quasi-newton-optimization-problem" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
+<div class="math" id="equation-eq-quasi-newton-optimization-problem">
+<span class="eqno">(1.25)<a class="headerlink" href="#equation-eq-quasi-newton-optimization-problem" title="Permalink to this equation">#</a></span>\[\begin{split}
 \min_{B \in \R^{n\times n}} || B - B_k ||, \quad \text{ unter den Nebenbedingungen: } \\
-B \ = \ B^T, \qquad B s_k \ = \ y_k, \qquad \langle p, Bp \rangle &gt; 0, \forall p \in \mathbb{R}^n / \lbrace 0 \rbrace,
-\end{split}\end{split}\]</div>
-<p>wobei <span class="math notranslate nohighlight">\(s_k\)</span> und <span class="math notranslate nohighlight">\(y_k\)</span> definiert sind wie in der Sekantengleichung
+B \ = \ B^T, \qquad B s_k \ = \ y_k, \qquad \langle p, Bp \rangle > 0, \forall p \in \mathbb{R}^n / \lbrace 0 \rbrace,
+\end{split}\]</div>
+<p>wobei <span class="math">\(s_k\)</span> und <span class="math">\(y_k\)</span> definiert sind wie in der Sekantengleichung
 <a class="reference internal" href="#equation-eq-sekantengleichung">(1.23)</a>. Man beachte, dass man eine unterschiedliche
-Lösung <span class="math notranslate nohighlight">\(B_{k+1}\)</span> des Optimierungsproblems
+Lösung <span class="math">\(B_{k+1}\)</span> des Optimierungsproblems
 <a class="reference internal" href="#equation-eq-quasi-newton-optimization-problem">(1.25)</a> in Abhängigkeit der gewählten
 Matrixnorm erhält und somit auch ein unterschiedliches Quasi-Newton
 Verfahren herleiten kann.</p>
 </section>
 <section id="das-davidon-fletcher-powell-verfahren">
 <span id="id7"></span><h3><span class="section-number">1.2.5.2. </span>Das Davidon-Fletcher-Powell Verfahren<a class="headerlink" href="#das-davidon-fletcher-powell-verfahren" title="Permalink to this heading">#</a></h3>
-<p>Im ursprünglich im Jahr <span class="math notranslate nohighlight">\(1959\)</span> von Davidon vorgeschlagenen Verfahren
+<p>Im ursprünglich im Jahr <span class="math">\(1959\)</span> von Davidon vorgeschlagenen Verfahren
 <span id="id8">[<a class="reference internal" href="../../references.html#id10">Dav59</a>]</span> (das im Übrigen bei der Erstbegutachtung
 abgelehnt wurde) wählt man für die Norm im Optimierungsproblem
 <a class="reference internal" href="#equation-eq-quasi-newton-optimization-problem">(1.25)</a> eine gewichtete Frobeniusnorm
 der Form</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[||A||_W \ \coloneqq \ || W^\frac{1}{2}A W^{-\frac{1}{2}} ||_F.\]</div>
-<p>Die Gewichtungsmatrix <span class="math notranslate nohighlight">\(W\)</span> dient dazu, dass das implizierte Quasi-Newton
-Verfahren zur Approximation eines stationären Punktes <span class="math notranslate nohighlight">\(x^* \in \Omega\)</span>
+<p>Die Gewichtungsmatrix <span class="math">\(W\)</span> dient dazu, dass das implizierte Quasi-Newton
+Verfahren zur Approximation eines stationären Punktes <span class="math">\(x^* \in \Omega\)</span>
 skalierungs-invariant wird. Hierzu wählt man eine beliebige Matrix für
-die die Relation <span class="math notranslate nohighlight">\(W y_k = s_k\)</span> gilt, d.h., eine Matrix <span class="math notranslate nohighlight">\(W\)</span>, die sich wie
-die Inverse der Matrix <span class="math notranslate nohighlight">\(B\)</span> in <a class="reference internal" href="#equation-eq-quasi-newton-optimization-problem">(1.25)</a>
+die die Relation <span class="math">\(W y_k = s_k\)</span> gilt, d.h., eine Matrix <span class="math">\(W\)</span>, die sich wie
+die Inverse der Matrix <span class="math">\(B\)</span> in <a class="reference internal" href="#equation-eq-quasi-newton-optimization-problem">(1.25)</a>
 verhält. Ein konkretes Beispiel für solch eine Gewichtungsmatrix wäre
-<span class="math notranslate nohighlight">\(W \coloneqq G_k^{-1}\)</span>, wobei <span class="math notranslate nohighlight">\(G_k\)</span> die <em>durchschnittliche Hessematrix</em>
-von <span class="math notranslate nohighlight">\(F\)</span> entlang des letzten Abstiegsschritts von
-<span class="math notranslate nohighlight">\(x_k \rightarrow x_{k+1}\)</span> ist mit</p>
-<div class="math notranslate nohighlight">
+<span class="math">\(W \coloneqq G_k^{-1}\)</span>, wobei <span class="math">\(G_k\)</span> die <em>durchschnittliche Hessematrix</em>
+von <span class="math">\(F\)</span> entlang des letzten Abstiegsschritts von
+<span class="math">\(x_k \rightarrow x_{k+1}\)</span> ist mit</p>
+<div class="math">
 \[G_k \ \coloneqq \ \int_0^1 \nabla^2 F(x_k + t \alpha_k p_k)~\mathrm{d}t.\]</div>
-<p>Mit der konkreten Wahl dieser Gewichtungsmatrix <span class="math notranslate nohighlight">\(W = G_k^{-1}\)</span> wird die
+<p>Mit der konkreten Wahl dieser Gewichtungsmatrix <span class="math">\(W = G_k^{-1}\)</span> wird die
 gewichtete Frobeniusnorm dimensionslos und man erhält eine eindeutige
 Lösung des Optimierungsproblems
 <a class="reference internal" href="#equation-eq-quasi-newton-optimization-problem">(1.25)</a> wie folgt:</p>
-<div class="math notranslate nohighlight" id="equation-eq-dfp">
+<div class="math" id="equation-eq-dfp">
 <span class="eqno">(1.26)<a class="headerlink" href="#equation-eq-dfp" title="Permalink to this equation">#</a></span>\[B_{k+1} \ = \ (I-\gamma_k y_ks_k^T) B_k (I - \gamma_k s_k y_k^T) + \gamma_k y_k y_k^T, \quad \text{ mit } \gamma_k \ \coloneqq \ \frac{1}{\langle y_k, s_k \rangle}.\]</div>
 <p>Die Gleichung <a class="reference internal" href="#equation-eq-dfp">(1.26)</a> wird auch <strong>DFP-Schritt</strong> genannt, da sie
 zuerst von Davidon vorgeschlagen und später von Fletcher und Powell
 untersucht und verbreitet wurde.</p>
-<p>Obwohl wir die explizite Berechnung der Hessematrix <span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span>
-vermieden haben und die Aktualisierung der Matrix <span class="math notranslate nohighlight">\(B_k\)</span> zu <span class="math notranslate nohighlight">\(B_{k+1}\)</span>
-lediglich auf den Gradienteninformationen von <span class="math notranslate nohighlight">\(F\)</span> basiert ist der
-numerische Aufwand bei direkter Verwendung von <span class="math notranslate nohighlight">\(B_{k+1}\)</span> in <a class="reference internal" href="#equation-eq-dfp">(1.26)</a>
+<p>Obwohl wir die explizite Berechnung der Hessematrix <span class="math">\(\nabla^2 F(x_k)\)</span>
+vermieden haben und die Aktualisierung der Matrix <span class="math">\(B_k\)</span> zu <span class="math">\(B_{k+1}\)</span>
+lediglich auf den Gradienteninformationen von <span class="math">\(F\)</span> basiert ist der
+numerische Aufwand bei direkter Verwendung von <span class="math">\(B_{k+1}\)</span> in <a class="reference internal" href="#equation-eq-dfp">(1.26)</a>
 noch zu hoch. Das liegt daran, dass wir für einen Schritt des
 Quasi-Newton Verfahrens in <a class="reference internal" href="#equation-eq-quasi-newton-abstieg">(1.20)</a> die Inverse der
-Matrix <span class="math notranslate nohighlight">\(B_k\)</span> benötigen und die Inversion einen numerischen Aufwand von
-<span class="math notranslate nohighlight">\(\mathcal{O}(n^3)\)</span> besitzt. Glücklicherweise gibt es einen Trick, wie
-wir die Inverse von <span class="math notranslate nohighlight">\(B_k\)</span> in jedem Schritt des Iterationsverfahrens
-numerisch günstig erhalten können. Sei <span class="math notranslate nohighlight">\(H_k \coloneqq B_k^{-1}\)</span>, dann
+Matrix <span class="math">\(B_k\)</span> benötigen und die Inversion einen numerischen Aufwand von
+<span class="math">\(\mathcal{O}(n^3)\)</span> besitzt. Glücklicherweise gibt es einen Trick, wie
+wir die Inverse von <span class="math">\(B_k\)</span> in jedem Schritt des Iterationsverfahrens
+numerisch günstig erhalten können. Sei <span class="math">\(H_k \coloneqq B_k^{-1}\)</span>, dann
 können wir die sogenannte Sherman-Morrison-Woodbury Formel (siehe
 <span id="id9">[<a class="reference internal" href="../../references.html#id9" title="Wikipedia. Sherman -morrison-woodbury formel. URL: https://de.wikipedia.org/wiki/Sherman-Morrison-Woodbury-Formel (visited on 2023-05-02).">Wikb</a>]</span>) auf Gleichung <a class="reference internal" href="#equation-eq-dfp">(1.26)</a> anwenden um die neue
-Inverse <span class="math notranslate nohighlight">\(H_{k+1}\)</span> durch eine Aktualisierung der Matrix <span class="math notranslate nohighlight">\(H_k\)</span> zu
+Inverse <span class="math">\(H_{k+1}\)</span> durch eine Aktualisierung der Matrix <span class="math">\(H_k\)</span> zu
 berechnen:</p>
-<div class="math notranslate nohighlight" id="equation-eq-smw-formel">
+<div class="math" id="equation-eq-smw-formel">
 <span class="eqno">(1.27)<a class="headerlink" href="#equation-eq-smw-formel" title="Permalink to this equation">#</a></span>\[H_{k+1} \ = \ H_k - \frac{H_k y_k y_k^T H_k}{\langle y_k, H_k y_k\rangle} + \frac{s_k s_k^T}{\langle y_k, s_k \rangle} .\]</div>
 <p>Wie man einssieht liegt der numerische Rechenaufwand für das Update von
-<span class="math notranslate nohighlight">\(H_{k+1}\)</span> in <a class="reference internal" href="#equation-eq-smw-formel">(1.27)</a> in <span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span>. Es fällt
-außerdem auf, dass <span class="math notranslate nohighlight">\(H_k\)</span> nur durch die Addition zweier Matrizen mit Rang
-<span class="math notranslate nohighlight">\(1\)</span> verändert wird, also insgesamt eine Änderung von höchstes Rang <span class="math notranslate nohighlight">\(2\)</span>
+<span class="math">\(H_{k+1}\)</span> in <a class="reference internal" href="#equation-eq-smw-formel">(1.27)</a> in <span class="math">\(\mathcal{O}(n^2)\)</span>. Es fällt
+außerdem auf, dass <span class="math">\(H_k\)</span> nur durch die Addition zweier Matrizen mit Rang
+<span class="math">\(1\)</span> verändert wird, also insgesamt eine Änderung von höchstens Rang <span class="math">\(2\)</span>
 erfährt. Das passt gut zu der Forderung, dass wir erwarten, dass sich
-die Approximation der Hessematrix <span class="math notranslate nohighlight">\(\nabla^2 F\)</span> in einer lokalen Umgebung
+die Approximation der Hessematrix <span class="math">\(\nabla^2 F\)</span> in einer lokalen Umgebung
 nur wenig ändert.</p>
 </section>
 <section id="das-broyden-fletcher-goldfarb-shanno-verfahren">
@@ -1124,49 +1129,49 @@ Broyden–Fletcher–Goldfard–Shanno (BFGS) Verfahren in
 <span id="id10">[<a class="reference internal" href="../../references.html#id13" title="Charles G. Broyden. The Convergence of a Class of Double-rank Minimization Algorithms 1. General Considerations. IMA Journal of Applied Mathematics, 6(1):76-90, 1970. arXiv:https://academic.oup.com/imamat/article-pdf/6/1/76/2233756/6-1-76.pdf.">Bro70</a>]</span>. Die Idee des BFGS Verfahrens leitet sich
 unmittelbar aus der Idee des DFP Verfahren ab. Anstatt das
 Optimierungsproblem <a class="reference internal" href="#equation-eq-quasi-newton-optimization-problem">(1.25)</a> mit
-bestimmten Bedingungen an die Approximation <span class="math notranslate nohighlight">\(B_{k+1}\)</span> der Hessematrix
-<span class="math notranslate nohighlight">\(\nabla^2 F(x_k)\)</span> zu stellen, versucht man direkt die Inverse der
-Hessematrix <span class="math notranslate nohighlight">\((\nabla^2 F(x_k))^{-1}\)</span> geeignet zu approximieren. Hierfür
-nehmen wir an, dass wir eine Matrix <span class="math notranslate nohighlight">\(H_{k+1}\)</span> als geringfügige
-Aktualisierung einer bereits vorher bestimmten Matrix <span class="math notranslate nohighlight">\(H_k\)</span> suchen, die
+bestimmten Bedingungen an die Approximation <span class="math">\(B_{k+1}\)</span> der Hessematrix
+<span class="math">\(\nabla^2 F(x_k)\)</span> zu stellen, versucht man direkt die Inverse der
+Hessematrix <span class="math">\((\nabla^2 F(x_k))^{-1}\)</span> geeignet zu approximieren. Hierfür
+nehmen wir an, dass wir eine Matrix <span class="math">\(H_{k+1}\)</span> als geringfügige
+Aktualisierung einer bereits vorher bestimmten Matrix <span class="math">\(H_k\)</span> suchen, die
 gleichzeitig symmetrisch und positiv definit ist und zusätzlich die
 Sekantenbedingung in umgeschriebener Form erfüllt:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[H_{k+1}y_k \ = \ s_k.\]</div>
 <p>Hierzu formuliert man ein analoges Optimierungsproblem zu
 <a class="reference internal" href="#equation-eq-quasi-newton-optimization-problem">(1.25)</a> von der Form:</p>
-<div class="math notranslate nohighlight" id="equation-eq-bfgs-optimierungsproblem">
-<span class="eqno">(1.28)<a class="headerlink" href="#equation-eq-bfgs-optimierungsproblem" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
+<div class="math" id="equation-eq-bfgs-optimierungsproblem">
+<span class="eqno">(1.28)<a class="headerlink" href="#equation-eq-bfgs-optimierungsproblem" title="Permalink to this equation">#</a></span>\[\begin{split}
 \min_{H} || H - H_k ||, \quad \text{ unter den Nebenbedingungen: } \\
-H \ = \ H^T, \qquad H y_k \ = \ s_k, \qquad \langle p, Hp \rangle &gt; 0, \forall p \in \mathbb{R}^n / \lbrace 0 \rbrace.
-\end{split}\end{split}\]</div>
+H \ = \ H^T, \qquad H y_k \ = \ s_k, \qquad \langle p, Hp \rangle > 0, \forall p \in \mathbb{R}^n / \lbrace 0 \rbrace.
+\end{split}\]</div>
 <p>Unter der Verwendung der gewichteten Frobeniusnorm und einer beliebigen
-Gewichtsfunktion, die die Sekantengleichung <span class="math notranslate nohighlight">\(Ws_k = y_k\)</span> erfüllt, erhält
+Gewichtsfunktion, die die Sekantengleichung <span class="math">\(Ws_k = y_k\)</span> erfüllt, erhält
 man wiederum die eindeutige Lösung des Minimierungsproblems
 <a class="reference internal" href="#equation-eq-bfgs-optimierungsproblem">(1.28)</a> als:</p>
-<div class="math notranslate nohighlight" id="equation-eq-bfgs">
+<div class="math" id="equation-eq-bfgs">
 <span class="eqno">(1.29)<a class="headerlink" href="#equation-eq-bfgs" title="Permalink to this equation">#</a></span>\[H_{k+1} \ = \ (I - \rho_k s_k y_k^T) H_k (I - \rho_k y_k s_k^T) + \rho_k s_k s_k^T, \quad \text{ mit } \rho_k \coloneqq \frac{1}{\langle y_k, s_k \rangle}.\]</div>
-<p>Das Update der Matrix <span class="math notranslate nohighlight">\(H_k\)</span> in <a class="reference internal" href="#equation-eq-bfgs">(1.29)</a> kann numerisch in
-<span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span> durchgeführt werden, was man schnell einsieht, wenn
+<p>Das Update der Matrix <span class="math">\(H_k\)</span> in <a class="reference internal" href="#equation-eq-bfgs">(1.29)</a> kann numerisch in
+<span class="math">\(\mathcal{O}(n^2)\)</span> durchgeführt werden, was man schnell einsieht, wenn
 man das Produkt ausschreibt:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[H_{k+1} \ = \ H_k - H_k\rho_k y_k s_k^T - \rho_k s_k y_k^T H_k + \rho_k s_k y_k^T H_k \rho_k y_k s_k^T + \rho_k s_k s_k^T.\]</div>
 <p>In dieser Schreibweise sieht man gut, dass man lediglich Skalarprodukte
-in <span class="math notranslate nohighlight">\(\mathcal{O}(n)\)</span>, Matrix-Vektor Multiplikationen in
-<span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span> und dyadische Produkte in <span class="math notranslate nohighlight">\(\mathcal{O}(n^2)\)</span>
+in <span class="math">\(\mathcal{O}(n)\)</span>, Matrix-Vektor Multiplikationen in
+<span class="math">\(\mathcal{O}(n^2)\)</span> und dyadische Produkte in <span class="math">\(\mathcal{O}(n^2)\)</span>
 berechnen muss. Im Gegensatz hierzu würde eine naive Implementierung des
 BFGS-Updates in <a class="reference internal" href="#equation-eq-bfgs">(1.29)</a> zu einem numerischen Aufwand von
-<span class="math notranslate nohighlight">\(\mathcal{O}(n^3)\)</span> führen.</p>
+<span class="math">\(\mathcal{O}(n^3)\)</span> führen.</p>
 <p>Abschließend bleibt die Frage was eine gute Initialisierung der Matrix
-<span class="math notranslate nohighlight">\(H_0\)</span> ist. Idealerweise hat man bereits Informationen über die Inverse
-der Hessematrix <span class="math notranslate nohighlight">\((\nabla^2 F(x_0))^{-1}\)</span> im Initialisierungspunkt
-<span class="math notranslate nohighlight">\(x_0 \in \Omega\)</span>, zum Beispiel durch eine numerische Approximation
+<span class="math">\(H_0\)</span> ist. Idealerweise hat man bereits Informationen über die Inverse
+der Hessematrix <span class="math">\((\nabla^2 F(x_0))^{-1}\)</span> im Initialisierungspunkt
+<span class="math">\(x_0 \in \Omega\)</span>, zum Beispiel durch eine numerische Approximation
 mittels finiter Differenzen (später in der Vorlesung!). Andererseits
-erwarten wir, dass die Aktualisierung von <span class="math notranslate nohighlight">\(H_k\)</span> im <span class="math notranslate nohighlight">\(k\)</span>-ten Schritt des
-Iterationsverfahrens <a class="reference internal" href="#equation-eq-bfgs">(1.29)</a> zu <span class="math notranslate nohighlight">\(H_{k+1}\)</span> die aktuellen
-Informationen über den Verlauf der Gradienten <span class="math notranslate nohighlight">\(\nabla F(x_k)\)</span> und
-<span class="math notranslate nohighlight">\(\nabla F(x_{k+1})\)</span> berücksichtigt. Darum ist eine häufige Wahl von
-<span class="math notranslate nohighlight">\(H_0\)</span> die Initialisierung als Einheitsmatrix <span class="math notranslate nohighlight">\(I_n\)</span> oder ein Vielfaches
+erwarten wir, dass die Aktualisierung von <span class="math">\(H_k\)</span> im <span class="math">\(k\)</span>-ten Schritt des
+Iterationsverfahrens <a class="reference internal" href="#equation-eq-bfgs">(1.29)</a> zu <span class="math">\(H_{k+1}\)</span> die aktuellen
+Informationen über den Verlauf der Gradienten <span class="math">\(\nabla F(x_k)\)</span> und
+<span class="math">\(\nabla F(x_{k+1})\)</span> berücksichtigt. Darum ist eine häufige Wahl von
+<span class="math">\(H_0\)</span> die Initialisierung als Einheitsmatrix <span class="math">\(I_n\)</span> oder ein Vielfaches
 der Einheitsmatrix, wobei die Vorfaktoren der Diagonaleinträge
 entsprechend der Skalierung der Variablen gewählt werden.</p>
 </section>

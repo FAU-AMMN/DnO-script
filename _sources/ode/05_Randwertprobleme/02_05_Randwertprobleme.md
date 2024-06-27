@@ -57,9 +57,10 @@ sich ebenfalls anders motivieren: eigentlich berechnen wir numerische
 Approximationen erster Ableitungen mit Hilfe des zentralen
 Differenzenquotienten als
 ```{math}
+\begin{aligned}
     \frac{u(x_{k+1}) -  u(x_k)}{x_{k+1}-x_k} \ &= \ u'(x_{k+1/2}) + \mathcal{O}(h^2),\\
     \frac{u(x_k)- u(x_{k-1})}{x_k - x_{k-1}} \ &= \ u'(x_{k-1/2}) + \mathcal{O}(h^2)
-
+\end{aligned}
 ```
 mit den beiden (impliziten) Mittelpunkten
 ```{math}
@@ -106,10 +107,11 @@ Differenzenschemas für jeden Punkt in eine Zeile der Systemmatrix
 $A \in \R^{N-1 \times N-1}$ des Problems schreiben. Hierzu können wir
 genauer für die Matrix-Einträge von $A$ definieren als:
 ```{math}
+\begin{aligned}
 A_{k,k} \ &\coloneqq \ \frac{1}{h_k} \left( \frac{1}{x_{k+1}-x_k} +  \frac{1}{x_k+x_{k-1}} \right) + c(x_k), \qquad k=1,\ldots,N-1\\
 A_{k,k-1} \ \coloneqq \ - \, &\frac{1}{h_k(x_k - x_{k-1})}, \qquad  A_{k-1,k} \ \coloneqq \ - \, \frac{1}{h_k(x_{k+1} - x_{k})} \qquad k=2,\ldots,N-1\\
 & \hspace{2cm} A_{k,j} \ \coloneqq \ 0 \qquad \text{sonst, }
-
+\end{aligned}
 ```
 Wir erhalten damit also eine Tridiagonalmatrix
 $A \in \R^{N-1 \times N-1}$, die sich im äquidistanten Fall vereinfacht
@@ -127,10 +129,11 @@ die rechte Seite $f(x)$ der Differentialgleichung abbilden, als auch die
 Randwertbedingungen $u(0) = g_0$ und $u(1) = g_1$ berücksichtigen.
 Hierzu definieren wir uns entsprechend den Vektor $F \in \R^{N-1}$ mit:
 ```{math}
+\begin{aligned}
 F_k \ &\coloneqq \  f(x_k),  \qquad k \in \{2, \ldots,N-2\} \\
 F_1 \ &\coloneqq \ f(x_1) + \frac{g_0}{h_1(x_1-x_0)}, \\
 F_{N-1} \ &\coloneqq \ f(x_{N-1}) + \frac{g_1}{h_{N-1}(x_N-x_{N-1})}.
-
+\end{aligned}
 ```
 Insgesamt müssen wir also das lineare $(N-1) \times (N-1)$
 Gleichungssystem $A U_h  \ = \ F$ numerisch lösen um eine diskrete
@@ -205,10 +208,11 @@ Wir können folgende Beobachtungen zu den Eigenschaften der Matrix $A$ in
     formal selbstadjungiert ist. Es gilt mit partieller Integration für
     $u$ und $v$ und angenommenen Dirichlet-Nullrandwerten:
     ```{math}
+    \begin{aligned}
     \langle Lu, v \rangle_{L^2} \ &= \ \int_0^1 (Lu)(x)~v(x)\, \mathrm{d}x \ = \ \int_0^1 (-(a(x) u'(x))v(x) + c(x) u(x) v(x)\, \mathrm{d}x \\
     &= \ \int_0^1 a(x) u'(x) v'(x)  + c(x) u(x) v(x)\, \mathrm{d}x \\
     &= \ \int_0^1 (-(a(x) v'(x)) u(x) + c(x)  v(x)u(x))\, \mathrm{d}x \ = \ \langle v, Lu \rangle_{L^2} .
-
+    \end{aligned}
     ```
 
     Ist $c(x) \geq 0$, dann ist die Matrix $A$ sogar symmetrisch positiv
@@ -242,9 +246,7 @@ es gilt $(U_h) _k = u_k \approx u(x_k)$ für $k=1,\ldots,N-1$.
 Wie wir im Folgenden feststellen werden hängt die Stabilität und
 folglich damit die Konvergenz eines Differenzenverfahrens maßgeblich von
 den Eigenschaften der Systemmatrix $A \in \R^{N-1 \times N-1}$ ab. Die
-in
-[\[rem:systemmatrix_eigenschaften\]](#rem:systemmatrix_eigenschaften){reference-type="ref+label"
-reference="rem:systemmatrix_eigenschaften"} diskutierten Eigenschaften
+in {prf:ref}`rem:systemmatrix_eigenschaften` diskutierten Eigenschaften
 der speziellen Systemmatrix $A$ motivieren die folgende Definition.
 
 ````{prf:definition} M-Matrix
@@ -273,10 +275,9 @@ $c(x) \geq 0$ für $x \in [0,1]$. Dann ist $A$ eine M-Matrix.
 
 ````
 
-Die letzte Eigenschaft einer M-Matrix in
-[\[def:m-matrix\]](#def:m-matrix){reference-type="ref+label"
-reference="def:m-matrix"} ist entscheidend für deren Invertierbarkeit,
-da sonst beispielsweise auch die folgende Matrix zulässig wäre:
+Die letzte Eigenschaft einer M-Matrix in {prf:ref}`def:m-matrix` ist
+entscheidend für deren Invertierbarkeit, da sonst beispielsweise auch
+die folgende Matrix zulässig wäre:
 ```{math}
 A \ \coloneqq \ \left( \begin{array}{cc} 1 & -1 \\ -1 & 1 \end{array} \right)
 ```
@@ -408,9 +409,8 @@ falls für den Konvergenzfehler folgende Abschätzung gilt:
 E_h \ = \ \Vert U_h - U\Vert_\infty \ \leq \ C \cdot K_h,
 ```
 wobei $K_h$ der globale Konsistenzfehler aus
-[\[def:randwertproblem_konsistenzfehler\]](#def:randwertproblem_konsistenzfehler){reference-type="ref+label"
-reference="def:randwertproblem_konsistenzfehler"} ist und $C > 0$ eine
-von der Diskretisierungsschrittweite
+{prf:ref}`def:randwertproblem_konsistenzfehler` ist und $C > 0$ eine von
+der Diskretisierungsschrittweite
 $h \coloneqq \max_{k=1,\ldots,N-1} |x_{k-1} - x_k|$ unabhängige
 Konstante.
 
@@ -419,8 +419,7 @@ Konstante.
 Wie wir sehen werden ist die M-Matrix Eigenschaft eine hinreichende
 Bedingung für die Stabilität eines Differenzenverfahrens. Wie beim
 Maximumsprinzip für die Differentialgleichung in
-[1.1](#s:randwertproblem_existenz_eindeutigkeit){reference-type="ref+label"
-reference="s:randwertproblem_existenz_eindeutigkeit"} werden wir
+{ref}`s:randwertproblem_existenz_eindeutigkeit` werden wir
 Vergleichslösungen suchen, um Fehlerschranken zu erhalten. Dazu ist es
 wichtig, dass die Vergleichslösung unabhängig von der Schrittweite
 $h > 0$ (bzw. der Anzahl der Gitterpunkte $N \in \N$) ist.
@@ -519,12 +518,10 @@ zunächst wieder die Vektoren
 H_\pm \ \coloneqq \ U - U_h \, \pm \, 2 \cdot K_h \cdot V.
 ```
 Da $A$ eine M-Matrix ist nach Voraussetzung können wir
-[\[lem:abschaetzungen_vergleichsloesungen\]](#lem:abschaetzungen_vergleichsloesungen){reference-type="ref+label"
-reference="lem:abschaetzungen_vergleichsloesungen"} anwenden und es
-gelten somit die Abschätzungen
-{eq}`eq:randwertproblem_fehler_ungleichungen`. Wegen der
-Nichtnegativität der Matrixeinträge der Inversen $A^{-1}$ können wir
-dann komponentenweise folgern
+{prf:ref}`lem:abschaetzungen_vergleichsloesungen` anwenden und es gelten
+somit die Abschätzungen {eq}`eq:randwertproblem_fehler_ungleichungen`.
+Wegen der Nichtnegativität der Matrixeinträge der Inversen $A^{-1}$
+können wir dann komponentenweise folgern
 ```{math}
 \begin{split}
 H_+ \ = \ U - U_h + 2 \cdot K_h \cdot V \ \geq \ A^{-1} \cdot 0 \ = \ 0,\\

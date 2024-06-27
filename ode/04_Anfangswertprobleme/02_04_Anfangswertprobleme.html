@@ -37,6 +37,8 @@
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/proof.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
@@ -58,14 +60,15 @@
     <script src="../../_static/translations.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js"></script>
+    <script src="../../_static/katex.min.js"></script>
+    <script src="../../_static/auto-render.min.js"></script>
+    <script src="../../_static/katex_autorenderer.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
 const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"tex": {"macros": {"Z": "\\mathbb{Z}", "V": "V", "N": "\\mathbb{N}", "C": "\\mathbb{C}", "Q": "\\mathbb{Q}", "K": "\\mathbb{K}", "floor": ["\\lfloor#1\\rfloor", 1], "bmat": ["\\left[\\begin{array}"], "emat": ["\\end{array}\\right]"], "R": ["\\mathbb{R}"], "B": ["\\mathcal{B}"], "norm": ["{\\Vert#1\\Vert}", 1], "abs": ["{\\left|#1\\right|}", 1], "coloneqq": ["{:=}"], "eqqcolon": ["{=:}"], "emph": ["\\pmb#1", 1], "tr": "\\operatorname{Spur}", "lin": "\\operatorname{lin}", "dv": "\\mathrm{div}~", "rot": "\\mathrm{rot}~", "Dim": "\\operatorname{dim}", "diag": "\\operatorname{diag}", "Kern": "\\operatorname{Kern}", "Bild": "\\operatorname{Bild}", "Im": "\\operatorname{Im}", "Rang": "\\operatorname{Rang}", "GL": "\\operatorname{GL}", "Eig": "\\operatorname{Eig}", "End": "\\operatorname{End}", "Hau": "\\operatorname{Haupt}", "mymathbb": ["\\boldsymbol{#1}", 1], "idx": "\\mathrm{d}x", "d": "\\mathrm{d}", "i": "\\mathrm{i}", "x": "\\mathbf{x}", "sign": "\\mathrm{sign}", "vec": ["\\mathbf{#1}", 1], "veczwei": ["\\begin{pmatrix} #1 \\\\ #2 \\end{pmatrix}", 2], "M": "\\mathcal{M}", "S": "\\mathbb{S}", "bone": "\\unicode{x1D7D9}", "Re": "\\mathrm{Re}", "Um": "\\operatorname{Um}", "Res": "\\operatorname{Res}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'ode/04_Anfangswertprobleme/02_04_Anfangswertprobleme';</script>
     <link rel="index" title="Stichwortverzeichnis" href="../../genindex.html" />
     <link rel="search" title="Suche" href="../../search.html" />
@@ -173,6 +176,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/02_NichtlineareOptimierung/03_02_NichtlineareOptimierung.html">1.3. Verfahren der konjugierten Gradienten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/00_03_NichtlineareOptimierung2.html">1.4. Wahl der Schrittweite</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../optimierung/03_NichtlineareOptimierung2/01_03_NichtlineareOptimierung2.html">1.5. Nicht-differenzierbare Optimierung</a></li>
+
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="00_04_Anfangswertprobleme.html">2. Numerische Lösungsverfahren für Anfangswertprobleme</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
@@ -373,39 +377,39 @@ document.write(`
 <p>In diesem Abschnitt wollen wir zunächst eine einfache Möglichkeit zur
 numerischen Berechnung von Lösungen gewöhnlicher Differentialgleichungen
 der folgenden Form eines Anfangswertproblems behandeln:</p>
-<div class="math notranslate nohighlight" id="equation-eq-awp-einschritt">
-<span class="eqno">(2.5)<a class="headerlink" href="#equation-eq-awp-einschritt" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
-u'(t) \ &amp;= \ F(t,u(t)), \qquad \forall \ 0 \leq t \leq T,\\ 
-u(0) \: &amp;= \: u_0 \in \R^n,
-\end{split}\end{split}\]</div>
+<div class="math" id="equation-eq-awp-einschritt">
+<span class="eqno">(2.5)<a class="headerlink" href="#equation-eq-awp-einschritt" title="Permalink to this equation">#</a></span>\[\begin{split}
+u'(t) \ &= \ F(t,u(t)), \qquad \forall \ 0 \leq t \leq T,\\ 
+u(0) \: &= \: u_0 \in \R^n,
+\end{split}\]</div>
 <p>Die grundlegende Idee ist es sukzessive (d.h., aufeinander aufbauend)
 die Lösung zu verschiedenen Zeitschritten zu approximieren. Hierzu
 führen wir eine sogenannte <strong>Zeitdiskretisierung der
 Differentialgleichung</strong> durch indem wir das kontinuierliche Intervall
-<span class="math notranslate nohighlight">\([0,T] \subset \R^+\)</span> in <span class="math notranslate nohighlight">\(N\in\N\)</span> Teilintervalle mit <span class="math notranslate nohighlight">\(N+1\)</span> Zeitpunkten
+<span class="math">\([0,T] \subset \R^+\)</span> in <span class="math">\(N\in\N\)</span> Teilintervalle mit <span class="math">\(N+1\)</span> Zeitpunkten
 aufteilen. Der Einfachheit halber wählen wir im Folgenden uniforme
 Zeitschritte mit einer festgewählten Schrittweite, d.h., wir
-diskretisieren das Intervall <span class="math notranslate nohighlight">\(\Omega \coloneqq [0,T]\)</span> durch</p>
-<div class="math notranslate nohighlight">
+diskretisieren das Intervall <span class="math">\(\Omega \coloneqq [0,T]\)</span> durch</p>
+<div class="math">
 \[\Omega_\tau \ \coloneqq \ \lbrace t_k \in \Omega \, | \, t_k \coloneqq k \cdot \tau, \ k=0,\ldots,N \rbrace \quad \text{mit} \quad \tau \, \coloneqq \, \frac{T}{N}.\]</div>
 <p>Es sei bemerkt, dass ein analoges Vorgehen auch für nicht äquidistante
 Schrittweiten möglich ist.</p>
 <p>Basierend auf der Diskretisierung der Differentialgleichung können wir
-dann sukzessive numerische Approximationen <span class="math notranslate nohighlight">\(u_\tau(t_k) \in \R^n\)</span> für
-die unbekannte Lösung <span class="math notranslate nohighlight">\(u\)</span> des Anfangswertproblems zu diesen diskreten
+dann sukzessive numerische Approximationen <span class="math">\(u_\tau(t_k) \in \R^n\)</span> für
+die unbekannte Lösung <span class="math">\(u\)</span> des Anfangswertproblems zu diesen diskreten
 Zeitschritten berechnen. Hierbei haben wir die Möglichkeit zeitliche
-Ableitung <span class="math notranslate nohighlight">\(\frac{d}{dt}\)</span> durch geeignete Differenzenquotienten zu den
+Ableitung <span class="math">\(\frac{d}{dt}\)</span> durch geeignete Differenzenquotienten zu den
 diskreten Zeitpunkten zu approximieren. Alternativ lässt sich auch eine
 numerische Quadraturformel (siehe <span id="id1">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>) für die zugehörige
 Integralgleichung in diesen Zeitschritten anwenden. Hierbei macht man
 sich die folgende auf dem Hauptsatz der Differential- und
 Integralrechnung basierende Beobachtung zu Nutze:</p>
-<div class="math notranslate nohighlight" id="equation-eq-anfangswertaufgabe-integralform">
+<div class="math" id="equation-eq-anfangswertaufgabe-integralform">
 <span class="eqno">(2.6)<a class="headerlink" href="#equation-eq-anfangswertaufgabe-integralform" title="Permalink to this equation">#</a></span>\[u(t_{k+1}) \ = \ u(t_k) + \int_{t_k}^{t_{k+1}} u'(t) \,\mathrm{d}t \ = \ u(t_k) + \int_{t_k}^{t_{k+1}} F(t,u(t))\,\mathrm{d}t , \qquad t_k \in \Omega_\tau.\]</div>
 <p>Im Falle von Einschrittverfahren, die wir in diesem Abschnitt zunächst
 behandeln wollen, verwenden wir dabei eine Differenzenformel, die nur
 einen einzigen Zeitschritt berücksichtigt, d.h. zur Berechnung von
-<span class="math notranslate nohighlight">\(u_\tau(t_{k+1})\)</span> wird lediglich der Wert <span class="math notranslate nohighlight">\(u_\tau(t_k)\)</span> des vorherigen
+<span class="math">\(u_\tau(t_{k+1})\)</span> wird lediglich der Wert <span class="math">\(u_\tau(t_k)\)</span> des vorherigen
 Zeitschritts verwendet.</p>
 <p>Im Folgenden wollen wir zunächst eine allgemeine Form für
 Einschrittverfahren zur numerischen Lösung von Anfangswertproblemen
@@ -413,24 +417,24 @@ angeben.</p>
 <div class="proof definition admonition" id="def:einschrittverfahren">
 <p class="admonition-title"><span class="caption-number">Definition 2.4 </span> (Einschrittverfahren und Verfahrensfunktion)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei eine Zeitdiskretisierung <span class="math notranslate nohighlight">\(\Omega_\tau\)</span> des Anfangswertproblems
-<a class="reference internal" href="#equation-eq-awp-einschritt">(2.5)</a> für das Zeitinterval <span class="math notranslate nohighlight">\([0,T] \subset \R^+\)</span> mit
-<span class="math notranslate nohighlight">\(n+1\)</span> äquidistanten Zeitschritten <span class="math notranslate nohighlight">\(t_k = k \cdot \tau\)</span> und
-<span class="math notranslate nohighlight">\(\tau = T / n\)</span> gegeben.</p>
+<p>Sei eine Zeitdiskretisierung <span class="math">\(\Omega_\tau\)</span> des Anfangswertproblems
+<a class="reference internal" href="#equation-eq-awp-einschritt">(2.5)</a> für das Zeitinterval <span class="math">\([0,T] \subset \R^+\)</span> mit
+<span class="math">\(n+1\)</span> äquidistanten Zeitschritten <span class="math">\(t_k = k \cdot \tau\)</span> und
+<span class="math">\(\tau = T / n\)</span> gegeben.</p>
 <p>Dann lassen sich <strong>Einschrittverfahren</strong> zur numerischen Lösung des
 Anfangswertproblems in folgender allgemeiner Form angeben:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u_\tau(t_{k+1}) \ = \ u_\tau(t_k) + \tau \cdot f_\tau(t_{k}, u_\tau(t_{k})),\]</div>
-<p>wobei <span class="math notranslate nohighlight">\(f_\tau \colon \Omega_\tau \times \R^n \rightarrow \R^n\)</span> eine
-numerische Approximation der Funktion <span class="math notranslate nohighlight">\(F\)</span> auf der rechten Seite der
+<p>wobei <span class="math">\(f_\tau \colon \Omega_\tau \times \R^n \rightarrow \R^n\)</span> eine
+numerische Approximation der Funktion <span class="math">\(F\)</span> auf der rechten Seite der
 gewöhnlichen Differentialgleichung in <a class="reference internal" href="#equation-eq-awp-einschritt">(2.5)</a> darstellt
 und allgemein <strong>Verfahrensfunktion</strong> genannt wird.</p>
-<p>Hängt die Verfahrensfunktion <span class="math notranslate nohighlight">\(f_\tau\)</span> nur vom bekannten Wert
-<span class="math notranslate nohighlight">\(u_\tau(t_k)\)</span> ab, so nennen wir das Einschrittverfahren <strong>explizit</strong>, da
+<p>Hängt die Verfahrensfunktion <span class="math">\(f_\tau\)</span> nur vom bekannten Wert
+<span class="math">\(u_\tau(t_k)\)</span> ab, so nennen wir das Einschrittverfahren <strong>explizit</strong>, da
 es eine explizite Vorschrift zur Berechnung des nächsten Zeitschritts
 basierend auf den Werten des aktuellen Zeitschritts liefert. Hängt
-andererseits die Verfahrensfunktion <span class="math notranslate nohighlight">\(f_\tau\)</span> auch vom unbekannten Wert
-<span class="math notranslate nohighlight">\(u_\tau(t_{k+1})\)</span> ab, so heißt das Verfahren <strong>implizit</strong>, da es nur
+andererseits die Verfahrensfunktion <span class="math">\(f_\tau\)</span> auch vom unbekannten Wert
+<span class="math">\(u_\tau(t_{k+1})\)</span> ab, so heißt das Verfahren <strong>implizit</strong>, da es nur
 eine implizite Bedingung (im Allgemeinen eine nichtlineare Gleichung)
 für den neuen Zeitschritt liefert.</p>
 </section>
@@ -441,33 +445,34 @@ ab, die in folgender Definition eingeführt werden.</p>
 <p class="admonition-title"><span class="caption-number">Definition 2.5 </span> (Finite Differenzen)</p>
 <section class="definition-content" id="proof-content">
 <p>Die Grundidee der sogenannten <strong>finiten Differenzen</strong> ist die
-Approximation der Ableitung <span class="math notranslate nohighlight">\(u'(t)\)</span> durch Differenzenquotienten mit
-Werten auf einem Diskretisierungsgitter <span class="math notranslate nohighlight">\(\Omega_\tau\)</span> für eine feste
-Schrittweite <span class="math notranslate nohighlight">\(\tau \coloneqq \frac{T}{N}, N \in \mathbb{N}\)</span>.
+Approximation der Ableitung <span class="math">\(u'(t)\)</span> durch Differenzenquotienten mit
+Werten auf einem Diskretisierungsgitter <span class="math">\(\Omega_\tau\)</span> für eine feste
+Schrittweite <span class="math">\(\tau \coloneqq \frac{T}{N}, N \in \mathbb{N}\)</span>.
 Differenzenbildung auf einem Gitter. Hierbei haben wir verschiedene
 Möglichkeiten die Zeitableitung zu approximieren und wir unterscheiden
 folgende Fälle:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}u'(t_k) \ &amp;\approx \ \frac{u(t_{k+1}) - u(t_k)}{\tau} \ = \ \frac{u(t_k + \tau) - u(t_k)}{\tau} \ &amp;=: \ D^+ u(t_k),\\
-u'(t_k) \ &amp;\approx \ \frac{u(t_k) - u(t_{k-1})}{\tau} \ = \ \frac{u(t_k) - u(t_k - \tau)}{\tau} \ &amp;=: \ D^- u(t_k),\\
-u'(t_k) \ &amp;\approx \ \frac{u(t_{k+1}) - u(t_{k-1})}{2\tau} \ = \ \frac{u(t_k + \tau) - u(t_k - \tau)}{2\tau} \hspace{-1cm} &amp;=: \ D^c u(t_k).
-\end{split}\]</div>
-<p>Hierbei werden die obigen Differenzenquotienten <span class="math notranslate nohighlight">\(D^+, D^-, D^c\)</span>
+<div class="math">
+\[\begin{aligned}
+u'(t_k) \ &\approx \ \frac{u(t_{k+1}) - u(t_k)}{\tau} \ = \ \frac{u(t_k + \tau) - u(t_k)}{\tau} \ &=: \ D^+ u(t_k),\\
+u'(t_k) \ &\approx \ \frac{u(t_k) - u(t_{k-1})}{\tau} \ = \ \frac{u(t_k) - u(t_k - \tau)}{\tau} \ &=: \ D^- u(t_k),\\
+u'(t_k) \ &\approx \ \frac{u(t_{k+1}) - u(t_{k-1})}{2\tau} \ = \ \frac{u(t_k + \tau) - u(t_k - \tau)}{2\tau} \hspace{-1cm} &=: \ D^c u(t_k).
+\end{aligned}\]</div>
+<p>Hierbei werden die obigen Differenzenquotienten <span class="math">\(D^+, D^-, D^c\)</span>
 <strong>Vorwärts-, Rückwärts-</strong> und <strong>zentrale Differenz</strong> genannt.</p>
 </section>
 </div><p>Mittels Taylorformel sieht man ein, dass alle drei finiten Differenzen
 in <a class="reference internal" href="#def:finite_differenzen">Definition 2.5</a> eine gute numerische Approximation
-für die erste Ableitung der Funktion <span class="math notranslate nohighlight">\(u\)</span> liefern, wenn die Schrittweite
-<span class="math notranslate nohighlight">\(\tau &gt; 0\)</span> der Diskretisierung hinreichend klein gewählt wird. Da der
-Fehler dieser Approximation für <span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span> bei allen drei
+für die erste Ableitung der Funktion <span class="math">\(u\)</span> liefern, wenn die Schrittweite
+<span class="math">\(\tau &gt; 0\)</span> der Diskretisierung hinreichend klein gewählt wird. Da der
+Fehler dieser Approximation für <span class="math">\(\tau \rightarrow 0\)</span> bei allen drei
 Varianten gegen Null konvergiert spricht man auch von <em>konsistenten
 Verfahren</em> (mehr dazu später). Bei einer quantitativen Analyse des
 Fehlerglieds in der Taylorentwicklung lässt sich zeigen, dass die
-Vorwärts- und Rückwärtsdifferenz <span class="math notranslate nohighlight">\(D^+\)</span> und <span class="math notranslate nohighlight">\(D^-\)</span> jeweils die
-Konsistenzordnung <span class="math notranslate nohighlight">\(1\)</span> besitzen, d.h., der Fehler verschwindet linear
-bzgl. der Schrittweite <span class="math notranslate nohighlight">\(\tau\)</span>, während die zentrale Differenz <span class="math notranslate nohighlight">\(D^c\)</span>
-sogar Konsistenzordnung <span class="math notranslate nohighlight">\(2\)</span> besitzt, d.h., der Fehler verschwindet
-quadratisch bzgl. der Schrittweite <span class="math notranslate nohighlight">\(\tau\)</span>.</p>
+Vorwärts- und Rückwärtsdifferenz <span class="math">\(D^+\)</span> und <span class="math">\(D^-\)</span> jeweils die
+Konsistenzordnung <span class="math">\(1\)</span> besitzen, d.h., der Fehler verschwindet linear
+bzgl. der Schrittweite <span class="math">\(\tau\)</span>, während die zentrale Differenz <span class="math">\(D^c\)</span>
+sogar Konsistenzordnung <span class="math">\(2\)</span> besitzt, d.h., der Fehler verschwindet
+quadratisch bzgl. der Schrittweite <span class="math">\(\tau\)</span>.</p>
 <p>Wir betrachten nun einige bekannte Einschrittverfahren, die häufig zur
 numerischen Lösung von Anfangswertproblemen genutzt werden.</p>
 <div class="proof example admonition" id="example-2">
@@ -479,44 +484,46 @@ genutzt werden.</p>
 <ol class="arabic">
 <li><p>Das einfachste Beispiel eines Einschrittverfahrens ist das
 <strong>Vorwärts-Euler-Verfahren</strong></p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u_\tau(t_{k+1}) \ = \ u_\tau(t_k) + \tau \cdot F(t_k,u_\tau(t_k)),\]</div>
-<p>welches auf einer Approximation der Ableitung <span class="math notranslate nohighlight">\(u'(t_k)\)</span> mittels
+<p>welches auf einer Approximation der Ableitung <span class="math">\(u'(t_k)\)</span> mittels
 Vorwärtsdifferenz aus <a class="reference internal" href="#def:finite_differenzen">Definition 2.5</a> basiert. Das
 Vorwärts-Euler Verfahren hat die Verfahrensfunktion</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ \coloneqq \ F(t_k,u_\tau(t_k)),\]</div>
 <p>und ist entsprechend nach <a class="reference internal" href="#def:einschrittverfahren">Definition 2.4</a> ein
 explizites Verfahren. Daher wird es häufig auch explizites
 Euler-Verfahren genannt.</p>
 <p>In der Integralform der Differentialgleichung bedeutet das, dass wir
 die folgende Approximation benutzen:</p>
-<div class="math notranslate nohighlight">
-\[u(t_{k+1}) - u(t_k) \ = \ \int_{t_k}^{t_{k+1}} F(t,u(t))\, \mathrm{d}t \ \approx \ \tau \cdot F(t_k, u_\tau(t_k)),
-\]</div>
+<div class="math">
+\[\begin{aligned}
+u(t_{k+1}) - u(t_k) \ = \ \int_{t_k}^{t_{k+1}} F(t,u(t))\, \mathrm{d}t \ \approx \ \tau \cdot F(t_k, u_\tau(t_k)),
+\end{aligned}\]</div>
 <p>d.h., dass wir das Integral durch die Intervallänge mal dem Wert am
 linken Intervallrand annähern. Dies entspricht einer numerischen
 Quadraturformel mit nur einer Stützstelle (siehe
 <span id="id2">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>).</p>
 </li>
 <li><p>Ein wenig komplizierter ist das <strong>Rückwärts-Euler-Verfahren</strong></p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u_\tau(t_{k+1}) \ = \ u_\tau(t_k) + \tau \cdot F(t_{k+1},u_\tau(t_{k+1})),\]</div>
-<p>welches auf einer Approximation der Ableitung <span class="math notranslate nohighlight">\(u'(t_k)\)</span> mittels
+<p>welches auf einer Approximation der Ableitung <span class="math">\(u'(t_k)\)</span> mittels
 Rückwärtsdifferenz aus <a class="reference internal" href="#def:finite_differenzen">Definition 2.5</a> basiert. In
 diesem Fall müssen wir zunächst eine (möglicherweise nichtlineare)
 Gleichung für den neuen Zeitschritt lösen.</p>
 <p>Das Rückwärts-Euler Verfahren hat die Verfahrensfunktion</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ \coloneqq \ F(t_{k+1},u_\tau(t_{k+1})),\]</div>
 <p>und ist entsprechend nach <a class="reference internal" href="#def:einschrittverfahren">Definition 2.4</a> ein
 implizites Verfahren. Daher wird es häufig auch implizites
 Euler-Verfahren genannt.</p>
 <p>In der Integralform der Differentialgleichung bedeutet das, dass wir
 die folgende Approximation benutzen:</p>
-<div class="math notranslate nohighlight">
-\[u(t_{k+1}) - u(t_k) \ = \ \int_{t_k}^{t_{k+1}} F(t,u(t)) \,\mathrm{d}t \ \approx \ \tau \cdot F(t_{k+1},u_\tau(t_{k+1})),
-\]</div>
+<div class="math">
+\[\begin{aligned}
+u(t_{k+1}) - u(t_k) \ = \ \int_{t_k}^{t_{k+1}} F(t,u(t)) \,\mathrm{d}t \ \approx \ \tau \cdot F(t_{k+1},u_\tau(t_{k+1})),
+\end{aligned}\]</div>
 <p>d.h., dass wir das Integral durch die Intervallänge mal dem Wert am
 rechten Intervallrand annähern. Auch dies entspricht einer
 numerischen Quadraturformel mit nur einer Stützstelle wie beim
@@ -524,117 +531,121 @@ expliziten Euler-Verfahren.</p>
 </li>
 <li><p>Ein Kompromiss aus den beiden obigen Verfahren ist das sogenannte
 <strong>Crank-Nicolson Verfahren</strong> der Form</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u_\tau(t_{k+1}) \ = \ u_\tau(t_k) + \frac{\tau}{2} \cdot \left(F(t_{k },u_\tau(t_{k })) + F(t_{k+1},u_\tau(t_{k+1}))\right).\]</div>
 <p>Hierbei ist die Verfahrensfunktion der <em>Mittelwert</em> der
 Verfahrensfunktionen des Vorwärts- und Rückwärts-Euler-Verfahrens
 mit</p>
-<div class="math notranslate nohighlight">
-\[f_\tau(t_k, u_\tau(t_k)) \ \coloneqq \ \frac{1}{2} \left( F(t_{k },u_\tau(t_{k })) + F(t_{k+1},u_\tau(t_{k+1}))\right)
-\]</div>
+<div class="math">
+\[\begin{aligned}
+f_\tau(t_k, u_\tau(t_k)) \ \coloneqq \ \frac{1}{2} \left( F(t_{k },u_\tau(t_{k })) + F(t_{k+1},u_\tau(t_{k+1}))\right)
+\end{aligned}\]</div>
 <p>und ist entsprechend nach <a class="reference internal" href="#def:einschrittverfahren">Definition 2.4</a>
 ebenfalls ein implizites Verfahren.</p>
 <p>In der Integralform der Differentialgleichung bedeutet das, dass wir
 die folgende Approximation benutzen:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}u(t_{k+1}) - u(t_k) \ &amp;= \ \int_{t_k}^{t_{k+1}} F(t,u(t)) \,\mathrm{d}t \\
-&amp;\approx \ \frac{\tau}{2} \left( F(t_{k },u_\tau(t_{k })) + F(t_{k+1},u_\tau(t_{k+1}))\right),
-\end{split}\]</div>
+<div class="math">
+\[\begin{aligned}
+u(t_{k+1}) - u(t_k) \ &= \ \int_{t_k}^{t_{k+1}} F(t,u(t)) \,\mathrm{d}t \\
+&\approx \ \frac{\tau}{2} \left( F(t_{k },u_\tau(t_{k })) + F(t_{k+1},u_\tau(t_{k+1}))\right),
+\end{aligned}\]</div>
 <p>Dies entspricht einer Approximation des Integrals mit Hilfe der
 Trapezregel aus <span id="id3">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>.</p>
 </li>
 </ol>
 </section>
 </div><p>Wir sehen, dass ein explizites Verfahren sofort wohldefiniert ist, falls
-die Verfahrensfunktion <span class="math notranslate nohighlight">\(f_\tau\)</span> eine stetige Funktion auf
-<span class="math notranslate nohighlight">\(\mathbb{R}_+ \times \mathbb{R}^n\)</span> ist, während bei impliziten Verfahren
+die Verfahrensfunktion <span class="math">\(f_\tau\)</span> eine stetige Funktion auf
+<span class="math">\(\mathbb{R}_+ \times \mathbb{R}^n\)</span> ist, während bei impliziten Verfahren
 noch eine Fixpunktgleichung gelöst werden muss. Die Existenz und
 Eindeutigkeit dieser Gleichung können wir mit dem <strong>Banachschen
-Fixpunktsatz</strong> garantieren, wenn wiederum <span class="math notranslate nohighlight">\(\tau\)</span> klein genug ist.</p>
+Fixpunktsatz</strong> garantieren, wenn wiederum <span class="math">\(\tau\)</span> klein genug ist.</p>
 <div class="proof theorem admonition" id="theorem-3">
 <p class="admonition-title"><span class="caption-number">Theorem 2.2 </span> (Existenz und Eindeutigkeit von Lösungen)</p>
 <section class="theorem-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(f_\tau:\R\times\R^n\times\R^n\to\R^n\)</span> stetig und Lipschitz-stetig
-bezüglich dem letzten Argument mit Lipschitzkonstante <span class="math notranslate nohighlight">\(L &gt; 0\)</span>. Dann
-existiert für <span class="math notranslate nohighlight">\(\tau&lt; \frac{1}{L}\)</span> genau eine Lösung <span class="math notranslate nohighlight">\(u_\tau(t_{k+1})\)</span>
+<p>Sei <span class="math">\(f_\tau:\R\times\R^n\times\R^n\to\R^n\)</span> stetig und Lipschitz-stetig
+bezüglich dem letzten Argument mit Lipschitzkonstante <span class="math">\(L &gt; 0\)</span>. Dann
+existiert für <span class="math">\(\tau&lt; \frac{1}{L}\)</span> genau eine Lösung <span class="math">\(u_\tau(t_{k+1})\)</span>
 der Fixpunktgleichung</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u = u_\tau(t_k) + \tau\ f_\tau(t_k,u_\tau(t_k),u).\]</div>
 </section>
 </div><p>Numerisch müssen wir zur Durchführung eines impliziten Verfahrens immer
-noch ein System in <span class="math notranslate nohighlight">\(\mathbb{R}^n\)</span> lösen. Ist dieses linear, so können
+noch ein System in <span class="math">\(\mathbb{R}^n\)</span> lösen. Ist dieses linear, so können
 wir die üblichen Verfahren für lineare Gleichungssysteme anwenden.
 Andernfalls bietet sich die Verwendung eines iterativen Verfahrens wie
 einer Fixpunktiteration oder des Newton-Verfahrens an (beachte, dass
-unter der obigen Bedingung <span class="math notranslate nohighlight">\(\mathbb{1}-\tau f_\tau'\)</span> invertierbar ist
-für <span class="math notranslate nohighlight">\(f_\tau \in C^1\)</span>). Mit dem Wert <span class="math notranslate nohighlight">\(u_\tau(t_k)\)</span> oder einer einfachen
+unter der obigen Bedingung <span class="math">\(\mathds{1}-\tau f_\tau'\)</span> invertierbar ist
+für <span class="math">\(f_\tau \in C^1\)</span>). Mit dem Wert <span class="math">\(u_\tau(t_k)\)</span> oder einer einfachen
 Vorhersage in der Zeit (etwa mit dem expliziten Euler-Verfahren) haben
 wir dafür auch einen sehr guten Startwert.</p>
 <p>Nachdem wir die Wohldefiniertheit und numerische Umsetzung von
 Einschrittverfahren geklärt haben, widmen wir uns nun der Analyse der
 Verfahren. Wir wollen dabei den Fehler</p>
-<div class="math notranslate nohighlight" id="equation-eq-einschrittfehler">
+<div class="math" id="equation-eq-einschrittfehler">
 <span class="eqno">(2.7)<a class="headerlink" href="#equation-eq-einschrittfehler" title="Permalink to this equation">#</a></span>\[E_\tau  = \max_{k\in\N} \Vert u_\tau(t_k) - u(t_k) \Vert\]</div>
-<p>abschätzen, wobei <span class="math notranslate nohighlight">\(u\)</span> die exakte Lösung des Anfangswertproblems ist.
-Wollen wir den Fehler an anderen Stellen <span class="math notranslate nohighlight">\(t\)</span> abschätzen, so können wir
+<p>abschätzen, wobei <span class="math">\(u\)</span> die exakte Lösung des Anfangswertproblems ist.
+Wollen wir den Fehler an anderen Stellen <span class="math">\(t\)</span> abschätzen, so können wir
 ein Interpolationsverfahren und die entsprechenden Abschätzungen
 anwenden.</p>
 <p>Unsere Strategie dabei ist die Folgende: Zunächst schreiben wir eine
-Gleichung für den Fehler <span class="math notranslate nohighlight">\(e_\tau = u_\tau - u\)</span>. Es gilt</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}e_\tau(t_{k+1}) =&amp; e_\tau(t_k) +\\ 
-&amp;\tau (f_\tau(t_k,u_\tau(t_k),u_\tau(t_{k+1})) - f_\tau(t_k,u(t_k),u(t_{k+1}))) 
-+ \\ &amp; \tau 
+Gleichung für den Fehler <span class="math">\(e_\tau = u_\tau - u\)</span>. Es gilt</p>
+<div class="math">
+\[\begin{aligned}
+e_\tau(t_{k+1}) =& e_\tau(t_k) +\\ 
+&\tau (f_\tau(t_k,u_\tau(t_k),u_\tau(t_{k+1})) - f_\tau(t_k,u(t_k),u(t_{k+1}))) 
++ \\ & \tau 
 \left[ f_\tau(t_k,u(t_k),u(t_{k+1})) - \frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t))~dt
 \right]. 
-\end{split}\]</div>
+\end{aligned}\]</div>
 <p>Nun benötigen wir zwei zentrale Eigenschaften von
 Diskretisierungsmethoden:</p>
 <ul>
 <li><p><strong>Konsistenz:</strong> Der Fehler</p>
-<div class="math notranslate nohighlight">
-\[f_\tau(t_k,u(t_k),u(t_{k+1})) - \frac{1}{\tau}\int_{t_k}^{t_{k+1}} F(t,u(t))~dt,
-\]</div>
+<div class="math">
+\[\begin{aligned}
+f_\tau(t_k,u(t_k),u(t_{k+1})) - \frac{1}{\tau}\int_{t_k}^{t_{k+1}} F(t,u(t))~dt,
+\end{aligned}\]</div>
 <p>d.h. das Residuum der Lösung des Anfangswertproblems eingesetzt in
 das numerische Verfahren konvergiert gegen Null für
-<span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span>.</p>
+<span class="math">\(\tau \rightarrow 0\)</span>.</p>
 </li>
 <li><p><strong>Stabilität:</strong> Bei der Umsetzung des numerischen Verfahrens mit
 gegebener rechter Seite wird diese nicht beliebig verstärkt,
-insbesondere existiert eine Abschätzung unabhängig von <span class="math notranslate nohighlight">\(\tau.\)</span></p></li>
+insbesondere existiert eine Abschätzung unabhängig von <span class="math">\(\tau.\)</span></p></li>
 </ul>
 <p>Zusammen ergeben Konsistenz und Stabilität Konvergenz des Verfahrens,
-d.h. <span class="math notranslate nohighlight">\(E_\tau \rightarrow 0\)</span>. Dies halten wir in einer Definition fest:</p>
+d.h. <span class="math">\(E_\tau \rightarrow 0\)</span>. Dies halten wir in einer Definition fest:</p>
 <div class="proof definition admonition" id="definition-4">
 <p class="admonition-title"><span class="caption-number">Definition 2.6 </span> (Konvergenz von Einschrittverfahren)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(E_\tau\)</span> definiert durch <a class="reference internal" href="#equation-eq-einschrittfehler">(2.7)</a>, dann heißt das
+<p>Sei <span class="math">\(E_\tau\)</span> definiert durch <a class="reference internal" href="#equation-eq-einschrittfehler">(2.7)</a>, dann heißt das
 Verfahren</p>
 <ol class="arabic simple">
-<li><p>konvergent, wenn <span class="math notranslate nohighlight">\(E_\tau \rightarrow 0\)</span> für <span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span>,</p></li>
-<li><p>konvergent von der Ordnung <span class="math notranslate nohighlight">\(p\)</span>, wenn <span class="math notranslate nohighlight">\(E_\tau = {\cal O}(\tau^p)\)</span> für
-<span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span>, d.h. es gibt eine Konstante <span class="math notranslate nohighlight">\(C_p\)</span>, sodass
-<span class="math notranslate nohighlight">\(E_\tau \leq C_p \tau^p\)</span> für <span class="math notranslate nohighlight">\(\tau\)</span> hinreichend klein.</p></li>
+<li><p>konvergent, wenn <span class="math">\(E_\tau \rightarrow 0\)</span> für <span class="math">\(\tau \rightarrow 0\)</span>,</p></li>
+<li><p>konvergent von der Ordnung <span class="math">\(p\)</span>, wenn <span class="math">\(E_\tau = {\cal O}(\tau^p)\)</span> für
+<span class="math">\(\tau \rightarrow 0\)</span>, d.h. es gibt eine Konstante <span class="math">\(C_p\)</span>, sodass
+<span class="math">\(E_\tau \leq C_p \tau^p\)</span> für <span class="math">\(\tau\)</span> hinreichend klein.</p></li>
 </ol>
 </section>
 </div><section id="konsistenz-von-einschrittverfahren">
 <span id="id4"></span><h2><span class="section-number">2.2.1. </span>Konsistenz von Einschrittverfahren<a class="headerlink" href="#konsistenz-von-einschrittverfahren" title="Permalink to this heading">#</a></h2>
 <p>Gemäß der obigen Motivation definieren wir den Konsistenzfehler als</p>
-<div class="math notranslate nohighlight" id="equation-eq-konsistenzfehler">
+<div class="math" id="equation-eq-konsistenzfehler">
 <span class="eqno">(2.8)<a class="headerlink" href="#equation-eq-konsistenzfehler" title="Permalink to this equation">#</a></span>\[K_\tau = \max_{k\in\N} \Vert g_\tau(t_k) \Vert\]</div>
 <p>mit</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[g_\tau(t_k) = f_\tau(t_k,u(t_k),u(t_{k+1})) - \frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t))~dt,\]</div>
-<p>wobei <span class="math notranslate nohighlight">\(u\)</span> eine Lösung des Anfangswertproblems <a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a> ist.</p>
+<p>wobei <span class="math">\(u\)</span> eine Lösung des Anfangswertproblems <a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a> ist.</p>
 <div class="proof definition admonition" id="def:konsistenzfehler">
 <p class="admonition-title"><span class="caption-number">Definition 2.7 </span> (Konsistenzfehler)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(K_\tau\)</span> definiert durch <a class="reference internal" href="#equation-eq-konsistenzfehler">(2.8)</a>, dann heißt das
+<p>Sei <span class="math">\(K_\tau\)</span> definiert durch <a class="reference internal" href="#equation-eq-konsistenzfehler">(2.8)</a>, dann heißt das
 Verfahren</p>
 <ol class="arabic simple">
-<li><p>konsistent, wenn <span class="math notranslate nohighlight">\(K_\tau \rightarrow 0\)</span> für <span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span>,</p></li>
-<li><p>konsistent von der Ordnung <span class="math notranslate nohighlight">\(p\)</span>, wenn <span class="math notranslate nohighlight">\(K_\tau = {\cal O}(\tau^p)\)</span> für
-<span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span> .</p></li>
+<li><p>konsistent, wenn <span class="math">\(K_\tau \rightarrow 0\)</span> für <span class="math">\(\tau \rightarrow 0\)</span>,</p></li>
+<li><p>konsistent von der Ordnung <span class="math">\(p\)</span>, wenn <span class="math">\(K_\tau = {\cal O}(\tau^p)\)</span> für
+<span class="math">\(\tau \rightarrow 0\)</span> .</p></li>
 </ol>
 </section>
 </div><p>Die Abschätzung des Konsistenzfehlers erfolgt meist durch
@@ -642,49 +653,51 @@ Taylorentwicklung, wir führen dies an zwei Beispielen durch:</p>
 <div class="proof example admonition" id="example-6">
 <p class="admonition-title"><span class="caption-number">Example 2.4 </span></p>
 <section class="example-content" id="proof-content">
-<p>Wir betrachten das Vorwärts-Euler Verfahren unter der Annahme, dass <span class="math notranslate nohighlight">\(F\)</span>
+<p>Wir betrachten das Vorwärts-Euler Verfahren unter der Annahme, dass <span class="math">\(F\)</span>
 bezüglich beider Variablen Lipschitz-stetig ist. Definieren wir
-<span class="math notranslate nohighlight">\(\varphi(t) = F(t,u(t))\)</span>, dann ist <span class="math notranslate nohighlight">\(\varphi\)</span> wegen <span class="math notranslate nohighlight">\(u \in C^1\)</span> eine
+<span class="math">\(\varphi(t) = F(t,u(t))\)</span>, dann ist <span class="math">\(\varphi\)</span> wegen <span class="math">\(u \in C^1\)</span> eine
 Lipschitz-stetige Funktion und es gilt</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\norm{g_\tau(t_k)} &amp;= \norm{\varphi(t_k) - \frac{1}\tau \int_{t_k}^{t_{k+1}} \varphi(t)~dt}\\
-&amp;= \norm{\frac{1}\tau \int_{t_k}^{t_{k+1}} (\varphi(t_k)-\varphi(t))~dt}\\
-&amp;\leq\frac{1}\tau \int_{t_k}^{t_{k+1}} \norm{\varphi(t_k)-\varphi(t)}~dt   \\
-&amp;\leq \frac{1}\tau \int_{t_k}^{t_{k+1}} L_\varphi ( t-t_k)~dt = \frac{L_\varphi}2 \tau.
-\end{split}\]</div>
-<p>Damit das Verfahren die Konsistenzordnung <span class="math notranslate nohighlight">\(p=1\)</span>, wir sehen im Beispiel
-<span class="math notranslate nohighlight">\(F(t,u) = t\)</span> auch sofort, dass man im allgemeinen nicht Ordnung zwei
+<div class="math">
+\[\begin{aligned}
+\norm{g_\tau(t_k)} &= \norm{\varphi(t_k) - \frac{1}\tau \int_{t_k}^{t_{k+1}} \varphi(t)~dt}\\
+&= \norm{\frac{1}\tau \int_{t_k}^{t_{k+1}} (\varphi(t_k)-\varphi(t))~dt}\\
+&\leq\frac{1}\tau \int_{t_k}^{t_{k+1}} \norm{\varphi(t_k)-\varphi(t)}~dt   \\
+&\leq \frac{1}\tau \int_{t_k}^{t_{k+1}} L_\varphi ( t-t_k)~dt = \frac{L_\varphi}2 \tau.
+\end{aligned}\]</div>
+<p>Damit das Verfahren die Konsistenzordnung <span class="math">\(p=1\)</span>, wir sehen im Beispiel
+<span class="math">\(F(t,u) = t\)</span> auch sofort, dass man im allgemeinen nicht Ordnung zwei
 erreichen kann.</p>
 </section>
 </div><div class="proof example admonition" id="example-7">
 <p class="admonition-title"><span class="caption-number">Example 2.5 </span></p>
 <section class="example-content" id="proof-content">
 <p>Wir betrachten das Crank–Nicholson Verfahren unter der Annahme, dass
-<span class="math notranslate nohighlight">\(F\)</span> bezüglich beider Variablen zweimal stetig differenzierbar ist.
-Definieren wir <span class="math notranslate nohighlight">\(\varphi(t) = F(t,u(t))\)</span>, dann ist <span class="math notranslate nohighlight">\(\varphi\)</span> ebenfalls
+<span class="math">\(F\)</span> bezüglich beider Variablen zweimal stetig differenzierbar ist.
+Definieren wir <span class="math">\(\varphi(t) = F(t,u(t))\)</span>, dann ist <span class="math">\(\varphi\)</span> ebenfalls
 zweimal stetig differenzierbar, da</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u''(t) = (F(t,u(t)))' = \partial_t F(t,u(t)) + \partial_u F(t,u(t)) u'(t)\]</div>
 <p>stetig ist. Damit gilt</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\norm{g_\tau(t_k)} &amp;= \norm{\frac{1}2(\varphi(t_k)+\varphi(t_{k+1})) - \frac{1}\tau \int_{t_k}^{t_{k+1}} \varphi(t)~dt}\\
-&amp;=    \frac{1}{2\tau}  \Vert \int_{t_k}^{t_{k+1}} (\varphi(t_k)+\varphi(t_{k+1})-2\varphi(t))~dt  \Vert \\
-&amp;\leq    \frac{1}{2\tau}   \Vert\int_{t_k}^{t_{k+1}} \varphi'(t_k)(t_k+t_{k+1}-2t) + r_k ~dt \Vert   ,
-\end{split}\]</div>
-<p>mit dem Restglied <span class="math notranslate nohighlight">\(r_k={\cal O}(\tau^2)\)</span>. Da
-<span class="math notranslate nohighlight">\(\int_{t_k}^{t_{k+1}} \varphi'(t_k)(t_k+t_{k+1}-2t) ~dt = 0\)</span>, folgt
-<span class="math notranslate nohighlight">\(\Vert g_\tau(t_k) \Vert = {\cal O}(\tau^p).\)</span> Damit das Verfahren die
-Konsistenzordnung <span class="math notranslate nohighlight">\(p=2\)</span>, wir sehen im Beispiel <span class="math notranslate nohighlight">\(F(t,u) = t^2\)</span> auch
+<div class="math">
+\[\begin{aligned}
+\norm{g_\tau(t_k)} &= \norm{\frac{1}2(\varphi(t_k)+\varphi(t_{k+1})) - \frac{1}\tau \int_{t_k}^{t_{k+1}} \varphi(t)~dt}\\
+&=    \frac{1}{2\tau}  \Vert \int_{t_k}^{t_{k+1}} (\varphi(t_k)+\varphi(t_{k+1})-2\varphi(t))~dt  \Vert \\
+&\leq    \frac{1}{2\tau}   \Vert\int_{t_k}^{t_{k+1}} \varphi'(t_k)(t_k+t_{k+1}-2t) + r_k ~dt \Vert   ,
+\end{aligned}\]</div>
+<p>mit dem Restglied <span class="math">\(r_k={\cal O}(\tau^2)\)</span>. Da
+<span class="math">\(\int_{t_k}^{t_{k+1}} \varphi'(t_k)(t_k+t_{k+1}-2t) ~dt = 0\)</span>, folgt
+<span class="math">\(\Vert g_\tau(t_k) \Vert = {\cal O}(\tau^p).\)</span> Damit das Verfahren die
+Konsistenzordnung <span class="math">\(p=2\)</span>, wir sehen im Beispiel <span class="math">\(F(t,u) = t^2\)</span> auch
 sofort, dass man im allgemeinen nicht Ordnung zwei erreichen kann.</p>
 </section>
-</div><p>Um eine Konvergenzordnung <span class="math notranslate nohighlight">\(p\)</span> zu erhalten, benötigen wir, dass <span class="math notranslate nohighlight">\(F\)</span>, aber
-auch <span class="math notranslate nohighlight">\(u\)</span> <span class="math notranslate nohighlight">\(p\)</span>-mal stetig differenzierbar ist. Aus den Eigenschaften von
-<span class="math notranslate nohighlight">\(F\)</span> folgt Letzteres aber sofort: wir haben gesehen, dass für <span class="math notranslate nohighlight">\(F\)</span> stetig
-auch <span class="math notranslate nohighlight">\(u\)</span> stetig differenzierbar folgt. Mit dem Argument aus dem letzten
-Beispiel sehen wir, dass für <span class="math notranslate nohighlight">\(F\)</span> stetig differenzierbar auch <span class="math notranslate nohighlight">\(u\)</span> zweimal
+</div><p>Um eine Konvergenzordnung <span class="math">\(p\)</span> zu erhalten, benötigen wir, dass <span class="math">\(F\)</span>, aber
+auch <span class="math">\(u\)</span> <span class="math">\(p\)</span>-mal stetig differenzierbar ist. Aus den Eigenschaften von
+<span class="math">\(F\)</span> folgt Letzteres aber sofort: wir haben gesehen, dass für <span class="math">\(F\)</span> stetig
+auch <span class="math">\(u\)</span> stetig differenzierbar folgt. Mit dem Argument aus dem letzten
+Beispiel sehen wir, dass für <span class="math">\(F\)</span> stetig differenzierbar auch <span class="math">\(u\)</span> zweimal
 stetig differenzierbar ist. Induktiv können wir durch weiteres
-differenzieren zeigen, dass <span class="math notranslate nohighlight">\(u\)</span> <span class="math notranslate nohighlight">\(p\)</span>-mal stetig differenzierbar ist, wenn
-<span class="math notranslate nohighlight">\(F\)</span> <span class="math notranslate nohighlight">\(p-1\)</span>-mal stetig differenzierbar ist.</p>
+differenzieren zeigen, dass <span class="math">\(u\)</span> <span class="math">\(p\)</span>-mal stetig differenzierbar ist, wenn
+<span class="math">\(F\)</span> <span class="math">\(p-1\)</span>-mal stetig differenzierbar ist.</p>
 </section>
 <section id="stabilitat-und-konvergenz">
 <span id="id5"></span><h2><span class="section-number">2.2.2. </span>Stabilität und Konvergenz<a class="headerlink" href="#stabilitat-und-konvergenz" title="Permalink to this heading">#</a></h2>
@@ -693,91 +706,102 @@ Hierbei verwenden wir eine diskrete Version des Lemmas von Gronwall.</p>
 <div class="proof lemma admonition" id="lem:gronwall_diskret">
 <p class="admonition-title"><span class="caption-number">Lemma 2.2 </span> (Diskretes Lemma von Gronwall)</p>
 <section class="lemma-content" id="proof-content">
-<p>Es sei <span class="math notranslate nohighlight">\(\beta_j \geq 0, j\in\N_0\)</span> eine Folge nicht-negativer Zahlen und
-für die Folge <span class="math notranslate nohighlight">\(u_j\in\R, j\in\N_0\)</span> gelte</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}u_0&amp;\leq \alpha\in\R^+_0\\
-u_k&amp;\leq \alpha + \sum_{j=0}^{k-1} \beta_j u_j
-\end{split}\]</div>
-<p>für <span class="math notranslate nohighlight">\(k\in\N\)</span>, dann gilt die Abschätzung</p>
-<div class="math notranslate nohighlight">
-\[u_k \leq \alpha \exp\left(\sum_{j=0}^{k-1} \beta_j\right).
-\]</div>
+<p>Es sei <span class="math">\(\beta_j \geq 0, j\in\N_0\)</span> eine Folge nicht-negativer Zahlen und
+für die Folge <span class="math">\(u_j\in\R, j\in\N_0\)</span> gelte</p>
+<div class="math">
+\[\begin{aligned}
+u_0&\leq \alpha\in\R^+_0\\
+u_k&\leq \alpha + \sum_{j=0}^{k-1} \beta_j u_j
+\end{aligned}\]</div>
+<p>für <span class="math">\(k\in\N\)</span>, dann gilt die Abschätzung</p>
+<div class="math">
+\[\begin{aligned}
+u_k \leq \alpha \exp\left(\sum_{j=0}^{k-1} \beta_j\right).
+\end{aligned}\]</div>
 </section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. Übung. ◻</p>
 </div>
-<p>Wir zeigen zunächst uniforme Schranken an <span class="math notranslate nohighlight">\(u_\tau\)</span>.</p>
+<p>Wir zeigen zunächst uniforme Schranken an <span class="math">\(u_\tau\)</span>.</p>
 <div class="proof lemma admonition" id="lemma-9">
 <p class="admonition-title"><span class="caption-number">Lemma 2.3 </span></p>
 <section class="lemma-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(F_\tau\)</span> stetig und Lipschitz-stetig bezüglich des dritten Arguments
-(d.h. <span class="math notranslate nohighlight">\(u_\tau(t_{k+1}\)</span>) mit Modul unabhängig von <span class="math notranslate nohighlight">\(\tau\)</span>. Dann existiert
-eine Konstante <span class="math notranslate nohighlight">\(M(T)\)</span> unabhängig von <span class="math notranslate nohighlight">\(\tau\)</span>, sodass</p>
-<div class="math notranslate nohighlight">
+<p>Sei <span class="math">\(F_\tau\)</span> stetig und Lipschitz-stetig bezüglich des dritten Arguments
+(d.h. <span class="math">\(u_\tau(t_{k+1}\)</span>) mit Modul unabhängig von <span class="math">\(\tau\)</span>. Dann existiert
+eine Konstante <span class="math">\(M(T)\)</span> unabhängig von <span class="math">\(\tau\)</span>, sodass</p>
+<div class="math">
 \[\max_{t_k \leq T} \Vert u_\tau(t_k) \Vert \leq M\]</div>
-<p>gilt für alle <span class="math notranslate nohighlight">\(\tau\)</span> hinreichend klein.</p>
+<p>gilt für alle <span class="math">\(\tau\)</span> hinreichend klein.</p>
 </section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. Aus der Definition des Verfahrens folgt</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u_\tau(t_{k+1})-u_0 = u_\tau(t_k) - u_0 + \tau (f_\tau(t_k,u_\tau(t_k),u_\tau(t_{k+1}))-f_\tau(t_k,u_0,u_0)) + \tau f_\tau(t_k,u_0,u_0)\]</div>
 <p>und mit der Dreiecksungleichung folgt für
-<span class="math notranslate nohighlight">\(v_k = \Vert u_\tau(t_k) - u_0 \Vert\)</span></p>
-<div class="math notranslate nohighlight">
-\[\begin{split} v_{k+1} &amp;\leq v_k + \tau \Vert f_\tau(t_k,u_\tau(t_k),u_\tau(t_{k+1}))-f_\tau(t_k,u_0,u_0) \Vert + \tau \Vert f_\tau(t_k,u_0,u_0) \Vert \\
-&amp;\leq  v_k + \tau L (v_k + v_{k+1}) + \tau C. 
-\end{split}\]</div>
-<p>Hier haben wir benutzt, dass <span class="math notranslate nohighlight">\(f_\tau\)</span> stetig ist, damit folgt
-<span class="math notranslate nohighlight">\(f_\tau(t,u_0,u_0)\)</span> ist auf dem kompakten Intervall <span class="math notranslate nohighlight">\([0,T]\)</span> durch eine
-Konstante <span class="math notranslate nohighlight">\(C\)</span> beschränkt. Dazu bezeichnet <span class="math notranslate nohighlight">\(L\)</span> den Lipschitz-Modul von
-<span class="math notranslate nohighlight">\(f_\tau\)</span> bezüglich zweitem und drittem Argument. Sei nun
-<span class="math notranslate nohighlight">\(\tau \leq \frac{1}{2L}\)</span>, d.h. <span class="math notranslate nohighlight">\(1- \tau L \geq \frac{1}2\)</span>, dann folgt</p>
-<div class="math notranslate nohighlight">
-\[v_{k+1} \leq 2(1+\tau L) v_k + 2 \tau C.
-\]</div>
+<span class="math">\(v_k = \Vert u_\tau(t_k) - u_0 \Vert\)</span></p>
+<div class="math">
+\[\begin{aligned}
+ v_{k+1} &\leq v_k + \tau \Vert f_\tau(t_k,u_\tau(t_k),u_\tau(t_{k+1}))-f_\tau(t_k,u_0,u_0) \Vert + \tau \Vert f_\tau(t_k,u_0,u_0) \Vert \\
+&\leq  v_k + \tau L (v_k + v_{k+1}) + \tau C. 
+\end{aligned}\]</div>
+<p>Hier haben wir benutzt, dass <span class="math">\(f_\tau\)</span> stetig ist, damit folgt
+<span class="math">\(f_\tau(t,u_0,u_0)\)</span> ist auf dem kompakten Intervall <span class="math">\([0,T]\)</span> durch eine
+Konstante <span class="math">\(C\)</span> beschränkt. Dazu bezeichnet <span class="math">\(L\)</span> den Lipschitz-Modul von
+<span class="math">\(f_\tau\)</span> bezüglich zweitem und drittem Argument. Sei nun
+<span class="math">\(\tau \leq \frac{1}{2L}\)</span>, d.h. <span class="math">\(1- \tau L \geq \frac{1}2\)</span>, dann folgt</p>
+<div class="math">
+\[\begin{aligned}
+v_{k+1} \leq 2(1+\tau L) v_k + 2 \tau C.
+\end{aligned}\]</div>
 <p>Das diskrete Lemma von Gronwall impliziert dann die Beschränktheit von
-<span class="math notranslate nohighlight">\(v_k\)</span>. ◻</p>
+<span class="math">\(v_k\)</span>. ◻</p>
 </div>
 <p>Mit einem ähnlichen Beweis können wir auch die Stabilität zeigen.</p>
 <div class="proof theorem admonition" id="thm:einschrittverfahren_fehlerabschaetzung">
 <p class="admonition-title"><span class="caption-number">Theorem 2.3 </span> (Stabilität von Einschrittverfahren)</p>
 <section class="theorem-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(u_\tau \colon \Omega_\tau \rightarrow \R^n\)</span> die Lösung eines
-Einschrittverfahrens mit Lipschitz-stetiger Verfahrensfunktion <span class="math notranslate nohighlight">\(f_\tau\)</span>
+<p>Sei <span class="math">\(u_\tau \colon \Omega_\tau \rightarrow \R^n\)</span> die Lösung eines
+Einschrittverfahrens mit Lipschitz-stetiger Verfahrensfunktion <span class="math">\(f_\tau\)</span>
 für eine Zeitdiskretisierung
-<span class="math notranslate nohighlight">\(\Omega_\tau \coloneqq \lbrace t_k \in [0, T] \colon t_k \coloneqq \frac{k\cdot T}{N}, k=0,\ldots,N\rbrace\)</span>
-mit Schrittweite <span class="math notranslate nohighlight">\(\tau \coloneqq \frac{T}{N} &gt; 0\)</span>. Sei außerdem
-<span class="math notranslate nohighlight">\(u \colon [0, T] \rightarrow \R\)</span> die Lösung des Anfangswertproblems
-<a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a> mit gleichem Anfangswert <span class="math notranslate nohighlight">\(u_0 \in \R^n\)</span>. Der lokale
-Konsistenzfehler <span class="math notranslate nohighlight">\(g_\tau(t_k)\)</span> und der globale Konsistenzfehler <span class="math notranslate nohighlight">\(K_\tau\)</span>
+<span class="math">\(\Omega_\tau \coloneqq \lbrace t_k \in [0, T] \colon t_k \coloneqq \frac{k\cdot T}{N}, k=0,\ldots,N\rbrace\)</span>
+mit Schrittweite <span class="math">\(\tau \coloneqq \frac{T}{N} &gt; 0\)</span>. Sei außerdem
+<span class="math">\(u \colon [0, T] \rightarrow \R\)</span> die Lösung des Anfangswertproblems
+<a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a> mit gleichem Anfangswert <span class="math">\(u_0 \in \R^n\)</span>. Der lokale
+Konsistenzfehler <span class="math">\(g_\tau(t_k)\)</span> und der globale Konsistenzfehler <span class="math">\(K_\tau\)</span>
 seien gegeben wie in <a class="reference internal" href="#def:konsistenzfehler">Definition 2.7</a>.</p>
-<p>Dann existiert eine Konstante <span class="math notranslate nohighlight">\(C &gt; 0\)</span>, so dass für <span class="math notranslate nohighlight">\(\tau &gt; 0\)</span>
+<p>Dann existiert eine Konstante <span class="math">\(C &gt; 0\)</span>, so dass für <span class="math">\(\tau &gt; 0\)</span>
 hinreichend klein die folgende Abschätzung für den Fehler des
 Einschrittverfahrens gilt:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[E_\tau \ = \ \max_{t_k} \Vert u_\tau(t_k) - u(t_k) \Vert \ \leq \ C \cdot  \max_{t_k} \Vert g_\tau(t_k) \Vert \ = \ C \cdot K_\tau.\]</div>
 </section>
 </div><div class="proof admonition" id="proof">
-<p>Proof. Wir definieren uns die Hilfsfunktion
-<span class="math notranslate nohighlight">\(v_k \coloneqq \Vert u_\tau(t_{k}) -u(t_k)) \Vert\)</span>. Durch Anwendung der
+<p>Proof. TODO</p>
+<!---
+Wir definieren uns die Hilfsfunktion
+$v_k \coloneqq \Vert u_\tau(t_{k}) -u(t_k)) \Vert$. Durch Anwendung der
 Dreiecksungleichung und dem Ausnutzen der Lipschitz-Stetigkeit von
-<span class="math notranslate nohighlight">\(f_\tau\)</span> erhalten wir dann</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}v_{k+1} \ &amp;= \ \Vert u_\tau(t_{k+1}) - u(t_{k+1})\Vert\\
-&amp;= \ \left\Vert u_\tau(t_k) + \tau \cdot f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - u(t_k) -\int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \right\Vert\\
-&amp;\leq \ v_k + \tau \cdot \norm{f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1}))}\\
-&amp; \hspace{1.01cm} + \tau  \cdot \left\Vert f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1})) - \frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \right\Vert\\
-&amp;\leq \ v_k + \tau \cdot L \cdot (v_k + v_{k+1}) + \norm{g_\tau(t_k)}.
-\end{split}\]</div>
-<p>Somit erhalten wir durch Umstellen also insgesamt</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}v_{k+1}  \ &amp;\leq \ v_k + L \cdot \tau \cdot (v_k + v_{k+1}) + \Vert g_\tau(t_k) \Vert\\
-\Rightarrow \quad v_{k+1} \ &amp;\leq \ \frac{1+\tau L}{1-\tau L} \cdot v_k + \max_{t_k}\norm{g_\tau(t_k)}.
-\end{split}\]</div>
-<p>Für hinreichend kleine Schrittweiten <span class="math notranslate nohighlight">\(\tau &lt; \frac{1}{2L}\)</span> erhalten wir
+$f_\tau$ erhalten wir dann
+```{math}
+\begin{aligned}
+v_{k+1} \ &= \ \Vert u_\tau(t_{k+1}) - u(t_{k+1})\Vert\\
+&= \ \left\Vert u_\tau(t_k) + \tau \cdot f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - u(t_k) -\int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \right\Vert\\
+&\leq \ v_k + \tau \cdot \norm{f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1}))}\\
+& \hspace{1.01cm} + \tau  \cdot \left\Vert f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1})) - \frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \right\Vert\\
+&\leq \ v_k + \tau \cdot L \cdot (v_k + v_{k+1}) + \norm{g_\tau(t_k)}.
+\end{aligned}
+```
+Somit erhalten wir durch Umstellen also insgesamt
+```{math}
+\begin{aligned}
+v_{k+1}  \ &\leq \ v_k + L \cdot \tau \cdot (v_k + v_{k+1}) + \Vert g_\tau(t_k) \Vert\\
+\Rightarrow \quad v_{k+1} \ &\leq \ \frac{1+\tau L}{1-\tau L} \cdot v_k + \max_{t_k}\norm{g_\tau(t_k)}.
+\end{aligned}
+```
+Für hinreichend kleine Schrittweiten $\tau < \frac{1}{2L}$ erhalten wir
 die gewünschte Schranke wieder direkt aus dem diskreten
-<a class="reference internal" href="#lem:gronwall_diskret">Lemma 2.2</a> von Gronwall. ◻</p>
+{prf:ref}`lem:gronwall_diskret` von Gronwall. ◻
+-->
 </div>
 <p>Eine direkte Folgerung von
 <a class="reference internal" href="#thm:einschrittverfahren_fehlerabschaetzung">Theorem 2.3</a> ist die Äquivalenz
@@ -787,8 +811,8 @@ folgenden Korollar feststellen.</p>
 <p class="admonition-title"><span class="caption-number">Corollary 2.1 </span> (Äquivalenz von Konsistenz und Konvergenz)</p>
 <section class="corollary-content" id="proof-content">
 <p>Für ein Einschrittverfahren mit Lipschitz-stetiger Verfahrensfunktion
-gilt: ist das Verfahren konsistent von der Ordnung <span class="math notranslate nohighlight">\(p\)</span>, so ist es auch
-konvergent von der Ordnung <span class="math notranslate nohighlight">\(p\)</span>.</p>
+gilt: ist das Verfahren konsistent von der Ordnung <span class="math">\(p\)</span>, so ist es auch
+konvergent von der Ordnung <span class="math">\(p\)</span>.</p>
 </section>
 </div><p>Mit Hilfe dieses Korollars und der Abschätzung des Konsistenzfehlers
 stellen wir fest, dass das Vorwärts- und Rückwärts-Euler Verfahren
@@ -798,7 +822,7 @@ hingegen ist sogar konvergent von der Ordnung zwei.</p>
 <section id="runge-kutta-verfahren">
 <span id="rungekutta-verfahren"></span><h2><span class="section-number">2.2.3. </span>Runge–Kutta Verfahren<a class="headerlink" href="#runge-kutta-verfahren" title="Permalink to this heading">#</a></h2>
 <p>Bisher haben wir Verfahren kennengelernt, die auf einzelne
-Funktionsauswertungen von <span class="math notranslate nohighlight">\(F\)</span> an den Zeitschritten <span class="math notranslate nohighlight">\(t_k\)</span> und <span class="math notranslate nohighlight">\(t_{k+1}\)</span>
+Funktionsauswertungen von <span class="math">\(F\)</span> an den Zeitschritten <span class="math">\(t_k\)</span> und <span class="math">\(t_{k+1}\)</span>
 zurückgreifen. Damit haben wir bereits die Konsistenzordnung Eins
 erreicht für die beiden Euler-Verfahren und als maximale
 Konsistenzordnung Zwei im Falle des Crank–Nicholson Verfahrens. Eine
@@ -809,154 +833,155 @@ Konsistenzordnung lässt sich ableiten, dass wir Verfahrensfunktionen der
 Art konstruieren müssen, so dass die Taylorentwicklung ein Restglied
 höherer Ordnung liefert.</p>
 <p>Eine erste Idee zur Steigerung der Konsistenzordnung ist es Ableitungen
-von <span class="math notranslate nohighlight">\(F\)</span> in den Zeitschritten <span class="math notranslate nohighlight">\(t_k\)</span> und <span class="math notranslate nohighlight">\(t_{k+1}\)</span> zu berücksichtigen,
+von <span class="math">\(F\)</span> in den Zeitschritten <span class="math">\(t_k\)</span> und <span class="math">\(t_{k+1}\)</span> zu berücksichtigen,
 womit man offensichtlich die Taylor-Entwicklung besser approximieren und
 somit eine höhere Ordnung erreichen kann. Die Berechnung von Ableitungen
-von <span class="math notranslate nohighlight">\(F\)</span> ist jedoch potentiell numerisch aufwändig und instabil, deswegen
+von <span class="math">\(F\)</span> ist jedoch potentiell numerisch aufwändig und instabil, deswegen
 geht alternativ einen anderen Weg und verwendet geschachtelte
 Funktionsauswertungen.</p>
 <p>Die grundlegende Idee ist es das Integral der Anfangswertaufgabe in
 <a class="reference internal" href="#equation-eq-anfangswertaufgabe-integralform">(2.6)</a> durch eine geeignete
 Quadraturformel (siehe <span id="id6">[<a class="reference internal" href="../../references.html#id3" title="Daniel Tenbrinck and Tim Roith. Vorlesungsskript zur einführung in die numerik (ws 22/23) an der fau erlangen-nürnberg. URL: https://www.math.fau.de/wp-content/uploads/2023/05/tenbrinck_script_numerik.pdf (visited on 2023-05-23).">TR</a>]</span>) der folgenden Form zu
 approximieren:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t, u(t)) \,\mathrm{d}t \ \approx \ f_\tau(t_k, u_\tau(t_k)) \ \coloneqq \ \sum_{i=1}^s b_i f_i^k.\]</div>
-<p>Hierbei stellen die <span class="math notranslate nohighlight">\(b_i \in \R\)</span> Gewichte der Quadraturformel dar und
-die Zwischenwerte <span class="math notranslate nohighlight">\(f_i^k \in \R^n\)</span> sollen eine Approximation der
-Funktionswerte von <span class="math notranslate nohighlight">\(F\)</span> liefern für <span class="math notranslate nohighlight">\(i=1,\ldots,s\)</span> mit</p>
-<div class="math notranslate nohighlight">
+<p>Hierbei stellen die <span class="math">\(b_i \in \R\)</span> Gewichte der Quadraturformel dar und
+die Zwischenwerte <span class="math">\(f_i^k \in \R^n\)</span> sollen eine Approximation der
+Funktionswerte von <span class="math">\(F\)</span> liefern für <span class="math">\(i=1,\ldots,s\)</span> mit</p>
+<div class="math">
 \[f_i^k \ \approx \ F(t_k+c_i\tau,u(t_k + c_i\tau)).\]</div>
-<p>Hierbei sind die <span class="math notranslate nohighlight">\(0 \leq c_i \leq 1, i=1,\ldots,s\)</span> aufsteigende
+<p>Hierbei sind die <span class="math">\(0 \leq c_i \leq 1, i=1,\ldots,s\)</span> aufsteigende
 Parameter, die Stützstellen für die jeweiligen Funktionsauswertung
 definieren. Da wir die Werte der unbekannten Funktion
-<span class="math notranslate nohighlight">\(u_\tau(t_k+c_i \tau)\)</span> an den Stützstellen nicht kennen, benötigen wir
+<span class="math">\(u_\tau(t_k+c_i \tau)\)</span> an den Stützstellen nicht kennen, benötigen wir
 ebenfalls Approximationen mit Hilfe von Quadraturformeln der folgenden
 Form:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u(t_k + c_i\tau) \ = \ u(t_k) + \int_{t_k}^{t_k + c_i\tau} F(t, u(t)) \, \mathrm{d}t \ \approx \  u_\tau(t_k) + \tau \sum_{j=1}^s a_{ij} f_j^k.\]</div>
 <p>Diese Idee führt zur Definition von sogenannten Runge-Kutta Verfahren.</p>
 <div class="proof definition admonition" id="def:runge-kutta">
 <p class="admonition-title"><span class="caption-number">Definition 2.8 </span> (Runge–Kutta Verfahren der Stufe s)</p>
 <section class="definition-content" id="proof-content">
-<p>Bei einem <strong>Runge–Kutta Verfahren der Stufe <span class="math notranslate nohighlight">\(\mathbf{s}\)</span></strong>,
-<span class="math notranslate nohighlight">\(s \in \N^+\)</span> berechnet man</p>
-<div class="math notranslate nohighlight">
+<p>Bei einem <strong>Runge–Kutta Verfahren der Stufe <span class="math">\(\mathbf{s}\)</span></strong>,
+<span class="math">\(s \in \N^+\)</span> berechnet man</p>
+<div class="math">
 \[u_\tau(t_{k+1}) \ = \ u_\tau(t_k) + \tau f_\tau(t_k, u_\tau(t_k)) \ = \ u_\tau(t_k) + \tau \sum_{i=1}^s b_i f_i^k.\]</div>
-<p>Die Zwischenwerte <span class="math notranslate nohighlight">\(f_i^k\)</span> lassen sich als Funktionsauswertungen von <span class="math notranslate nohighlight">\(F\)</span>
+<p>Die Zwischenwerte <span class="math">\(f_i^k\)</span> lassen sich als Funktionsauswertungen von <span class="math">\(F\)</span>
 wie folgt berechnen</p>
-<div class="math notranslate nohighlight" id="equation-eq-runge-kutta-schachtelung">
+<div class="math" id="equation-eq-runge-kutta-schachtelung">
 <span class="eqno">(2.9)<a class="headerlink" href="#equation-eq-runge-kutta-schachtelung" title="Permalink to this equation">#</a></span>\[f_i^k \ \coloneqq \  F\Bigl(t_k + c_i \tau, u_\tau(t_k) + \tau \sum_{j=1}^s a_{ij} f_j^k\Bigr), \qquad i=1,\ldots,s.\]</div>
 <p>Um in der Zeit vorwärts zu gehen wählt man die Koeffizienten
-<span class="math notranslate nohighlight">\(0 \leq c_i \leq 1, i=1,\ldots,s\)</span> als aufsteigende Folge und die Matrix
-<span class="math notranslate nohighlight">\((a_{ij})_{i,j=1,\ldots,s}\)</span> als linke, untere Dreiecksmatrix.</p>
+<span class="math">\(0 \leq c_i \leq 1, i=1,\ldots,s\)</span> als aufsteigende Folge und die Matrix
+<span class="math">\((a_{ij})_{i,j=1,\ldots,s}\)</span> als linke, untere Dreiecksmatrix.</p>
 <p>Man nennt ein Runge–Kutta Verfahren <strong>explizit</strong> falls für alle
-Einträge der Matrix <span class="math notranslate nohighlight">\(A\in \R^{s\times s}\)</span> gilt <span class="math notranslate nohighlight">\(a_{ij}=0, i=1,\ldots,s\)</span>
-wenn <span class="math notranslate nohighlight">\(j \geq i\)</span>.</p>
+Einträge der Matrix <span class="math">\(A\in \R^{s\times s}\)</span> gilt <span class="math">\(a_{ij}=0, i=1,\ldots,s\)</span>
+wenn <span class="math">\(j \geq i\)</span>.</p>
 </section>
-</div><p>Die zu bestimmenden Koeffizienten <span class="math notranslate nohighlight">\(b_i,c_i \in \R\)</span> und <span class="math notranslate nohighlight">\(a_{i,j} \in \R\)</span>
-für <span class="math notranslate nohighlight">\(i,j=1,\ldots,s\)</span> in <a class="reference internal" href="#def:runge-kutta">Definition 2.8</a> erhält man durch
+</div><p>Die zu bestimmenden Koeffizienten <span class="math">\(b_i,c_i \in \R\)</span> und <span class="math">\(a_{i,j} \in \R\)</span>
+für <span class="math">\(i,j=1,\ldots,s\)</span> in <a class="reference internal" href="#def:runge-kutta">Definition 2.8</a> erhält man durch
 einen Vergleich mit der Taylorentwicklung des zu approximierenden
-Integrals <span class="math notranslate nohighlight">\(\frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t\)</span>.
+Integrals <span class="math">\(\frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t\)</span>.
 Das folgende Beispiel soll die Idee zur Herleitung eines Runge–Kutta
-Verfahren für den einfachen Fall der Stufe <span class="math notranslate nohighlight">\(s=1\)</span> verdeutlichen.</p>
+Verfahren für den einfachen Fall der Stufe <span class="math">\(s=1\)</span> verdeutlichen.</p>
 <div class="proof example admonition" id="ex:runge_kutta_s=1">
 <p class="admonition-title"><span class="caption-number">Example 2.6 </span> (Runge–Kutta Verfahren der Stufe 1)</p>
 <section class="example-content" id="proof-content">
-<p>Für ein Runge–Kutta Verfahren der Stufe <span class="math notranslate nohighlight">\(s=1\)</span> ist die
+<p>Für ein Runge–Kutta Verfahren der Stufe <span class="math">\(s=1\)</span> ist die
 Verfahrensfunktion gegeben durch</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ \coloneqq \ b_1 f_1^k,\]</div>
-<p>und für den Zwischenwert <span class="math notranslate nohighlight">\(f_1^k \in \R^n\)</span> gilt entsprechend:</p>
-<div class="math notranslate nohighlight">
+<p>und für den Zwischenwert <span class="math">\(f_1^k \in \R^n\)</span> gilt entsprechend:</p>
+<div class="math">
 \[f_1^k \ = \ F(t_k + c_1 \tau, u_\tau(t_k) +  \tau a_{11} f_1^k).\]</div>
 <p>Wollen wir nun ein <strong>explizites Verfahren</strong> herleiten, so muss nach
-<a class="reference internal" href="#def:runge-kutta">Definition 2.8</a> schon <span class="math notranslate nohighlight">\(a_{11}=0\)</span> gelten. Die
+<a class="reference internal" href="#def:runge-kutta">Definition 2.8</a> schon <span class="math">\(a_{11}=0\)</span> gelten. Die
 Verfahrensfunktion ist also von der Form</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ = \ b_1 f_1^k \ = \ b_1 F(t_k+c_1 \tau,  u_\tau(t_k)).\]</div>
-<p>Die einzige sinnvolle Wahl für den Koeffizienten <span class="math notranslate nohighlight">\(c_1\)</span> ist Null, da wir
-sonst die Funktion <span class="math notranslate nohighlight">\(F\)</span> zu einer anderen Zeit auswerten als die
-unbekannte Funktion <span class="math notranslate nohighlight">\(u\)</span>. Um ein konsistentes Verfahren zu erhalten sieht
-man außerdem ein, dass <span class="math notranslate nohighlight">\(b_1=1\)</span> gelten muss. Also erhalten wir
+<p>Die einzige sinnvolle Wahl für den Koeffizienten <span class="math">\(c_1\)</span> ist Null, da wir
+sonst die Funktion <span class="math">\(F\)</span> zu einer anderen Zeit auswerten als die
+unbekannte Funktion <span class="math">\(u\)</span>. Um ein konsistentes Verfahren zu erhalten sieht
+man außerdem ein, dass <span class="math">\(b_1=1\)</span> gelten muss. Also erhalten wir
 schlussendlich das Vorwärts-Euler Verfahren.</p>
 <p><br />
 Im <strong>impliziten Fall</strong> können wir interessanterweise eine höhere Ordnung
 erreichen. Wir berechnen hierzu die Taylor-Entwicklung des Zwischenwerts
-<span class="math notranslate nohighlight">\(f_1^k\)</span> wie folgt</p>
-<div class="math notranslate nohighlight" id="equation-eq-runge-kutta-taylor-f1k">
-<span class="eqno">(2.10)<a class="headerlink" href="#equation-eq-runge-kutta-taylor-f1k" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
-f_1^k \ &amp;= \ F(t_k + c_1 \tau, u_\tau(t_k) +  \tau a_{11} f_1^k) \\
-&amp;= \ F(t_k,u(t_k)) + c_1 \tau \partial_t F(t_k,u(t_k)) + \tau a_{11} D_u F(t_k,u(t_k)) f_1^k + {\cal O}(\tau^2).
-\end{split}\end{split}\]</div>
-<p>Hierbei bezeichnet <span class="math notranslate nohighlight">\(D_u\)</span> die Jacobimatrix bezüglich des zweiten
-Arguments <span class="math notranslate nohighlight">\(u\)</span> von <span class="math notranslate nohighlight">\(F\)</span>. Setzen wir auf der rechten Seite nochmal den
-ersten Approximationsterm für <span class="math notranslate nohighlight">\(f_1^k\)</span> ein, so folgt</p>
-<div class="math notranslate nohighlight">
+<span class="math">\(f_1^k\)</span> wie folgt</p>
+<div class="math" id="equation-eq-runge-kutta-taylor-f1k">
+<span class="eqno">(2.10)<a class="headerlink" href="#equation-eq-runge-kutta-taylor-f1k" title="Permalink to this equation">#</a></span>\[\begin{split}
+f_1^k \ &= \ F(t_k + c_1 \tau, u_\tau(t_k) +  \tau a_{11} f_1^k) \\
+&= \ F(t_k,u(t_k)) + c_1 \tau \partial_t F(t_k,u(t_k)) + \tau a_{11} D_u F(t_k,u(t_k)) f_1^k + {\cal O}(\tau^2).
+\end{split}\]</div>
+<p>Hierbei bezeichnet <span class="math">\(D_u\)</span> die Jacobimatrix bezüglich des zweiten
+Arguments <span class="math">\(u\)</span> von <span class="math">\(F\)</span>. Setzen wir auf der rechten Seite nochmal den
+ersten Approximationsterm für <span class="math">\(f_1^k\)</span> ein, so folgt</p>
+<div class="math">
 \[f_1^k \ = \ F(t_k,u(t_k)) + c_1 \tau \partial_t F(t_k,u(t_k)) + \tau a_{11} D_u F(t_k,u(t_k)) F(t_k,u(t_k))+ {\cal O}(\tau^2).\]</div>
 <p>Andererseits gilt mit einer Taylorentwicklung des unbekannten
-Funktionswerts <span class="math notranslate nohighlight">\(u(t_{k+1})\)</span> im Punkt <span class="math notranslate nohighlight">\(t_k\)</span>:</p>
-<div class="math notranslate nohighlight" id="equation-eq-runge-kutta-taylor-integral">
-<span class="eqno">(2.11)<a class="headerlink" href="#equation-eq-runge-kutta-taylor-integral" title="Permalink to this equation">#</a></span>\[\begin{split}\begin{split}
-\frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t))\,\mathrm{d}t \ &amp;= \ \frac{1}{\tau} \left( u(t_{k+1}) - u(t_k) \right) \\
-&amp;= \ \frac{1}{\tau} \left( u(t_k) + \tau u'(t_k) + \frac{\tau^2}{2}u''(t_k) + \mathcal{O}(\tau^3) - u(t_k) \right)\\
-&amp;= \ u'(t_k) + \frac{\tau}{2} u''(t_k) + \mathcal{O}(\tau^2)\\
-&amp;= \ F(t_k,u(t_k)) + \frac{\tau}2 \partial_t F(t_k,u(t_k))\\
-&amp; \hspace{2.58cm} +\frac{\tau}2 D_u F(t_k,u(t_k)) F(t_k,u(t_k)) + {\cal O}(\tau^2).
-\end{split}\end{split}\]</div>
+Funktionswerts <span class="math">\(u(t_{k+1})\)</span> im Punkt <span class="math">\(t_k\)</span>:</p>
+<div class="math" id="equation-eq-runge-kutta-taylor-integral">
+<span class="eqno">(2.11)<a class="headerlink" href="#equation-eq-runge-kutta-taylor-integral" title="Permalink to this equation">#</a></span>\[\begin{split}
+\frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t))\,\mathrm{d}t \ &= \ \frac{1}{\tau} \left( u(t_{k+1}) - u(t_k) \right) \\
+&= \ \frac{1}{\tau} \left( u(t_k) + \tau u'(t_k) + \frac{\tau^2}{2}u''(t_k) + \mathcal{O}(\tau^3) - u(t_k) \right)\\
+&= \ u'(t_k) + \frac{\tau}{2} u''(t_k) + \mathcal{O}(\tau^2)\\
+&= \ F(t_k,u(t_k)) + \frac{\tau}2 \partial_t F(t_k,u(t_k))\\
+& \hspace{2.58cm} +\frac{\tau}2 D_u F(t_k,u(t_k)) F(t_k,u(t_k)) + {\cal O}(\tau^2).
+\end{split}\]</div>
 <p>Damit gilt</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ = \ b_1 f_1^k \ \approx \ \frac{1}{\tau}\int_{t_k}^{t_{k+1}} F(t,u(t))\,\mathrm{d}t,\]</div>
 <p>vergleichen wir die beiden Formeln <a class="reference internal" href="#equation-eq-runge-kutta-taylor-f1k">(2.10)</a> und
 <a class="reference internal" href="#equation-eq-runge-kutta-taylor-integral">(2.11)</a> und sehen ein, dass wir eine
 Konsistenzordnung von Zwei erreichen können, wenn die Koeffizienten als
-<span class="math notranslate nohighlight">\(b_1 =1\)</span>, <span class="math notranslate nohighlight">\(c_1=\frac{1}2\)</span> und <span class="math notranslate nohighlight">\(a_{11}=\frac{1}2\)</span> gewählt werden.</p>
+<span class="math">\(b_1 =1\)</span>, <span class="math">\(c_1=\frac{1}2\)</span> und <span class="math">\(a_{11}=\frac{1}2\)</span> gewählt werden.</p>
 <p>Die Verfahrensfunktion ist also gegeben durch die Lösung von</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ = \ f_1^k \ = \ F(t_k +\frac{\tau}2,u_\tau(t_k) + \frac{\tau}2 f_1^k).\]</div>
 <p>Wir können dieses Runge-Kutta Verfahren als <em>Mittelpunktsregel</em> im
-Intervall <span class="math notranslate nohighlight">\([t_k,t_{k+1}]\)</span> interpretieren, wobei der unbekannte Wert von
-<span class="math notranslate nohighlight">\(u_\tau\)</span> am Mittelpunkt <span class="math notranslate nohighlight">\(t_k +\frac{\tau}2\)</span> des Intervalls durch das
+Intervall <span class="math">\([t_k,t_{k+1}]\)</span> interpretieren, wobei der unbekannte Wert von
+<span class="math">\(u_\tau\)</span> am Mittelpunkt <span class="math">\(t_k +\frac{\tau}2\)</span> des Intervalls durch das
 <em>Rückwärts-Euler-Verfahren</em> bestimmt wird.</p>
 </section>
-</div><p>Im Folgenden betrachten wir noch <span class="math notranslate nohighlight">\(2\)</span>-stufige Runge–Kutta Verfahren.</p>
+</div><p>Im Folgenden betrachten wir noch <span class="math">\(2\)</span>-stufige Runge–Kutta Verfahren.</p>
 <div class="proof example admonition" id="ex:runge_kutta_s=2">
 <p class="admonition-title"><span class="caption-number">Example 2.7 </span> (Runge–Kutta Verfahren der Stufe 2)</p>
 <section class="example-content" id="proof-content">
-<p>Für ein Runge–Kutta Verfahren der Stufe <span class="math notranslate nohighlight">\(s=2\)</span> ist die
+<p>Für ein Runge–Kutta Verfahren der Stufe <span class="math">\(s=2\)</span> ist die
 Verfahrensfunktion gegeben durch</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ \coloneqq \ b_1 f_1^k +b_2 f_2^k,\]</div>
-<p>und für die Zwischenwerte <span class="math notranslate nohighlight">\(f_1^k, f_2^k \in \R^n\)</span> gilt im <strong>expliziten
-Fall</strong> mit <span class="math notranslate nohighlight">\(a_{11} = a_{22} = 0\)</span>:</p>
-<div class="math notranslate nohighlight">
+<p>und für die Zwischenwerte <span class="math">\(f_1^k, f_2^k \in \R^n\)</span> gilt im <strong>expliziten
+Fall</strong> mit <span class="math">\(a_{11} = a_{22} = 0\)</span>:</p>
+<div class="math">
 \[f_1^k \ = \ F(t_k + c_1 \tau, u_\tau(t_k)), \quad f_2^k \ = \ F(t_k + c_2 \tau, u_\tau(t_k) +  \tau a_{21} f_1^k).\]</div>
 <p>Analog zur Argumentation im expliziten Fall von
-<a class="reference internal" href="#ex:runge_kutta_s=1">Example 2.6</a> sehen wir wieder, dass nur <span class="math notranslate nohighlight">\(c_1=0\)</span> eine
-sinnvolle Wahl ist. Eine Taylor-Entwicklung des Zwischenwertes <span class="math notranslate nohighlight">\(f_2^k\)</span>
+<a class="reference internal" href="#ex:runge_kutta_s=1">Example 2.6</a> sehen wir wieder, dass nur <span class="math">\(c_1=0\)</span> eine
+sinnvolle Wahl ist. Eine Taylor-Entwicklung des Zwischenwertes <span class="math">\(f_2^k\)</span>
 liefert dann</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}b_1 f_1^k +b_2 f_2^k \ &amp;= \ (b_1 + b_2) F(t_k , u(t_k)) + b_2 c_2 \tau \partial_t F(t_k , u (t_k))\\ 
-&amp; \hspace{1cm} + b_2 a_{21} \tau D_u F(t_k , u (t_k)) F(t_k , u (t_k)) + {\cal O}(\tau^2).
-\end{split}\]</div>
+<div class="math">
+\[\begin{aligned}
+b_1 f_1^k +b_2 f_2^k \ &= \ (b_1 + b_2) F(t_k , u(t_k)) + b_2 c_2 \tau \partial_t F(t_k , u (t_k))\\ 
+& \hspace{1cm} + b_2 a_{21} \tau D_u F(t_k , u (t_k)) F(t_k , u (t_k)) + {\cal O}(\tau^2).
+\end{aligned}\]</div>
 <p>Vergleichen wir dies wieder mit der Taylor-Entwicklung des Integrals in
 <a class="reference internal" href="#equation-eq-runge-kutta-taylor-integral">(2.11)</a>, so erhalten wir folgendes
 Gleichungssystem</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[b_1+b_2 \, = \, 1, \qquad b_2 c_2 \, = \, \frac{1}2, \qquad b_2 a_{21} \, = \, \frac{1}2.\]</div>
-<p>Eine einfache Lösung ist beispielsweise <span class="math notranslate nohighlight">\(b_1=0\)</span>, <span class="math notranslate nohighlight">\(b_2=1\)</span>,
-<span class="math notranslate nohighlight">\(c_2=a_{21} = \frac{1}2\)</span>. Diese Wahl der Koeffizienten liefert uns also
+<p>Eine einfache Lösung ist beispielsweise <span class="math">\(b_1=0\)</span>, <span class="math">\(b_2=1\)</span>,
+<span class="math">\(c_2=a_{21} = \frac{1}2\)</span>. Diese Wahl der Koeffizienten liefert uns also
 ein Verfahren der Konsistenzordnung zwei mit der Verfahrensfunktion</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ = \ F(t_k +\frac{\tau}2,u_\tau(t_k) + \frac{\tau}2 F(t_k,u(t_k))).\]</div>
 <p>Wir können dieses zweistufige Runge-Kutta Verfahren als eine
-<em>Mittelpunktsregel</em> im Intervall <span class="math notranslate nohighlight">\([t_k,t_{k+1}]\)</span> interpretieren, wobei
-der unbekannte Wert von <span class="math notranslate nohighlight">\(u_\tau\)</span> am Mittelpunkt <span class="math notranslate nohighlight">\(t_k +\frac{\tau}2\)</span>
+<em>Mittelpunktsregel</em> im Intervall <span class="math">\([t_k,t_{k+1}]\)</span> interpretieren, wobei
+der unbekannte Wert von <span class="math">\(u_\tau\)</span> am Mittelpunkt <span class="math">\(t_k +\frac{\tau}2\)</span>
 durch das <em>Vorwärts-Euler-Verfahren</em> bestimmt wird.</p>
 </section>
 </div><p>Bei der Konstruktion eines Runge-Kutta Verfahrens in
 <a class="reference internal" href="#ex:runge_kutta_s=1">Example 2.6</a> und <a class="reference internal" href="#ex:runge_kutta_s=2">Example 2.7</a> haben
-wir die Koeffizienten <span class="math notranslate nohighlight">\(b_i, c_i \in \R\)</span> und <span class="math notranslate nohighlight">\(a_{i,j} \in \R\)</span> für
-<span class="math notranslate nohighlight">\(i,j=1,\ldots,s\)</span> basierend auf vernünftigen Überlegungen zu wählen. Wie
+wir die Koeffizienten <span class="math">\(b_i, c_i \in \R\)</span> und <span class="math">\(a_{i,j} \in \R\)</span> für
+<span class="math">\(i,j=1,\ldots,s\)</span> basierend auf vernünftigen Überlegungen zu wählen. Wie
 wir speziell im Fall des zweistufigen Runge-Kutta Verfahrens gesehen
 haben führt dies im Allgemeinen jedoch nicht zu eindeutigen Lösungen.
 Daher ist es sinnvoll Kriterien an die implizierten Runge-Kutta
@@ -968,168 +993,169 @@ folgende Lemma festhält.</p>
 <div class="proof lemma admonition" id="lem:runge_kutta_konsistenzbedingung">
 <p class="admonition-title"><span class="caption-number">Lemma 2.4 </span> (Konsistenzbedingung von Runge-Kutta-Verfahren)</p>
 <section class="lemma-content" id="proof-content">
-<p>Ein Runge-Kutta Verfahren der Stufe <span class="math notranslate nohighlight">\(s \in \N^+\)</span> ist genau dann
+<p>Ein Runge-Kutta Verfahren der Stufe <span class="math">\(s \in \N^+\)</span> ist genau dann
 konsistent, wenn die folgende Bedingung erfüllt ist:</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\sum_{i=1}^s b_i \ = \ 1.\]</div>
 </section>
 </div><div class="proof admonition" id="proof">
 <p>Proof. Um zu zeigen, dass ein Runge-Kutta Verfahren konsistent ist müssen wir
 zeigen, dass der Konsistenzfehler</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[K_\tau \ = \ \max_{k=0,\ldots,N} \left\Vert f_\tau(t_k, u(t_k)) - \frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t, u(t)) \, \mathrm{d}t \right\Vert\]</div>
-<p>mindestens von der Fehlerordnung <span class="math notranslate nohighlight">\(\mathcal{O}(\tau)\)</span> ist und für
-<span class="math notranslate nohighlight">\(\tau \rightarrow 0\)</span> gegen Null geht.</p>
-<p>Die Verfahrensfunktion des Runge-Kutta Verfahrens der Stufe <span class="math notranslate nohighlight">\(s\)</span> gegeben
+<p>mindestens von der Fehlerordnung <span class="math">\(\mathcal{O}(\tau)\)</span> ist und für
+<span class="math">\(\tau \rightarrow 0\)</span> gegen Null geht.</p>
+<p>Die Verfahrensfunktion des Runge-Kutta Verfahrens der Stufe <span class="math">\(s\)</span> gegeben
 ist als</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[f_\tau(t_k, u_\tau(t_k)) \ = \ \sum_{i=1}^s b_i f_i^k\]</div>
 <p>und daher können wir die Taylorapproximation erster Ordnung jedes
-Zwischenwerts <span class="math notranslate nohighlight">\(f_i^k \in \R^n\)</span> für <span class="math notranslate nohighlight">\(i=1,\ldots,s\)</span> analog zu
+Zwischenwerts <span class="math">\(f_i^k \in \R^n\)</span> für <span class="math">\(i=1,\ldots,s\)</span> analog zu
 <a class="reference internal" href="#equation-eq-runge-kutta-taylor-f1k">(2.10)</a> betrachten und erhalten somit</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\sum_{i=1}^s b_i f_i^k \ = \  \sum_{i=1}^s (b_i F(t_k,u(t_k)) + {\cal O}(\tau)) \ = \ \sum_{i=1}^s b_i F(t_k,u(t_k)) + {\cal O}(\tau).\]</div>
 <p>Die Taylorapproximation erster Ordnung des Integrals liefert nach
 <a class="reference internal" href="#equation-eq-runge-kutta-taylor-integral">(2.11)</a> außerdem</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[\frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t = F(t_k,u(t_k)) + {\cal O}(\tau).\]</div>
 <p>Nun gilt also für den Konsistenzfehler</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-K_\tau \ &amp;= \ \max_{k=0,\ldots,N} \left\Vert \, f_\tau(t_k, u(t_k))  - \frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t, u(t)) \, \mathrm{d}t \, \right\Vert \\
-&amp;= \ \max_{k=0,\ldots,N} \left\Vert \, \sum_{i=1}^s b_i F(t_k,u(t_k)) - F(t_k,u(t_k)) + {\cal O}(\tau) \, \right\Vert.
-\end{split}\end{split}\]</div>
-<p>Wir sehen, dass für den Konsistenzfehler <span class="math notranslate nohighlight">\(K_\tau \in \mathcal{O}(\tau)\)</span>
-genau dann gilt, wenn <span class="math notranslate nohighlight">\(\sum_{i=1}^s b_i = 1\)</span> ist. ◻</p>
+<div class="math">
+\[\begin{split}
+K_\tau \ &= \ \max_{k=0,\ldots,N} \left\Vert \, f_\tau(t_k, u(t_k))  - \frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t, u(t)) \, \mathrm{d}t \, \right\Vert \\
+&= \ \max_{k=0,\ldots,N} \left\Vert \, \sum_{i=1}^s b_i F(t_k,u(t_k)) - F(t_k,u(t_k)) + {\cal O}(\tau) \, \right\Vert.
+\end{split}\]</div>
+<p>Wir sehen, dass für den Konsistenzfehler <span class="math">\(K_\tau \in \mathcal{O}(\tau)\)</span>
+genau dann gilt, wenn <span class="math">\(\sum_{i=1}^s b_i = 1\)</span> ist. ◻</p>
 </div>
 <p>Umgekehrt ist die Konsistenzordnung eines Runge-Kutta Verfahrens nach
 oben durch dessen Stufe beschränkt, wie folgendes Lemma zeigt.</p>
 <div class="proof lemma admonition" id="lemma-16">
 <p class="admonition-title"><span class="caption-number">Lemma 2.5 </span> (Maximale Konsistenzordnung von Runge-Kutta-Verfahren)</p>
 <section class="lemma-content" id="proof-content">
-<p>Für die Konsistenzordnung <span class="math notranslate nohighlight">\(p \in \N^+\)</span> eines expliziten Runge-Kutta
-Verfahren der Stufe <span class="math notranslate nohighlight">\(s \in \N^+\)</span> für ein Anfangswertproblem mit einer
+<p>Für die Konsistenzordnung <span class="math">\(p \in \N^+\)</span> eines expliziten Runge-Kutta
+Verfahren der Stufe <span class="math">\(s \in \N^+\)</span> für ein Anfangswertproblem mit einer
 rechten Seite der Differentialgleichung
-<span class="math notranslate nohighlight">\(F \in C^\infty([0,T] \times \R^n; \R^n)\)</span> gilt, dass die
+<span class="math">\(F \in C^\infty([0,T] \times \R^n; \R^n)\)</span> gilt, dass die
 Konsistenzordnung durch die Stufe des Verfahrens nach oben beschränkt
-ist, d.h., es gilt <span class="math notranslate nohighlight">\(0 &lt; p \leq s\)</span>.</p>
+ist, d.h., es gilt <span class="math">\(0 &lt; p \leq s\)</span>.</p>
 </section>
 </div><div class="proof admonition" id="proof">
-<p>Proof. Wir zeigen die Behauptung für den reellen Fall <span class="math notranslate nohighlight">\(n=1\)</span> und wählen die
-besonders einfache rechte Seite <span class="math notranslate nohighlight">\(F(t,u) = u\)</span> mit <span class="math notranslate nohighlight">\(u_0=1 \in \R\)</span>. Dann
+<p>Proof. Wir zeigen die Behauptung für den reellen Fall <span class="math">\(n=1\)</span> und wählen die
+besonders einfache rechte Seite <span class="math">\(F(t,u) = u\)</span> mit <span class="math">\(u_0=1 \in \R\)</span>. Dann
 ist die Lösung des Anfangswertproblems</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[u'(t) \ = \ F(t, u(t)) \ = \ u(t), \qquad u(0) \ = \ 1,\]</div>
-<p>gegeben durch <span class="math notranslate nohighlight">\(u(t)=u_0\cdot e^t = e^t\)</span>.</p>
+<p>gegeben durch <span class="math">\(u(t)=u_0\cdot e^t = e^t\)</span>.</p>
 <p>Mit der Taylorentwicklung der Exponentialfunktion
-<span class="math notranslate nohighlight">\(u(t) = e^t = \sum_{j=0}^\infty \frac{t^j}{j!}\)</span> können wir das Integral
-als Polynom in <span class="math notranslate nohighlight">\(\tau\)</span> schreiben mit:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t))\,\mathrm{d}t \ &amp;= \ \frac{1}\tau \int_{t_k}^{t_{k+1}} u(t)\,\mathrm{d}t \\
-&amp;= \frac{1}\tau \int_{t_k}^{t_{k+1}} \underbrace{u(t_k - t_k)}_{=\, 1} \cdot \: u(t)\,\mathrm{d}t\\
-&amp;= \frac{1}\tau \int_{t_k}^{t_{k+1}} u(t_k) \cdot u(t  - t_k)\,\mathrm{d}t\\
-&amp;= \ \frac{u(t_k)}\tau \int_{t_k}^{t_{k+1}} \sum_{j=0}^p \frac{(t-t_k)^j}{j!} + {\cal O}(\tau^{p+1}) \,\mathrm{d}t \\
-&amp;= \ \frac{u(t_k)}\tau \sum_{j=0}^p \frac{(t_{k+1}-t_k)^{j+1}}{(j+1)!} + {\cal O}(\tau^{p}) \\
-&amp;= \ \sum_{j=0}^p \tau^{j} \frac{u(t_k)}{(j+1)!} + {\cal O}(\tau^{p}).
-\end{split}\]</div>
+<span class="math">\(u(t) = e^t = \sum_{j=0}^\infty \frac{t^j}{j!}\)</span> können wir das Integral
+als Polynom in <span class="math">\(\tau\)</span> schreiben mit:</p>
+<div class="math">
+\[\begin{aligned}
+\frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t))\,\mathrm{d}t \ &= \ \frac{1}\tau \int_{t_k}^{t_{k+1}} u(t)\,\mathrm{d}t \\
+&= \frac{1}\tau \int_{t_k}^{t_{k+1}} \underbrace{u(t_k - t_k)}_{=\, 1} \cdot \: u(t)\,\mathrm{d}t\\
+&= \frac{1}\tau \int_{t_k}^{t_{k+1}} u(t_k) \cdot u(t  - t_k)\,\mathrm{d}t\\
+&= \ \frac{u(t_k)}\tau \int_{t_k}^{t_{k+1}} \sum_{j=0}^p \frac{(t-t_k)^j}{j!} + {\cal O}(\tau^{p+1}) \,\mathrm{d}t \\
+&= \ \frac{u(t_k)}\tau \sum_{j=0}^p \frac{(t_{k+1}-t_k)^{j+1}}{(j+1)!} + {\cal O}(\tau^{p}) \\
+&= \ \sum_{j=0}^p \tau^{j} \frac{u(t_k)}{(j+1)!} + {\cal O}(\tau^{p}).
+\end{aligned}\]</div>
 <p>Andererseits sehen wir für ein beliebiges explizites Runge-Kutta
-Verfahren der Stufe <span class="math notranslate nohighlight">\(s \in \N^+\)</span> mit Konsistenzordnung <span class="math notranslate nohighlight">\(p \leq s\)</span>, dass
+Verfahren der Stufe <span class="math">\(s \in \N^+\)</span> mit Konsistenzordnung <span class="math">\(p \leq s\)</span>, dass
 die Zwischenwerte gegeben sind durch:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-f_1^k \ &amp;= \ u_\tau(t_k),\\
-f_2^k \ &amp;= \ u_\tau(t_k) + \tau a_{21} u_\tau(t_k),\\
-f_3^k  \ &amp;= \ u_\tau(t_k) + \tau a_{31} u_\tau(t_k) + \tau a_{32} u_\tau(t_k) + \tau^2 a_{32} a_{21} u_\tau(t_k),\\
-&amp;\vdots
-\end{split}\end{split}\]</div>
-<p>Wir sehen also, dass jeder Zwischenwert <span class="math notranslate nohighlight">\(f_i^k \in \R^n\)</span> für
-<span class="math notranslate nohighlight">\(i=1,\ldots, s\)</span> ein Polynom in <span class="math notranslate nohighlight">\(\tau\)</span> vom Grad kleiner gleich <span class="math notranslate nohighlight">\(i-1\)</span> ist
+<div class="math">
+\[\begin{split}
+f_1^k \ &= \ u_\tau(t_k),\\
+f_2^k \ &= \ u_\tau(t_k) + \tau a_{21} u_\tau(t_k),\\
+f_3^k  \ &= \ u_\tau(t_k) + \tau a_{31} u_\tau(t_k) + \tau a_{32} u_\tau(t_k) + \tau^2 a_{32} a_{21} u_\tau(t_k),\\
+&\vdots
+\end{split}\]</div>
+<p>Wir sehen also, dass jeder Zwischenwert <span class="math">\(f_i^k \in \R^n\)</span> für
+<span class="math">\(i=1,\ldots, s\)</span> ein Polynom in <span class="math">\(\tau\)</span> vom Grad kleiner gleich <span class="math">\(i-1\)</span> ist
 und somit ist die Verfahrensfunktion
-<span class="math notranslate nohighlight">\(f_\tau(t_k, u_\tau(t_k))  \ = \ \sum_{i=1}^s b_i f_i^k\)</span> ein Polynom in
-<span class="math notranslate nohighlight">\(\tau\)</span> vom Grad kleiner gleich <span class="math notranslate nohighlight">\(s-1\)</span>.</p>
+<span class="math">\(f_\tau(t_k, u_\tau(t_k))  \ = \ \sum_{i=1}^s b_i f_i^k\)</span> ein Polynom in
+<span class="math">\(\tau\)</span> vom Grad kleiner gleich <span class="math">\(s-1\)</span>.</p>
 <p>Damit können wir keine höhere Ordnung erreichen, da der Fehler ab der
-Ordnung <span class="math notranslate nohighlight">\(\mathcal{O}(\tau^p)\)</span> im Allgemeinen nicht verschwindet. ◻</p>
+Ordnung <span class="math">\(\mathcal{O}(\tau^p)\)</span> im Allgemeinen nicht verschwindet. ◻</p>
 </div>
 <p>Man sieht ein, dass sich mittels der Forderung von Konsistenz in
 <a class="reference internal" href="#lem:runge_kutta_konsistenzbedingung">Lemma 2.4</a> und dem Bestreben nach
-maximaler Konsistenzordnung <span class="math notranslate nohighlight">\(p = s\)</span> eines <span class="math notranslate nohighlight">\(s\)</span>-stufigen Runge-Kutta
+maximaler Konsistenzordnung <span class="math">\(p = s\)</span> eines <span class="math">\(s\)</span>-stufigen Runge-Kutta
 Verfahrens, das enstehende Gleichungssystem lösen lässt. Allerdings
 bleibt hierbei immer noch eine Uneindeutigkeit der Koeffizienten
-<span class="math notranslate nohighlight">\(c_i \in \R, i=1,\ldots,s\)</span> übrig. Um hier eine systematische Wahl zu
+<span class="math">\(c_i \in \R, i=1,\ldots,s\)</span> übrig. Um hier eine systematische Wahl zu
 treffen, fordert man im Allgemeinheit die Invarianz des Verfahrens
 gegenüber sogenannter <em>Autonomisierung</em>. Hierzu führen wir zunächst den
 Begriff einer autonomen Differentialgleichung ein.</p>
 <div class="proof definition admonition" id="definition-17">
 <p class="admonition-title"><span class="caption-number">Definition 2.9 </span> (Autonome gew. Differentialgleichung)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(u'(t) = F(t, u(t)), \ u(0) = u_0 \in \R^n\)</span> ein Anfangswertproblem
+<p>Sei <span class="math">\(u'(t) = F(t, u(t)), \ u(0) = u_0 \in \R^n\)</span> ein Anfangswertproblem
 einer gewöhnlichen Differentialgleichung erster Ordnung.</p>
-<p>Wir nennen die Differentialgleichung <strong>autonom</strong>, wenn die Funktion <span class="math notranslate nohighlight">\(F\)</span>
-auf der rechten Seite nicht explizit von <span class="math notranslate nohighlight">\(t\)</span> abhängt, d.h., es gilt
-<span class="math notranslate nohighlight">\(F(t,u(t)) = F(u(t))\)</span>.</p>
+<p>Wir nennen die Differentialgleichung <strong>autonom</strong>, wenn die Funktion <span class="math">\(F\)</span>
+auf der rechten Seite nicht explizit von <span class="math">\(t\)</span> abhängt, d.h., es gilt
+<span class="math">\(F(t,u(t)) = F(u(t))\)</span>.</p>
 </section>
 </div><p>Das allgemeine Anfangswertproblem <a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a> lässt sich
 autonomisieren, d.h. in ein äquivalentes System autonomer
-Differentialgleichungen für <span class="math notranslate nohighlight">\(\tilde u = v,u)\)</span> mit einer Hilfsfunktion
-<span class="math notranslate nohighlight">\(v\)</span> umschreiben. Hierzu betrachten wir das Differentialgleichungssystem</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{split}
-u'(t) \ &amp;= \ F(v(t),u(t)) \ = \ F(\tilde{u}(t)), \qquad u(0) \, = \, u_0 \in \R^n,\\
-v'(t) \ &amp;= \ 1, \hspace{4.7cm} v(0) \, = \, 0.
-\end{split}\end{split}\]</div>
-<p>Man erkennt sofort, dass <span class="math notranslate nohighlight">\(v(t) =t\)</span> gelten muss, was die Äquivalenz zu
+Differentialgleichungen für <span class="math">\(\tilde u = v,u)\)</span> mit einer Hilfsfunktion
+<span class="math">\(v\)</span> umschreiben. Hierzu betrachten wir das Differentialgleichungssystem</p>
+<div class="math">
+\[\begin{split}
+u'(t) \ &= \ F(v(t),u(t)) \ = \ F(\tilde{u}(t)), \qquad u(0) \, = \, u_0 \in \R^n,\\
+v'(t) \ &= \ 1, \hspace{4.7cm} v(0) \, = \, 0.
+\end{split}\]</div>
+<p>Man erkennt sofort, dass <span class="math">\(v(t) =t\)</span> gelten muss, was die Äquivalenz zu
 <a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a> impliziert.</p>
 <p>Wir nennen die obige Transformation des Anfangswertproblems
 Autonomisierung und fordern, dass das Runge-Kutta Verfahren unter der
 Autonomisierung invariant sein soll. Dies bedeutet, dass wir fordern,
 dass die Anwendung des numerischen Verfahrens auf das neue System die
-selbe Lösung <span class="math notranslate nohighlight">\(u_\tau\)</span> liefern soll, wie die Anwendung auf das
+selbe Lösung <span class="math">\(u_\tau\)</span> liefern soll, wie die Anwendung auf das
 ursprüngliche Anfangswertproblem <a class="reference internal" href="01_04_Anfangswertprobleme.html#equation-eq-awp">(2.1)</a>. Darüber hinaus fordern
 wir, dass die Invarianz unter Autonomisierung für jede geeignete
-Funktion <span class="math notranslate nohighlight">\(F\)</span> auf der rechten Seite gelten soll.</p>
+Funktion <span class="math">\(F\)</span> auf der rechten Seite gelten soll.</p>
 <p>Schreiben wir die Zwischenwerte für beide Formulierungen, so gilt für
 das <em>ursprüngliche Anfangswertproblem</em></p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[F(t_k + c_i \tau, u(t_k + c_i \tau)) \ \approx \ F(t_k + c_i \tau,u(t_k) + \tau \sum_{j=1}^s a_{ij} f_j^k) \ =: \ f_i^k,\]</div>
 <p>und für die <em>autonome Variante</em> andererseits</p>
-<div class="math notranslate nohighlight">
+<div class="math">
 \[F(v(t_k + c_i \tau), u(t_k + c_i \tau)) \ \approx \ F(v(t_k) + \tau \sum_{j=1}^s a_{ij},u(t_k) +  \tau \sum_{j=1}^s a_{ij} f_j^k) \ =: \ f_i^k.\]</div>
 <p>Da wegen der exakten numerischen Integration der linearen Funktion
-<span class="math notranslate nohighlight">\(t \mapsto t\)</span> immer <span class="math notranslate nohighlight">\(v(t_k) = t_k\)</span> gilt, sehen wir durch
+<span class="math">\(t \mapsto t\)</span> immer <span class="math">\(v(t_k) = t_k\)</span> gilt, sehen wir durch
 Koeffizientenvergleich, dass die Invarianz gegenüber Autonomisierung
 äquivalent ist zu der Bedingung</p>
-<div class="math notranslate nohighlight" id="equation-eq-runge-kutta-ci">
+<div class="math" id="equation-eq-runge-kutta-ci">
 <span class="eqno">(2.12)<a class="headerlink" href="#equation-eq-runge-kutta-ci" title="Permalink to this equation">#</a></span>\[c_i \ = \ \sum_{j=1}^s a_{ij}, \qquad i=1,\ldots,s.\]</div>
-<p>Aus diesem Grund bestimmt man die Koeffizienten <span class="math notranslate nohighlight">\(c_i\in \R\)</span> immer aus
-Gleichung <a class="reference internal" href="#equation-eq-runge-kutta-ci">(2.12)</a> und lediglich die Einträge <span class="math notranslate nohighlight">\(a_{ij}\)</span>
-der Matrix <span class="math notranslate nohighlight">\(A\)</span> werden aus der Konsistenzbedingung mittels
+<p>Aus diesem Grund bestimmt man die Koeffizienten <span class="math">\(c_i\in \R\)</span> immer aus
+Gleichung <a class="reference internal" href="#equation-eq-runge-kutta-ci">(2.12)</a> und lediglich die Einträge <span class="math">\(a_{ij}\)</span>
+der Matrix <span class="math">\(A\)</span> werden aus der Konsistenzbedingung mittels
 Taylorentwicklung bestimmt. Damit ist es möglich ein explizites
-<span class="math notranslate nohighlight">\(s\)</span>-stufiges Runge-Kutta Verfahren der Konsistenzordnung <span class="math notranslate nohighlight">\(s \in N^+\)</span> zu
+<span class="math">\(s\)</span>-stufiges Runge-Kutta Verfahren der Konsistenzordnung <span class="math">\(s \in N^+\)</span> zu
 konstruieren</p>
 <section id="butcher-schema">
 <span id="id7"></span><h3><span class="section-number">2.2.3.1. </span>Butcher-Schema<a class="headerlink" href="#butcher-schema" title="Permalink to this heading">#</a></h3>
-<p>Allgemein lässt sich ein <span class="math notranslate nohighlight">\(s\)</span>-stufiges Runge-Kutta Verfahren durch die
-Matrix <span class="math notranslate nohighlight">\(A\)</span> und die Vektoren <span class="math notranslate nohighlight">\(b\)</span>, <span class="math notranslate nohighlight">\(c\)</span> eindeutig repräsentieren. Diese
+<p>Allgemein lässt sich ein <span class="math">\(s\)</span>-stufiges Runge-Kutta Verfahren durch die
+Matrix <span class="math">\(A\)</span> und die Vektoren <span class="math">\(b\)</span>, <span class="math">\(c\)</span> eindeutig repräsentieren. Diese
 lassen sich kompakt in Form eines Schemas angeben.</p>
 <div class="proof definition admonition" id="definition-18">
 <p class="admonition-title"><span class="caption-number">Definition 2.10 </span> (Butcher-Schema)</p>
 <section class="definition-content" id="proof-content">
-<p>Sei <span class="math notranslate nohighlight">\(s \in \N^+\)</span> die Stufe eines Runge-Kutta Verfahrens mit
+<p>Sei <span class="math">\(s \in \N^+\)</span> die Stufe eines Runge-Kutta Verfahrens mit
 Koeffizienten, die gegeben sind durch eine Matrix
-<span class="math notranslate nohighlight">\(A \in \R^{s \times s}\)</span> und den beiden Vektoren
-<span class="math notranslate nohighlight">\(\vec{c}, \vec{b} \in \R^s\)</span>. Dann lässt sich das Runge-Kutta Verfahren
+<span class="math">\(A \in \R^{s \times s}\)</span> und den beiden Vektoren
+<span class="math">\(\vec{c}, \vec{b} \in \R^s\)</span>. Dann lässt sich das Runge-Kutta Verfahren
 kompakt durch das folgende <strong>Butcher-Schema</strong> repräsentieren:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{array}{c|c}
-\vec{c} &amp; A \\ \hline &amp; \vec{b}^T
+<div class="math">
+\[\begin{array}{c|c}
+\vec{c} & A \\ \hline & \vec{b}^T
 \end{array}
 \ = \ \begin{array}{c|cccc}
-c_1 &amp; a_{11} &amp; a_{12} &amp; \cdots &amp; a_{1s}\\
-c_2 &amp; a_{21} &amp; a_{22} &amp; \cdots &amp; a_{2s}\\
-\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-c_s &amp; a_{s1} &amp; a_{s2} &amp; \cdots &amp; a_{ss}\\ \hline
-    &amp; b_1 &amp; b_2 &amp; \cdots &amp; b_s 
-\end{array}.\end{split}\]</div>
+c_1 & a_{11} & a_{12} & \cdots & a_{1s}\\
+c_2 & a_{21} & a_{22} & \cdots & a_{2s}\\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+c_s & a_{s1} & a_{s2} & \cdots & a_{ss}\\ \hline
+    & b_1 & b_2 & \cdots & b_s 
+\end{array}.\]</div>
 </section>
 </div><p>Im folgenden Beispiel geben wir die Butcher-Schemata für vier explizite
 Runge-Kutta Verfahren im Vergleich an.</p>
@@ -1138,6 +1164,7 @@ Runge-Kutta Verfahren im Vergleich an.</p>
 <section class="example-content" id="proof-content">
 <p>TODO</p>
 <!---
+
   --------- ---------------------------------------------------------- ------------------------------------------------------------------------------------------------------------------------------------
    $s = 1$                     $\begin{array}{c|c}                     Vorwärts-Euler Verfahren mit: $u_\tau(t_{k+1}) \ = \ u_\tau(t_k) + \tau F(t_k, u_\tau(t_k))$. Konsistenzordnung $p=1$.
                                   0 & 0\\ \hline                       

@@ -359,10 +359,11 @@ v'(t) \ = \ - A(t) \cdot v(t)
 ```
 mit dem Endwert $v(T) = L \in \R^n$. Denn dann gilt
 ```{math}
+\begin{aligned}
 L^T \cdot u(T) \ &= \ v(T)^T \cdot u(T) \ = \ v(0)^T \cdot u(0) + \int_0^T (v(t)^T \cdot u(t))'\, \mathrm{d}t \\
 &= \ v(0)^T \cdot u(0) + \int_0^T \underbrace{(v'(t)^T \cdot u(t) + v(t)^T \cdot u'(t))}_{=\:0} \, \mathrm{d}t\\
 &= \  v(0)^T \cdot u(0).
-
+\end{aligned}
 ```
 Hierbei nutzt man aus, dass gilt
 ```{math}
@@ -391,10 +392,11 @@ v(t_k) \ = \ v(t_{k+1}) + \tau A^T v(t_k)
 ```
 genau die richtige Diskretisierung. Es gilt dann nämlich
 ```{math}
+\begin{aligned}
     u(t_N) \cdot v(t_N) \ &= \ u(0) \cdot v(0) + \sum_{k=0}^{N-1} (u(t_{k+1}) \cdot v(t_{k+1}) - u(t_{k }) \cdot v(t_{k })) \\
      &= \ u(0) \cdot v(0) + \sum_{k=0}^{N-1} ((u(t_{k+1})  - u(t_{k }) \cdot v(t_{k+1}) + (v(t_{k+1}) - v(t_{k })) \cdot u(t_k) ) \\
      &= \ u(0) \cdot v(0) + \sum_{k=0}^{N-1} (A u(t_{k })\cdot v(t_{k+1}) - (A^T v(t_{k })) \cdot u(t_k) ) \ = \ u(0)\cdot v(0) .
-
+\end{aligned}
 ```
 Man sieht ein, dass bei anderen Verfahren für die adjungierte Gleichung,
 z.B. einem impliziten Euler-Verfahren, eine solche Identität nicht
@@ -529,12 +531,13 @@ v(s_k) \ = \ u_w(s_k) - g_k +  \lim_{t \downarrow s_k} v(t) .
 ```
 Dann gilt mit $s_0=0$, $s_{K+1}=T$,
 ```{math}
+\begin{aligned}
 \partial_{w_i} f(w) \ &= \ \sum_k (u_w(s_k) - g_k) \cdot u_w^i(s_k) \\
 &= \ \sum_k (\lim_{t \uparrow s_k} v(t) - \lim_{t \downarrow s_k} v(t)) \cdot u_w^i(s_k) \\
 &= \ v(0) \cdot u_w^i(0) + \sum_{k=0}^K \int_{s_k}^{s_{k+1}} (v(t) \cdot u_w^i(t))'\,\mathrm{d}t  \\
 &= \ v(0) \cdot u_w^i(0) + \int_0^T (v(t) \cdot u_w^i(t))'\,\mathrm{d}t  \\
 &= \ v(0) \cdot \partial_{w_i} u_0(w) + \int_0^T v(t) \cdot \partial_{w_i} F(t,u_w(t),w)\,\mathrm{d}t.
-
+\end{aligned}
 ```
 Damit genügt zur Berechnung des Gradienten die Lösung einer adjungierten
 Differentialgleichung, sowie von $M$ Skalarprodukten mit Anfangswerten

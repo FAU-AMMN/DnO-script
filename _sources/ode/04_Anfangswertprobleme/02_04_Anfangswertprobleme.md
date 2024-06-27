@@ -92,10 +92,11 @@ Differenzenbildung auf einem Gitter. Hierbei haben wir verschiedene
 Möglichkeiten die Zeitableitung zu approximieren und wir unterscheiden
 folgende Fälle:
 ```{math}
+\begin{aligned}
 u'(t_k) \ &\approx \ \frac{u(t_{k+1}) - u(t_k)}{\tau} \ = \ \frac{u(t_k + \tau) - u(t_k)}{\tau} \ &=: \ D^+ u(t_k),\\
 u'(t_k) \ &\approx \ \frac{u(t_k) - u(t_{k-1})}{\tau} \ = \ \frac{u(t_k) - u(t_k - \tau)}{\tau} \ &=: \ D^- u(t_k),\\
 u'(t_k) \ &\approx \ \frac{u(t_{k+1}) - u(t_{k-1})}{2\tau} \ = \ \frac{u(t_k + \tau) - u(t_k - \tau)}{2\tau} \hspace{-1cm} &=: \ D^c u(t_k).
-
+\end{aligned}
 ```
 Hierbei werden die obigen Differenzenquotienten $D^+, D^-, D^c$
 **Vorwärts-, Rückwärts-** und **zentrale Differenz** genannt.
@@ -142,8 +143,9 @@ genutzt werden.
     In der Integralform der Differentialgleichung bedeutet das, dass wir
     die folgende Approximation benutzen:
     ```{math}
+    \begin{aligned}
     u(t_{k+1}) - u(t_k) \ = \ \int_{t_k}^{t_{k+1}} F(t,u(t))\, \mathrm{d}t \ \approx \ \tau \cdot F(t_k, u_\tau(t_k)),
-
+    \end{aligned}
     ```
     d.h., dass wir das Integral durch die Intervallänge mal dem Wert am
     linken Intervallrand annähern. Dies entspricht einer numerischen
@@ -170,8 +172,9 @@ genutzt werden.
     In der Integralform der Differentialgleichung bedeutet das, dass wir
     die folgende Approximation benutzen:
     ```{math}
+    \begin{aligned}
     u(t_{k+1}) - u(t_k) \ = \ \int_{t_k}^{t_{k+1}} F(t,u(t)) \,\mathrm{d}t \ \approx \ \tau \cdot F(t_{k+1},u_\tau(t_{k+1})),
-
+    \end{aligned}
     ```
     d.h., dass wir das Integral durch die Intervallänge mal dem Wert am
     rechten Intervallrand annähern. Auch dies entspricht einer
@@ -187,8 +190,9 @@ genutzt werden.
     Verfahrensfunktionen des Vorwärts- und Rückwärts-Euler-Verfahrens
     mit
     ```{math}
+    \begin{aligned}
     f_\tau(t_k, u_\tau(t_k)) \ \coloneqq \ \frac{1}{2} \left( F(t_{k },u_\tau(t_{k })) + F(t_{k+1},u_\tau(t_{k+1}))\right)
-
+    \end{aligned}
     ```
     und ist entsprechend nach {prf:ref}`def:einschrittverfahren`
     ebenfalls ein implizites Verfahren.
@@ -196,9 +200,10 @@ genutzt werden.
     In der Integralform der Differentialgleichung bedeutet das, dass wir
     die folgende Approximation benutzen:
     ```{math}
+    \begin{aligned}
     u(t_{k+1}) - u(t_k) \ &= \ \int_{t_k}^{t_{k+1}} F(t,u(t)) \,\mathrm{d}t \\
     &\approx \ \frac{\tau}{2} \left( F(t_{k },u_\tau(t_{k })) + F(t_{k+1},u_\tau(t_{k+1}))\right),
-
+    \end{aligned}
     ```
     Dies entspricht einer Approximation des Integrals mit Hilfe der
     Trapezregel aus {cite:p}`numerik1`.
@@ -228,7 +233,7 @@ noch ein System in $\mathbb{R}^n$ lösen. Ist dieses linear, so können
 wir die üblichen Verfahren für lineare Gleichungssysteme anwenden.
 Andernfalls bietet sich die Verwendung eines iterativen Verfahrens wie
 einer Fixpunktiteration oder des Newton-Verfahrens an (beachte, dass
-unter der obigen Bedingung $\mathbb{1}-\tau f_\tau'$ invertierbar ist
+unter der obigen Bedingung $\mathds{1}-\tau f_\tau'$ invertierbar ist
 für $f_\tau \in C^1$). Mit dem Wert $u_\tau(t_k)$ oder einer einfachen
 Vorhersage in der Zeit (etwa mit dem expliziten Euler-Verfahren) haben
 wir dafür auch einen sehr guten Startwert.
@@ -249,20 +254,22 @@ anwenden.
 Unsere Strategie dabei ist die Folgende: Zunächst schreiben wir eine
 Gleichung für den Fehler $e_\tau = u_\tau - u$. Es gilt
 ```{math}
+\begin{aligned}
 e_\tau(t_{k+1}) =& e_\tau(t_k) +\\ 
 &\tau (f_\tau(t_k,u_\tau(t_k),u_\tau(t_{k+1})) - f_\tau(t_k,u(t_k),u(t_{k+1}))) 
 + \\ & \tau 
 \left[ f_\tau(t_k,u(t_k),u(t_{k+1})) - \frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t))~dt
 \right]. 
-
+\end{aligned}
 ```
 Nun benötigen wir zwei zentrale Eigenschaften von
 Diskretisierungsmethoden:
 
 -   **Konsistenz:** Der Fehler
     ```{math}
+    \begin{aligned}
     f_\tau(t_k,u(t_k),u(t_{k+1})) - \frac{1}{\tau}\int_{t_k}^{t_{k+1}} F(t,u(t))~dt,
-
+    \end{aligned}
     ```
     d.h. das Residuum der Lösung des Anfangswertproblems eingesetzt in
     das numerische Verfahren konvergiert gegen Null für
@@ -322,11 +329,12 @@ bezüglich beider Variablen Lipschitz-stetig ist. Definieren wir
 $\varphi(t) = F(t,u(t))$, dann ist $\varphi$ wegen $u \in C^1$ eine
 Lipschitz-stetige Funktion und es gilt
 ```{math}
+\begin{aligned}
 \norm{g_\tau(t_k)} &= \norm{\varphi(t_k) - \frac{1}\tau \int_{t_k}^{t_{k+1}} \varphi(t)~dt}\\
 &= \norm{\frac{1}\tau \int_{t_k}^{t_{k+1}} (\varphi(t_k)-\varphi(t))~dt}\\
 &\leq\frac{1}\tau \int_{t_k}^{t_{k+1}} \norm{\varphi(t_k)-\varphi(t)}~dt   \\
 &\leq \frac{1}\tau \int_{t_k}^{t_{k+1}} L_\varphi ( t-t_k)~dt = \frac{L_\varphi}2 \tau.
-
+\end{aligned}
 ```
 Damit das Verfahren die Konsistenzordnung $p=1$, wir sehen im Beispiel
 $F(t,u) = t$ auch sofort, dass man im allgemeinen nicht Ordnung zwei
@@ -344,10 +352,11 @@ u''(t) = (F(t,u(t)))' = \partial_t F(t,u(t)) + \partial_u F(t,u(t)) u'(t)
 ```
 stetig ist. Damit gilt
 ```{math}
+\begin{aligned}
 \norm{g_\tau(t_k)} &= \norm{\frac{1}2(\varphi(t_k)+\varphi(t_{k+1})) - \frac{1}\tau \int_{t_k}^{t_{k+1}} \varphi(t)~dt}\\
 &=    \frac{1}{2\tau}  \Vert \int_{t_k}^{t_{k+1}} (\varphi(t_k)+\varphi(t_{k+1})-2\varphi(t))~dt  \Vert \\
 &\leq    \frac{1}{2\tau}   \Vert\int_{t_k}^{t_{k+1}} \varphi'(t_k)(t_k+t_{k+1}-2t) + r_k ~dt \Vert   ,
-
+\end{aligned}
 ```
 mit dem Restglied $r_k={\cal O}(\tau^2)$. Da
 $\int_{t_k}^{t_{k+1}} \varphi'(t_k)(t_k+t_{k+1}-2t) ~dt = 0$, folgt
@@ -377,14 +386,16 @@ Hierbei verwenden wir eine diskrete Version des Lemmas von Gronwall.
 Es sei $\beta_j \geq 0, j\in\N_0$ eine Folge nicht-negativer Zahlen und
 für die Folge $u_j\in\R, j\in\N_0$ gelte
 ```{math}
+\begin{aligned}
 u_0&\leq \alpha\in\R^+_0\\
 u_k&\leq \alpha + \sum_{j=0}^{k-1} \beta_j u_j
-
+\end{aligned}
 ```
 für $k\in\N$, dann gilt die Abschätzung
 ```{math}
+\begin{aligned}
 u_k \leq \alpha \exp\left(\sum_{j=0}^{k-1} \beta_j\right).
-
+\end{aligned}
 ```
 
 ````
@@ -416,9 +427,10 @@ und mit der Dreiecksungleichung folgt für
 $v_k = \Vert u_\tau(t_k) - u_0 \Vert$
 
 ```{math}
+\begin{aligned}
  v_{k+1} &\leq v_k + \tau \Vert f_\tau(t_k,u_\tau(t_k),u_\tau(t_{k+1}))-f_\tau(t_k,u_0,u_0) \Vert + \tau \Vert f_\tau(t_k,u_0,u_0) \Vert \\
 &\leq  v_k + \tau L (v_k + v_{k+1}) + \tau C. 
-
+\end{aligned}
 ```
 Hier haben wir benutzt, dass $f_\tau$ stetig ist, damit folgt
 $f_\tau(t,u_0,u_0)$ ist auf dem kompakten Intervall $[0,T]$ durch eine
@@ -426,8 +438,9 @@ Konstante $C$ beschränkt. Dazu bezeichnet $L$ den Lipschitz-Modul von
 $f_\tau$ bezüglich zweitem und drittem Argument. Sei nun
 $\tau \leq \frac{1}{2L}$, d.h. $1- \tau L \geq \frac{1}2$, dann folgt
 ```{math}
+\begin{aligned}
 v_{k+1} \leq 2(1+\tau L) v_k + 2 \tau C.
-
+\end{aligned}
 ```
 Das diskrete Lemma von Gronwall impliziert dann die Beschränktheit von
 $v_k$. ◻
@@ -458,28 +471,32 @@ E_\tau \ = \ \max_{t_k} \Vert u_\tau(t_k) - u(t_k) \Vert \ \leq \ C \cdot  \max_
 ````
 
 ````{prf:proof} 
+TODO
+<!---
 Wir definieren uns die Hilfsfunktion
 $v_k \coloneqq \Vert u_\tau(t_{k}) -u(t_k)) \Vert$. Durch Anwendung der
 Dreiecksungleichung und dem Ausnutzen der Lipschitz-Stetigkeit von
 $f_\tau$ erhalten wir dann
 ```{math}
+\begin{aligned}
 v_{k+1} \ &= \ \Vert u_\tau(t_{k+1}) - u(t_{k+1})\Vert\\
 &= \ \left\Vert u_\tau(t_k) + \tau \cdot f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - u(t_k) -\int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \right\Vert\\
 &\leq \ v_k + \tau \cdot \norm{f_\tau(t_k, t_{k+1}, u_\tau(t_k), u_\tau(t_{k+1})) - f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1}))}\\
 & \hspace{1.01cm} + \tau  \cdot \left\Vert f_\tau(t_k, t_{k+1}, u(t_k), u(t_{k+1})) - \frac{1}{\tau} \int_{t_k}^{t_{k+1}} F(t,u(t)) \, \mathrm{d}t \right\Vert\\
 &\leq \ v_k + \tau \cdot L \cdot (v_k + v_{k+1}) + \norm{g_\tau(t_k)}.
-
+\end{aligned}
 ```
 Somit erhalten wir durch Umstellen also insgesamt
 ```{math}
+\begin{aligned}
 v_{k+1}  \ &\leq \ v_k + L \cdot \tau \cdot (v_k + v_{k+1}) + \Vert g_\tau(t_k) \Vert\\
 \Rightarrow \quad v_{k+1} \ &\leq \ \frac{1+\tau L}{1-\tau L} \cdot v_k + \max_{t_k}\norm{g_\tau(t_k)}.
-
+\end{aligned}
 ```
 Für hinreichend kleine Schrittweiten $\tau < \frac{1}{2L}$ erhalten wir
 die gewünschte Schranke wieder direkt aus dem diskreten
 {prf:ref}`lem:gronwall_diskret` von Gronwall. ◻
-
+-->
 ````
 
 Eine direkte Folgerung von
@@ -671,9 +688,10 @@ Analog zur Argumentation im expliziten Fall von
 sinnvolle Wahl ist. Eine Taylor-Entwicklung des Zwischenwertes $f_2^k$
 liefert dann
 ```{math}
+\begin{aligned}
 b_1 f_1^k +b_2 f_2^k \ &= \ (b_1 + b_2) F(t_k , u(t_k)) + b_2 c_2 \tau \partial_t F(t_k , u (t_k))\\ 
 & \hspace{1cm} + b_2 a_{21} \tau D_u F(t_k , u (t_k)) F(t_k , u (t_k)) + {\cal O}(\tau^2).
-
+\end{aligned}
 ```
 Vergleichen wir dies wieder mit der Taylor-Entwicklung des Integrals in
 {eq}`eq:runge_kutta_taylor_integral`, so erhalten wir folgendes
@@ -782,13 +800,14 @@ Mit der Taylorentwicklung der Exponentialfunktion
 $u(t) = e^t = \sum_{j=0}^\infty \frac{t^j}{j!}$ können wir das Integral
 als Polynom in $\tau$ schreiben mit:
 ```{math}
+\begin{aligned}
 \frac{1}\tau \int_{t_k}^{t_{k+1}} F(t,u(t))\,\mathrm{d}t \ &= \ \frac{1}\tau \int_{t_k}^{t_{k+1}} u(t)\,\mathrm{d}t \\
 &= \frac{1}\tau \int_{t_k}^{t_{k+1}} \underbrace{u(t_k - t_k)}_{=\, 1} \cdot \: u(t)\,\mathrm{d}t\\
 &= \frac{1}\tau \int_{t_k}^{t_{k+1}} u(t_k) \cdot u(t  - t_k)\,\mathrm{d}t\\
 &= \ \frac{u(t_k)}\tau \int_{t_k}^{t_{k+1}} \sum_{j=0}^p \frac{(t-t_k)^j}{j!} + {\cal O}(\tau^{p+1}) \,\mathrm{d}t \\
 &= \ \frac{u(t_k)}\tau \sum_{j=0}^p \frac{(t_{k+1}-t_k)^{j+1}}{(j+1)!} + {\cal O}(\tau^{p}) \\
 &= \ \sum_{j=0}^p \tau^{j} \frac{u(t_k)}{(j+1)!} + {\cal O}(\tau^{p}).
-
+\end{aligned}
 ```
 Andererseits sehen wir für ein beliebiges explizites Runge-Kutta
 Verfahren der Stufe $s \in \N^+$ mit Konsistenzordnung $p \leq s$, dass
@@ -912,6 +931,7 @@ Runge-Kutta Verfahren im Vergleich an.
 ````{prf:example} Explizite Runge--Kutta Verfahren
 TODO
 <!---
+
   --------- ---------------------------------------------------------- ------------------------------------------------------------------------------------------------------------------------------------
    $s = 1$                     $\begin{array}{c|c}                     Vorwärts-Euler Verfahren mit: $u_\tau(t_{k+1}) \ = \ u_\tau(t_k) + \tau F(t_k, u_\tau(t_k))$. Konsistenzordnung $p=1$.
                                   0 & 0\\ \hline                       
